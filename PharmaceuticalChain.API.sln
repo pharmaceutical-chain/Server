@@ -7,7 +7,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{61F431E2-5A2
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{FE1C696A-D79B-4E8C-BD74-FDF7DD063442}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PharmaceuticalChain.API", "..\PharmaceuticalChain.API\PharmaceuticalChain.API.csproj", "{45D07AE8-58E7-43CD-B919-6408957C45E8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PharmaceuticalChain.API", "src\PharmaceuticalChain.API\PharmaceuticalChain.API.csproj", "{45D07AE8-58E7-43CD-B919-6408957C45E8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
