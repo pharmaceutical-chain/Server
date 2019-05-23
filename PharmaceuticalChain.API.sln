@@ -1,0 +1,32 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.572
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{61F431E2-5A2E-44AD-A800-B69CBA319A08}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{FE1C696A-D79B-4E8C-BD74-FDF7DD063442}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PharmaceuticalChain.API", "..\PharmaceuticalChain.API\PharmaceuticalChain.API.csproj", "{45D07AE8-58E7-43CD-B919-6408957C45E8}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{45D07AE8-58E7-43CD-B919-6408957C45E8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{45D07AE8-58E7-43CD-B919-6408957C45E8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{45D07AE8-58E7-43CD-B919-6408957C45E8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{45D07AE8-58E7-43CD-B919-6408957C45E8}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{45D07AE8-58E7-43CD-B919-6408957C45E8} = {61F431E2-5A2E-44AD-A800-B69CBA319A08}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {1FEE28FF-D29D-43B2-BB2D-3011A631222D}
+	EndGlobalSection
+EndGlobal
