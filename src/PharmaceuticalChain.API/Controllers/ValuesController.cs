@@ -21,6 +21,7 @@ namespace PharmaceuticalChain.API.Controllers
         [HttpGet]
         public ActionResult<IEnumerable<string>> Get()
         {
+            ethereumService.GetContract();
             return new string[] { "value1", "value2" };
         }
 
@@ -48,5 +49,32 @@ namespace PharmaceuticalChain.API.Controllers
         public void Delete(int id)
         {
         }
+
+        [HttpGet]
+        [Route("contract/get")]
+        public async Task<string> GetValue()
+        {
+            return await ethereumService.Get();
+        }
+
+        //[HttpGet]
+        //[Route("exeContract/{name}/{contractMethod}/{value}")]
+        //public async Task<string> ExecuteContract([FromRoute] string name, [FromRoute] string contractMethod, [FromRoute] int value)
+        //{
+        //    string contractAddress = await service.TryGetContractAddress(name);
+        //    var contract = await service.GetContract(name);
+        //    if (contract == null) throw new System.Exception("Contact not present in storage");
+        //    var method = contract.GetFunction(contractMethod);
+        //    try
+        //    {
+        //        // var result = await method.CallAsync<int>(value);
+        //        var result = await method.SendTransactionAsync(service.AccountAddress, value);
+        //        return result.ToString();
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return "error";
+        //    }
+        //}
     }
 }
