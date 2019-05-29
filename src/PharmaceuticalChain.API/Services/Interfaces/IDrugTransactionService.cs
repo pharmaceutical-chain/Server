@@ -1,0 +1,21 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+
+namespace PharmaceuticalChain.API.Services.Interfaces
+{
+    public interface IDrugTransactionService
+    {
+        /// <summary>
+        /// Create a transaction indicating that a company has sent some pills to another company.
+        /// Although counted individually, pills should be sent in packages so <paramref name="packageId"/> is also required.
+        /// </summary>
+        /// <param name="fromCompany">Id of the orginial company.</param>
+        /// <param name="toCompany">Id of the receiver company</param>
+        /// <param name="pillName">Name of the drug.</param>
+        /// <param name="packageId">Package Id which the drugs belong to.</param>
+        /// <param name="value">Number of pills are being transfered with this transaction.</param>
+        void Create(Guid fromCompany, Guid toCompany, string pillName, Guid packageId, uint value);
+    }
+}
