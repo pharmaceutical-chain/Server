@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Options;
 using Nethereum.Contracts;
+using Nethereum.Hex.HexTypes;
 using Nethereum.Web3;
 using Nethereum.Web3.Accounts;
 using Nethereum.Web3.Accounts.Managed;
@@ -25,36 +26,60 @@ namespace PharmaceuticalChain.API.Services.Implementations
             ethereumAccount = options.Value.EthereumAccount;
             ethereumPassword = options.Value.EthereumPassword;
 
+            // Currently using testing account provided on Nethereum Docs.
             var privateKey = "0xb5b1870957d373ef0eeffecc6e4812c0fd08f554b37b233526acc331bf1544f7";
             var account = new Account(privateKey);
             web3 = new Web3(account, "https://ropsten.infura.io/v3/ad8ea364154b464eb6c7ff37f66ffc94");
+
+            
         }
 
         Contract IEthereumService.GetContract()
         {
-            return web3.Eth.GetContract(abi, contractAddress);
+           return web3.Eth.GetContract(abi, contractAddress);
         }
 
-        void IEthereumService.Set(int value)
+        async void IEthereumService.Set(uint value)
         {
-            throw new NotImplementedException();
-        }
-
-        async Task<string> IEthereumService.Get()
-        {
-            var isUnlokced = await web3.Personal.UnlockAccount.SendRequestAsync(ethereumAccount, ethereumPassword, 60);
-            if (!isUnlokced) { throw new UnauthorizedAccessException(); }
-            var contract = (this as IEthereumService).GetContract();
-            var method = contract.GetFunction("get");
+            var method = GetFunction("set");
+            var estimate = await method.EstimateGasAsync();
             try
             {
-                var result = await method.SendTransactionAsync(ethereumAccount);
-                return result;
+                var result = await method.SendTransactionAsync(ethereumAccount,
+                    new HexBigInteger(300000),
+                    new HexBigInteger(0),
+                    value);
             }
             catch (Exception ex)
             {
                 throw;
             }
+        }
+
+        async Task<string> IEthereumService.Get()
+        {
+            //var isUnlokced = await web3.Personal.UnlockAccount.SendRequestAsync(ethereumAccount, ethereumPassword, 60);
+            //if (!isUnlokced) { throw new UnauthorizedAccessException(); }
+
+            var method = GetFunction("get");
+            var estimate = await method.EstimateGasAsync();
+            try
+            {
+                var result = await method.CallAsync<int>(ethereumAccount,
+                    new HexBigInteger(estimate.Value / 100 * 140),
+                    new HexBigInteger(0));
+                return result.ToString();
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+
+        private Function GetFunction(string name)
+        {
+            var contract = (this as IEthereumService).GetContract();
+            return contract.GetFunction(name);
         }
     }
 }

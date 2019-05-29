@@ -10,7 +10,7 @@ namespace PharmaceuticalChain.API.Services.Interfaces
     {
         Contract GetContract();
 
-        void Set(int value);
+        void Set(uint value);
         Task<string> Get();
     }
 }
