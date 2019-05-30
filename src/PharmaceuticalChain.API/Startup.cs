@@ -33,6 +33,9 @@ namespace PharmaceuticalChain.API
             services.Configure<EthereumSettings>(ethereumSettings);
 
             services.AddScoped<IEthereumService, EthereumService>();
+
+            services.AddTransient<ICompanyService, CompanyService>();
+            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
