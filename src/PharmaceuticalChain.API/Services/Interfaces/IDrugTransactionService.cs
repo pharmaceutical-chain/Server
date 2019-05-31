@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PharmaceuticalChain.API.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -16,6 +17,10 @@ namespace PharmaceuticalChain.API.Services.Interfaces
         /// <param name="pillName">Name of the drug.</param>
         /// <param name="packageId">Package Id which the drugs belong to.</param>
         /// <param name="value">Number of pills are being transfered with this transaction.</param>
-        void Create(Guid fromCompany, Guid toCompany, string pillName, Guid packageId, uint value);
+        Task<int> Create(uint fromCompany, uint toCompany, string pillName, string packageId, uint value);
+
+        Task<int> GetTotalTransactions();
+
+        Task<List<DrugTransactionInformation>> GetInformationOfAllDrugTransactions();
     }
 }

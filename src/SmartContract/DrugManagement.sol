@@ -1,4 +1,4 @@
-pragma solidity ^0.4.18;
+pragma solidity ^0.5.9;
 
 contract DrugManagement {
     
@@ -14,12 +14,12 @@ contract DrugManagement {
 	}
 	
 	struct Transaction {
-	    bytes32 uid;
+	    //bytes32 uid;
 	    uint fromCompanyId;
 	    uint toCompanyId;
 	    bytes32 drugName;
 	    uint amount;
-	    string packageId;
+	    bytes32 packageId;
 	}
     
     // These state variables are used keep track of the number of Companies and Drugs
@@ -34,22 +34,24 @@ contract DrugManagement {
     // These mappings will hold all the candidates and Voters respectively
     mapping (uint => Company) companies;
     mapping (uint => Drug) drugs;
-	mapping (uint => Transaction) transactions;
+	mapping (uint => Transaction) public transactions;
 	
-    function send(bytes32 uid, uint fromCompanyId, uint toCompanyId, bytes32 drugName, uint amount, string packageId) public {
+    function send(uint fromCompanyId, uint toCompanyId, bytes32 drugName, uint amount, bytes32 packageId) public {
         if (companies[fromCompanyId].doesExist == true && companies[toCompanyId].doesExist == true) {
-            uint transactionId = totalTransactions++;
-            transactions[transactionId] = Transaction(uid, fromCompanyId, toCompanyId, drugName, amount, packageId);
+            uint uid = totalTransactions++;
+            transactions[uid] = Transaction(fromCompanyId, toCompanyId, drugName, amount, packageId);
         }
     }
 	
 	event AddedCompany(uint companyId);
-	function addCompany(bytes32 companyName) public {
+	function addCompany(bytes32 companyName) public returns(uint) {
 		uint companyId = totalCompanies++;
 		
-		companies[companyId] =  Company(companyName, true);
+		companies[companyId] = Company(companyName, true);
 		
-		AddedCompany(companyId);
+		emit AddedCompany(companyId);
+		
+		return companyId;
 	}
 	
 	
@@ -69,14 +71,14 @@ contract DrugManagement {
         return totalTransactions;
     }
     
-    function getTransaction(uint transactionId) public view returns(uint, uint, uint, bytes32, uint) {
-        return (transactionId, transactions[transactionId].fromCompanyId, transactions[transactionId].toCompanyId,
+    function getTransaction(uint transactionId) public view returns(uint, uint, bytes32, uint) {
+        return (transactions[transactionId].fromCompanyId, transactions[transactionId].toCompanyId,
             transactions[transactionId].drugName, transactions[transactionId].amount);
     }
     
-    /* In progress */
+    /* In progress 
     function getCurrentStorageOfCompany(uint companyId) public view returns(bytes32[], uint[]) {
-        bytes32[] drugs;
+        bytes32[] resultDrugNames;
         uint[] drugAmounts;
         
         // Add drugs this company has received
@@ -91,5 +93,6 @@ contract DrugManagement {
         
         return (drugs, drugAmounts);
     }
+    */
     
 }
