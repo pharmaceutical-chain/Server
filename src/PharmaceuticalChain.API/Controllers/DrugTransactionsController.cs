@@ -30,7 +30,7 @@ namespace PharmaceuticalChain.API.Controllers
                     drugTransaction.DrugName,
                     drugTransaction.PackageId,
                     drugTransaction.Amount);
-                return Ok(new { CompanyId = result });
+                return Ok(new { TransactionId = result });
             }
             catch (Exception ex)
             {
