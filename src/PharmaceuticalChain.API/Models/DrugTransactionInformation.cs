@@ -23,5 +23,22 @@ namespace PharmaceuticalChain.API.Models
 
         [Parameter("bytes32", 5)]
         public string PackageId { get; set; }
+
+        internal bool HasParent(List<DrugTransactionInformation> transactionPool, Func<DrugTransactionInformation, bool> parentMatchCondition)
+        {
+            if (transactionPool.Any(parentMatchCondition))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        internal DrugTransactionInformation Parent(List<DrugTransactionInformation> transactionPool, Func<DrugTransactionInformation, bool> parentMatchCondition)
+        {
+            return transactionPool.Single(parentMatchCondition);
+        }
     }
 }

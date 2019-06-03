@@ -11,9 +11,13 @@ namespace PharmaceuticalChain.API.Services.Implementations
     public class CompanyService : ICompanyService
     {
         private readonly IEthereumService ethereumService;
-        public CompanyService(IEthereumService ethereumService)
+
+        private readonly IDrugTransactionService drugTransactionService;
+
+        public CompanyService(IEthereumService ethereumService, IDrugTransactionService drugTransactionService)
         {
             this.ethereumService = ethereumService;
+            this.drugTransactionService = drugTransactionService;
         }
 
         async Task<int> ICompanyService.Create(string name)
@@ -62,6 +66,43 @@ namespace PharmaceuticalChain.API.Services.Implementations
             {
                 throw;
             }
+        }
+
+        async Task<List<StorageInformation>> ICompanyService.GetStorageInformation(uint companyId)
+        {
+            List<StorageInformation> result = new List<StorageInformation>();
+
+            var allTransactions = await drugTransactionService.GetInformationOfAllDrugTransactions();
+
+            var lastTransactions = new List<DrugTransactionInformation>();
+            foreach (var transaction in allTransactions)
+            {
+                if (transaction.ToCompanyId == companyId)
+                {
+                    lastTransactions.Add(transaction);
+                }
+            }
+
+            // Find parent transactions all the way to the first
+            var chainedTransactions = new List<DrugTransactionInformation>();
+            chainedTransactions.AddRange(lastTransactions);
+            foreach (var transaction in lastTransactions)
+            {
+                var iteratorTransaction = transaction;
+                var transactionPool = allTransactions.Where(t => t.PackageId == iteratorTransaction.PackageId).ToList();
+                bool parentMatchCondition(DrugTransactionInformation t) => t.ToCompanyId == iteratorTransaction.FromCompanyId;
+                while (iteratorTransaction.HasParent(transactionPool, parentMatchCondition))
+                {
+                    iteratorTransaction = iteratorTransaction.Parent(transactionPool, parentMatchCondition);
+                    chainedTransactions.Add(iteratorTransaction);
+                }
+            }
+
+            var transactionsGroupedByDrugName = (from t in chainedTransactions
+                                                 group t by t.DrugName into g
+                                                 select new { DrugName= g.Key, Transactions = g.ToList() }).ToList();
+
+            return result;
         }
 
         async Task<int> ICompanyService.GetTotalCompanies()

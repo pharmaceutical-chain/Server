@@ -69,5 +69,20 @@ namespace PharmaceuticalChain.API.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
+
+        [HttpGet]
+        [Route("{companyId}/storage")]
+        public async Task<IActionResult> GetStorage(uint companyId)
+        {
+            try
+            {
+                var result = await companyService.GetStorageInformation(companyId);
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
     }
 }

@@ -17,5 +17,7 @@ namespace PharmaceuticalChain.API.Services.Interfaces
         Task<int> GetTotalCompanies();
 
         Task<List<CompanyInformation>> GetInformationOfAllCompanies();
+
+        Task<List<StorageInformation>> GetStorageInformation(uint companyId);
     }
 }
