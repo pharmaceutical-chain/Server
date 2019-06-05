@@ -1,4 +1,5 @@
 ﻿using PharmaceuticalChain.API.Models;
+using PharmaceuticalChain.API.Models.Ethereum;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,7 +18,7 @@ namespace PharmaceuticalChain.API.Services.Interfaces
         /// <param name="pillName">Name of the drug.</param>
         /// <param name="packageId">Package Id which the drugs belong to.</param>
         /// <param name="value">Number of pills are being transfered with this transaction.</param>
-        Task<int> Create(uint fromCompany, uint toCompany, string pillName, string packageId, uint value);
+        Task<CreateDrugTransactionResult> Create(uint fromCompany, uint toCompany, string pillName, string packageId, uint value);
 
         Task<int> GetTotalTransactions();
 

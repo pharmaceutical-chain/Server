@@ -1,5 +1,6 @@
 ﻿using Nethereum.Hex.HexTypes;
 using PharmaceuticalChain.API.Models;
+using PharmaceuticalChain.API.Models.Ethereum;
 using PharmaceuticalChain.API.Services.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -16,7 +17,7 @@ namespace PharmaceuticalChain.API.Services.Implementations
             this.ethereumService = ethereumService;
         }
 
-        async Task<int> IDrugTransactionService.Create(uint fromCompany, uint toCompany, string pillName, string packageId, uint amount)
+        async Task<CreateDrugTransactionResult> IDrugTransactionService.Create(uint fromCompany, uint toCompany, string pillName, string packageId, uint amount)
         {
             try
             {
@@ -35,7 +36,14 @@ namespace PharmaceuticalChain.API.Services.Implementations
                         amount,
                         packageId.ToString()
                     });
-                return await (this as IDrugTransactionService).GetTotalTransactions(); // Id of the new transaction
+
+                var id = await (this as IDrugTransactionService).GetTotalTransactions();
+                return new CreateDrugTransactionResult()
+                {
+                    TransactionHash = result,
+                    TransactionId = id
+
+                };
             }
             catch (Exception)
             {
