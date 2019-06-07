@@ -14,7 +14,7 @@ namespace PharmaceuticalChain.API.Services.Implementations
         private readonly IEthereumService ethereumService;
         public DrugTransactionService(IEthereumService ethereumService)
         {
-            this.ethereumService = ethereumService;
+            this.ethereumService = ethereumService; 
         }
 
         async Task<CreateDrugTransactionResult> IDrugTransactionService.Create(uint fromCompany, uint toCompany, string pillName, string packageId, uint amount)
@@ -22,7 +22,6 @@ namespace PharmaceuticalChain.API.Services.Implementations
             try
             {
                 var sendFunction = ethereumService.GetFunction("send");
-
 
                 var result = await sendFunction.SendTransactionAsync(
                     "0xa5eE58Df60d9f6c2FE211D287926948292DffbD3",

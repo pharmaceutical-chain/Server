@@ -20,6 +20,9 @@ contract DrugManagement {
 	    bytes32 drugName;
 	    uint amount;
 	    bytes32 packageId;
+		
+		uint256 manufactureDate;
+		uint256 expirationDate;
 	}
     
     // These state variables are used keep track of the number of Companies and Drugs
@@ -36,10 +39,10 @@ contract DrugManagement {
     mapping (uint => Drug) drugs;
 	mapping (uint => Transaction) public transactions;
 	
-    function send(uint fromCompanyId, uint toCompanyId, bytes32 drugName, uint amount, bytes32 packageId) public {
+    function send(uint fromCompanyId, uint toCompanyId, bytes32 drugName, uint amount, bytes32 packageId, uint256 mfgDate, uint256 expDate) public {
         if (companies[fromCompanyId].doesExist == true && companies[toCompanyId].doesExist == true) {
             uint uid = totalTransactions++;
-            transactions[uid] = Transaction(fromCompanyId, toCompanyId, drugName, amount, packageId);
+            transactions[uid] = Transaction(fromCompanyId, toCompanyId, drugName, amount, packageId, mfgDate, expDate);
         }
     }
 	

@@ -7,7 +7,9 @@ namespace PharmaceuticalChain.API.Models.Database
 {
     public class Transaction
     {
-        public Guid Id { get; set; }
+        public uint Id { get; set; }
+
+        public string EthereumTransactionHash { get; set; }
 
         public Guid ReceiptId { get; set; }
         public Receipt Receipt { get; set; }
