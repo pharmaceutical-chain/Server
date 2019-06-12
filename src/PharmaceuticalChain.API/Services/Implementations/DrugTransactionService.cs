@@ -1,6 +1,8 @@
 ﻿using Nethereum.Hex.HexTypes;
 using PharmaceuticalChain.API.Models;
+using PharmaceuticalChain.API.Models.Database;
 using PharmaceuticalChain.API.Models.Ethereum;
+using PharmaceuticalChain.API.Repositories.Interfaces;
 using PharmaceuticalChain.API.Services.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -12,12 +14,20 @@ namespace PharmaceuticalChain.API.Services.Implementations
     public class DrugTransactionService : IDrugTransactionService
     {
         private readonly IEthereumService ethereumService;
-        public DrugTransactionService(IEthereumService ethereumService)
+        private readonly ITransactionRepository transactionRepository;
+        private readonly IReceiptRepository receiptRepository;
+        public DrugTransactionService(
+            IEthereumService ethereumService,
+            ITransactionRepository transactionRepository,
+            IReceiptRepository receiptRepository)
         {
-            this.ethereumService = ethereumService; 
+            this.ethereumService = ethereumService;
+            this.transactionRepository = transactionRepository;
+            this.receiptRepository = receiptRepository;
         }
 
-        async Task<CreateDrugTransactionResult> IDrugTransactionService.Create(uint fromCompany, uint toCompany, string pillName, string packageId, uint amount)
+        async Task<CreateDrugTransactionResult> IDrugTransactionService.Create(
+            uint fromCompany, uint toCompany, string pillName, string packageId, uint amount, Guid receiptId)
         {
             try
             {
@@ -48,6 +58,17 @@ namespace PharmaceuticalChain.API.Services.Implementations
             {
                 throw;
             }
+        }
+
+        Guid IDrugTransactionService.CreateAndReturnReceipt()
+        {
+            var newReceiptId = receiptRepository.CreateAndReturnId(new Receipt());
+            return newReceiptId;
+        }
+
+        bool IDrugTransactionService.DoesReceiptExist(Guid receiptId)
+        {
+            throw new NotImplementedException();
         }
 
         async Task<List<DrugTransactionInformation>> IDrugTransactionService.GetInformationOfAllDrugTransactions()

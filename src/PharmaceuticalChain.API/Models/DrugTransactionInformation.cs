@@ -40,5 +40,7 @@ namespace PharmaceuticalChain.API.Models
         {
             return transactionPool.Single(parentMatchCondition);
         }
+
+        public Guid ReceiptId { get; set; }
     }
 }

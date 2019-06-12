@@ -6,10 +6,14 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using PharmaceuticalChain.API.Models.Database;
+using PharmaceuticalChain.API.Repositories.Implementations;
+using PharmaceuticalChain.API.Repositories.Interfaces;
 using PharmaceuticalChain.API.Services.Implementations;
 using PharmaceuticalChain.API.Services.Interfaces;
 using Swashbuckle.AspNetCore.Swagger;
@@ -32,13 +36,19 @@ namespace PharmaceuticalChain.API
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
+            services.AddDbContext<ApplicationDbContext>(options =>
+              options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+
             var ethereumSettings = Configuration.GetSection("EthereumSettings");
             services.Configure<EthereumSettings>(ethereumSettings);
 
-            services.AddScoped<IEthereumService, EthereumService>();
+            services.AddTransient<IEthereumService, EthereumService>();
 
             services.AddTransient<ICompanyService, CompanyService>();
             services.AddTransient<IDrugTransactionService, DrugTransactionService>();
+
+            services.AddTransient<IReceiptRepository, ReceiptRepository>();
+            services.AddTransient<ITransactionRepository, TransactionRepository>();
 
             services.AddSwaggerGen(c =>
             {
