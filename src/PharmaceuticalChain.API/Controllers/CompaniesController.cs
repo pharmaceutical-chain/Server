@@ -64,7 +64,7 @@ namespace PharmaceuticalChain.API.Controllers
                 var companies = await companyService.GetInformationOfAllCompanies();
                 return Ok(companies);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }

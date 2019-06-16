@@ -11,6 +11,7 @@ namespace PharmaceuticalChain.API.Repositories.Implementations
     {
         public ReceiptRepository(ApplicationDbContext dbContext) : base(dbContext)
         {
+            
         }
 
         Guid IReceiptRepository.CreateAndReturnId(Receipt receipt)
@@ -30,10 +31,14 @@ namespace PharmaceuticalChain.API.Repositories.Implementations
         List<Receipt> IReceiptRepository.GetReceipts(uint companyId)
         {
             var receipts = dbContext.Receipts.ToList();
-            var result = from r in receipts
+            var result = (from r in receipts
                          where r.CompanyId == companyId
-                         select r;
-            return result.ToList();
+                         select r).ToList();
+            foreach(var receipt in result)
+            {
+                dbContext.Entry(receipt).Collection(r => r.Transactions).Load();
+            }
+            return result;
         }
     }
 }

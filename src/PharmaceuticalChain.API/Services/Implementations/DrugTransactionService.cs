@@ -51,7 +51,12 @@ namespace PharmaceuticalChain.API.Services.Implementations
 
                 var id = await (this as IDrugTransactionService).GetTotalTransactions();
 
-
+                transactionRepository.Create(new Transaction()
+                {
+                    EthereumTransactionHash = result,
+                    Id = (uint)id,
+                    ReceiptId = receiptId 
+                });
 
                 return new CreateDrugTransactionResult()
                 {

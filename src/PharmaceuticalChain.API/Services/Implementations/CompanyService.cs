@@ -77,7 +77,7 @@ namespace PharmaceuticalChain.API.Services.Implementations
                         functionInput: new object[] { i }
                         );
 
-                    receiptRepository.GetReceipts(companyInfo.CompanyId);
+                    companyInfo.Receipts = receiptRepository.GetReceipts(companyInfo.CompanyId);
 
                     result.Add(companyInfo);
                 }
