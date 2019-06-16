@@ -21,6 +21,12 @@ namespace PharmaceuticalChain.API.Repositories.Implementations
             return receipt.Id;
         }
 
+        Receipt IReceiptRepository.GetReceipt(Guid receiptId)
+        {
+            var receipt = dbContext.Receipts.Where(r => r.Id == receiptId).SingleOrDefault();
+            return receipt;
+        }
+
         List<Receipt> IReceiptRepository.GetReceipts(uint companyId)
         {
             var receipts = dbContext.Receipts.ToList();

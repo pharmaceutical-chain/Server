@@ -44,9 +44,9 @@ namespace PharmaceuticalChain.API.Services.Implementations
                         toCompany,
                         pillName,
                         amount,
+                        packageId.ToString(),
                         manufacureDate.ToUnixTimestamp(),
-                        expirationDate.ToUnixTimestamp(),
-                        packageId.ToString()
+                        expirationDate.ToUnixTimestamp()
                     });
 
                 var id = await (this as IDrugTransactionService).GetTotalTransactions();
@@ -74,7 +74,14 @@ namespace PharmaceuticalChain.API.Services.Implementations
 
         bool IDrugTransactionService.DoesReceiptExist(Guid receiptId)
         {
-            throw new NotImplementedException();
+            if (receiptRepository.GetReceipt(receiptId) == null)
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
         }
 
         async Task<List<DrugTransactionInformation>> IDrugTransactionService.GetInformationOfAllDrugTransactions()
