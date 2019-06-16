@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -7,6 +8,7 @@ namespace PharmaceuticalChain.API.Models.Database
 {
     public class Transaction
     {
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public uint Id { get; set; }
 
         public string EthereumTransactionHash { get; set; }

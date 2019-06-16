@@ -4,6 +4,7 @@ using PharmaceuticalChain.API.Models.Database;
 using PharmaceuticalChain.API.Models.Ethereum;
 using PharmaceuticalChain.API.Repositories.Interfaces;
 using PharmaceuticalChain.API.Services.Interfaces;
+using PharmaceuticalChain.API.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,7 +28,7 @@ namespace PharmaceuticalChain.API.Services.Implementations
         }
 
         async Task<CreateDrugTransactionResult> IDrugTransactionService.Create(
-            uint fromCompany, uint toCompany, string pillName, string packageId, uint amount, Guid receiptId)
+            uint fromCompany, uint toCompany, string pillName, string packageId, uint amount, DateTime manufacureDate, DateTime expirationDate, Guid receiptId)
         {
             try
             {
@@ -43,10 +44,15 @@ namespace PharmaceuticalChain.API.Services.Implementations
                         toCompany,
                         pillName,
                         amount,
+                        manufacureDate.ToUnixTimestamp(),
+                        expirationDate.ToUnixTimestamp(),
                         packageId.ToString()
                     });
 
                 var id = await (this as IDrugTransactionService).GetTotalTransactions();
+
+
+
                 return new CreateDrugTransactionResult()
                 {
                     TransactionHash = result,

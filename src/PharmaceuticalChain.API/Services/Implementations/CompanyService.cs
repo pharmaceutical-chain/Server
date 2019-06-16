@@ -1,5 +1,6 @@
 ﻿using Nethereum.Hex.HexTypes;
 using PharmaceuticalChain.API.Models;
+using PharmaceuticalChain.API.Repositories.Interfaces;
 using PharmaceuticalChain.API.Services.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -14,10 +15,20 @@ namespace PharmaceuticalChain.API.Services.Implementations
 
         private readonly IDrugTransactionService drugTransactionService;
 
-        public CompanyService(IEthereumService ethereumService, IDrugTransactionService drugTransactionService)
+        private readonly IReceiptRepository receiptRepository;
+
+        private readonly ICompanyRepository companyRepository;
+
+        public CompanyService(
+            IEthereumService ethereumService, 
+            IDrugTransactionService drugTransactionService,
+            IReceiptRepository receiptRepository,
+            ICompanyRepository companyRepository)
         {
             this.ethereumService = ethereumService;
             this.drugTransactionService = drugTransactionService;
+            this.receiptRepository = receiptRepository;
+            this.companyRepository = companyRepository;
         }
 
         async Task<int> ICompanyService.Create(string name)
@@ -26,12 +37,20 @@ namespace PharmaceuticalChain.API.Services.Implementations
             var getTotalFunction = ethereumService.GetFunction("getTotalCompanies");
             try
             {
+
                 var result = await function.SendTransactionAsync(
                     "0xa5eE58Df60d9f6c2FE211D287926948292DffbD3",
                     new HexBigInteger(300000),
                     new HexBigInteger(0),
                     functionInput: new object[] { name });
-                return await ethereumService.CallFunction(getTotalFunction); // Total company is the Id of this new company.
+                var newCompanyId = await ethereumService.CallFunction(getTotalFunction); // Total company is the Id of this new company.
+
+                companyRepository.Create(new Models.Database.Company()
+                {
+                    Id = newCompanyId
+                });
+
+                return newCompanyId;
             }
             catch (Exception ex)
             {
@@ -57,6 +76,9 @@ namespace PharmaceuticalChain.API.Services.Implementations
                         new HexBigInteger(0),
                         functionInput: new object[] { i }
                         );
+
+                    receiptRepository.GetReceipts(companyInfo.CompanyId);
+
                     result.Add(companyInfo);
                 }
 

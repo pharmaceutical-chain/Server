@@ -51,6 +51,8 @@ namespace PharmaceuticalChain.API.Controllers
                     drugTransaction.DrugName,
                     drugTransaction.PackageId,
                     drugTransaction.Amount,
+                    drugTransaction.ManufactureDate,
+                    drugTransaction.ExpirationDate,
                     drugTransaction.ReceiptId);
                 return Ok(result);
             }

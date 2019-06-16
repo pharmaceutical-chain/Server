@@ -9,5 +9,13 @@ namespace PharmaceuticalChain.API.Repositories.Interfaces
     public interface IReceiptRepository
     {
         Guid CreateAndReturnId(Receipt receipt);
+
+
+        /// <summary>
+        /// Get receipts of a company.
+        /// </summary>
+        /// <param name="companyId"></param>
+        /// <returns></returns>
+        List<Receipt> GetReceipts(uint companyId);
     }
 }

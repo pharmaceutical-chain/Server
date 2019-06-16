@@ -19,20 +19,34 @@ namespace PharmaceuticalChain.API.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+            modelBuilder.Entity("PharmaceuticalChain.API.Models.Database.Company", b =>
+                {
+                    b.Property<int>("Id");
+
+                    b.Property<string>("Name");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Companies");
+                });
+
             modelBuilder.Entity("PharmaceuticalChain.API.Models.Database.Receipt", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<int>("CompanyId");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("CompanyId");
 
                     b.ToTable("Receipts");
                 });
 
             modelBuilder.Entity("PharmaceuticalChain.API.Models.Database.Transaction", b =>
                 {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd();
+                    b.Property<long>("Id");
 
                     b.Property<string>("EthereumTransactionHash");
 
@@ -43,6 +57,14 @@ namespace PharmaceuticalChain.API.Migrations
                     b.HasIndex("ReceiptId");
 
                     b.ToTable("Transactions");
+                });
+
+            modelBuilder.Entity("PharmaceuticalChain.API.Models.Database.Receipt", b =>
+                {
+                    b.HasOne("PharmaceuticalChain.API.Models.Database.Company", "Company")
+                        .WithMany()
+                        .HasForeignKey("CompanyId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("PharmaceuticalChain.API.Models.Database.Transaction", b =>

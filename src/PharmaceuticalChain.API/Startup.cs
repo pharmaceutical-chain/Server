@@ -49,6 +49,7 @@ namespace PharmaceuticalChain.API
 
             services.AddTransient<IReceiptRepository, ReceiptRepository>();
             services.AddTransient<ITransactionRepository, TransactionRepository>();
+            services.AddTransient<ICompanyRepository, CompanyRepository>();
 
             services.AddSwaggerGen(c =>
             {

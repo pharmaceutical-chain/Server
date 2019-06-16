@@ -19,11 +19,16 @@ namespace PharmaceuticalChain.API.Services.Interfaces
         /// <param name="packageId">Package Id which the drugs belong to.</param>
         /// <param name="value">Number of pills are being transfered with this transaction.</param>
         /// <param name="receiptId">A drug transaction belongs to a receipt.</param>
-        Task<CreateDrugTransactionResult> Create(uint fromCompany, uint toCompany, string pillName, string packageId, uint value, Guid receiptId);
+        Task<CreateDrugTransactionResult> Create(uint fromCompany, uint toCompany, string pillName, string packageId, uint value, DateTime manufacureDate, DateTime expirationDate, Guid receiptId);
 
         Task<int> GetTotalTransactions();
 
         Task<List<DrugTransactionInformation>> GetInformationOfAllDrugTransactions();
+
+        /// <summary>
+        /// Create and return Id of the receipt. Use this Id to attach to drug transactions that belong to this receipt.
+        /// </summary>
+        /// <returns></returns>
         Guid CreateAndReturnReceipt();
         bool DoesReceiptExist(Guid receiptId);
     }

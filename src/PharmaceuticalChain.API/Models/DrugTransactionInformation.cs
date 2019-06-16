@@ -24,7 +24,15 @@ namespace PharmaceuticalChain.API.Models
         [Parameter("bytes32", 5)]
         public string PackageId { get; set; }
 
-        internal bool HasParent(List<DrugTransactionInformation> transactionPool, Func<DrugTransactionInformation, bool> parentMatchCondition)
+        [Parameter("uint256", 6)]
+        public uint ManufactureDateInUnix { get; set; }
+
+        [Parameter("uint256", 7)]
+        public uint ExpirationDateInUnix { get; set; }
+
+        internal bool HasParent(
+            List<DrugTransactionInformation> transactionPool,
+            Func<DrugTransactionInformation, bool> parentMatchCondition)
         {
             if (transactionPool.Any(parentMatchCondition))
             {
@@ -36,11 +44,17 @@ namespace PharmaceuticalChain.API.Models
             }
         }
 
-        internal DrugTransactionInformation Parent(List<DrugTransactionInformation> transactionPool, Func<DrugTransactionInformation, bool> parentMatchCondition)
+        internal DrugTransactionInformation Parent(
+            List<DrugTransactionInformation> transactionPool,
+            Func<DrugTransactionInformation, bool> parentMatchCondition)
         {
             return transactionPool.Single(parentMatchCondition);
         }
 
         public Guid ReceiptId { get; set; }
+
+        public DateTime ManufactureDate { get; set; }
+
+        public DateTime ExpirationDate { get; set; }
     }
 }

@@ -20,5 +20,14 @@ namespace PharmaceuticalChain.API.Repositories.Implementations
 
             return receipt.Id;
         }
+
+        List<Receipt> IReceiptRepository.GetReceipts(uint companyId)
+        {
+            var receipts = dbContext.Receipts.ToList();
+            var result = from r in receipts
+                         where r.CompanyId == companyId
+                         select r;
+            return result.ToList();
+        }
     }
 }
