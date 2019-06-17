@@ -48,6 +48,7 @@ namespace PharmaceuticalChain.API
 
             services.AddTransient<ICompanyService, CompanyService>();
             services.AddTransient<IDrugTransactionService, DrugTransactionService>();
+            services.AddTransient<IReceiptService, ReceiptService>();
 
             services.AddTransient<IReceiptRepository, ReceiptRepository>();
             services.AddTransient<ITransactionRepository, TransactionRepository>();

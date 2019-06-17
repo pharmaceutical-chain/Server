@@ -10,5 +10,6 @@ namespace PharmaceuticalChain.API.Repositories.Interfaces
     {
         void Create(Company company);
         List<Company> GetCompanies();
+        Company Get(int companyId);
     }
 }

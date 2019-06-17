@@ -72,13 +72,10 @@ namespace PharmaceuticalChain.API.Services.Implementations
             }
         }
 
-        Guid IDrugTransactionService.CreateAndReturnReceipt(int companyId)
+        Guid IDrugTransactionService.CreateAndReturnReceipt(int companyId, int toCompanyId)
         {
-            var newReceiptId = receiptRepository.CreateAndReturnId(new Receipt()
-            {
-                CompanyId = companyId
-            });
-            return newReceiptId;
+            // TODO: Remove
+            throw new NotImplementedException();
         }
 
         bool IDrugTransactionService.DoesReceiptExist(Guid receiptId)

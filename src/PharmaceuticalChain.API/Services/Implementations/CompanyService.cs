@@ -47,7 +47,8 @@ namespace PharmaceuticalChain.API.Services.Implementations
 
                 companyRepository.Create(new Models.Database.Company()
                 {
-                    Id = newCompanyId
+                    Id = newCompanyId,
+                    Name = name
                 });
 
                 return newCompanyId;
@@ -77,7 +78,7 @@ namespace PharmaceuticalChain.API.Services.Implementations
                         functionInput: new object[] { i }
                         );
 
-                    companyInfo.Receipts = receiptRepository.GetReceipts(companyInfo.CompanyId);
+                    //companyInfo.Receipts = receiptRepository.GetReceipts(companyInfo.CompanyId);
 
                     result.Add(companyInfo);
                 }

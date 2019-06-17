@@ -12,6 +12,10 @@ namespace PharmaceuticalChain.API.Models.Database
 
         public int CompanyId { get; set; }
         public Company Company { get; set; }
+
+
+        public int ToCompanyId { get; set; }
+        public string ToCompanyName { get; set; }
         
 
         public ICollection<Transaction> Transactions { get; set; }

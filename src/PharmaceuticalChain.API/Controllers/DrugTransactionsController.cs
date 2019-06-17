@@ -19,20 +19,6 @@ namespace PharmaceuticalChain.API.Controllers
             this.drugTransactionService = drugTransactionService;
         }
 
-        [HttpPost]
-        [Route("create-receipt")]
-        public IActionResult CreateReceipt([FromBody] int companyId)
-        {
-            try
-            {
-                Guid receiptId = drugTransactionService.CreateAndReturnReceipt(companyId);
-                return Ok(receiptId);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError);
-            }
-        }
 
         [HttpPost]
         public async Task<IActionResult> CreateTransactions([FromBody] DrugTransactionInformation drugTransaction)

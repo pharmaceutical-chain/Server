@@ -19,6 +19,12 @@ namespace PharmaceuticalChain.API.Repositories.Implementations
             dbContext.SaveChanges();
         }
 
+        Company ICompanyRepository.Get(int companyId)
+        {
+            var result = dbContext.Companies.Where(c => c.Id == companyId).SingleOrDefault();
+            return result;
+        }
+
         List<Company> ICompanyRepository.GetCompanies()
         {
             throw new NotImplementedException();
