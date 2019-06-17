@@ -18,6 +18,6 @@ namespace PharmaceuticalChain.API.Services.Interfaces
 
         Task<List<CompanyInformation>> GetInformationOfAllCompanies();
 
-        Task<List<StorageInformation>> GetStorageInformation(uint companyId);
+        Task<List<DrugStorageInformation>> GetStorageInformation(uint companyId);
     }
 }

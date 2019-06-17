@@ -32,8 +32,9 @@ namespace PharmaceuticalChain.API.Services.Implementations
         {
             try
             {
-                var sendFunction = ethereumService.GetFunction("send");
+                var id = await (this as IDrugTransactionService).GetTotalTransactions();
 
+                var sendFunction = ethereumService.GetFunction("send");
                 var result = await sendFunction.SendTransactionAsync(
                     "0xa5eE58Df60d9f6c2FE211D287926948292DffbD3",
                     new HexBigInteger(300000),
@@ -49,7 +50,7 @@ namespace PharmaceuticalChain.API.Services.Implementations
                         expirationDate.ToUnixTimestamp()
                     });
 
-                var id = await (this as IDrugTransactionService).GetTotalTransactions();
+                
 
                 transactionRepository.Create(new Transaction()
                 {
@@ -71,9 +72,12 @@ namespace PharmaceuticalChain.API.Services.Implementations
             }
         }
 
-        Guid IDrugTransactionService.CreateAndReturnReceipt()
+        Guid IDrugTransactionService.CreateAndReturnReceipt(int companyId)
         {
-            var newReceiptId = receiptRepository.CreateAndReturnId(new Receipt());
+            var newReceiptId = receiptRepository.CreateAndReturnId(new Receipt()
+            {
+                CompanyId = companyId
+            });
             return newReceiptId;
         }
 

@@ -79,7 +79,7 @@ namespace PharmaceuticalChain.API.Controllers
                 var result = await companyService.GetStorageInformation(companyId);
                 return Ok(result);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }

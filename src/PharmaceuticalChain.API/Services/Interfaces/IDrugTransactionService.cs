@@ -29,7 +29,7 @@ namespace PharmaceuticalChain.API.Services.Interfaces
         /// Create and return Id of the receipt. Use this Id to attach to drug transactions that belong to this receipt.
         /// </summary>
         /// <returns></returns>
-        Guid CreateAndReturnReceipt();
+        Guid CreateAndReturnReceipt(int companyId);
         bool DoesReceiptExist(Guid receiptId);
     }
 }

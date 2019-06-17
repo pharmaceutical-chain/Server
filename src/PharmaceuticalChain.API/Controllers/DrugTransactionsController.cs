@@ -21,11 +21,11 @@ namespace PharmaceuticalChain.API.Controllers
 
         [HttpPost]
         [Route("create-receipt")]
-        public IActionResult CreateReceipt()
+        public IActionResult CreateReceipt([FromBody] int companyId)
         {
             try
             {
-                Guid receiptId = drugTransactionService.CreateAndReturnReceipt();
+                Guid receiptId = drugTransactionService.CreateAndReturnReceipt(companyId);
                 return Ok(receiptId);
             }
             catch (Exception ex)

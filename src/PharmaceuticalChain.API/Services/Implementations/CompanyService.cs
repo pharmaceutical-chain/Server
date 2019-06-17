@@ -37,13 +37,13 @@ namespace PharmaceuticalChain.API.Services.Implementations
             var getTotalFunction = ethereumService.GetFunction("getTotalCompanies");
             try
             {
+                var newCompanyId = await ethereumService.CallFunction(getTotalFunction); // Total company is the Id of this new company.
 
                 var result = await function.SendTransactionAsync(
                     "0xa5eE58Df60d9f6c2FE211D287926948292DffbD3",
                     new HexBigInteger(300000),
                     new HexBigInteger(0),
                     functionInput: new object[] { name });
-                var newCompanyId = await ethereumService.CallFunction(getTotalFunction); // Total company is the Id of this new company.
 
                 companyRepository.Create(new Models.Database.Company()
                 {
@@ -90,7 +90,7 @@ namespace PharmaceuticalChain.API.Services.Implementations
             }
         }
 
-        async Task<List<StorageInformation>> ICompanyService.GetStorageInformation(uint companyId)
+        async Task<List<DrugStorageInformation>> ICompanyService.GetStorageInformation(uint companyId)
         {
             List<StorageInformation> result = new List<StorageInformation>();
 
@@ -121,10 +121,29 @@ namespace PharmaceuticalChain.API.Services.Implementations
             }
 
             var transactionsGroupedByDrugName = (from t in chainedTransactions
-                                                 group t by t.DrugName into g
-                                                 select new { DrugName= g.Key, Transactions = g.ToList() }).ToList();
+                                                 group t by new { t.DrugName, t.PackageId } into g
+                                                 select new DrugStorageInformation(
+                                                     g.Key.DrugName,
+                                                     g.Key.PackageId,
+                                                     g.Select(p => new ChainHistory(p.FromCompanyId, p.Amount)).Reverse().ToList()
+                                                 )).ToList();
 
-            return result;
+            var companies = await (this as ICompanyService).GetInformationOfAllCompanies();
+
+            foreach (var transaction in transactionsGroupedByDrugName)
+            {
+                foreach(var item in transaction.ChainHistories)
+                {
+                    item.CompanyName = companies.Where(c => c.CompanyId == item.CompanyId).Single().Name;
+                }
+
+                // Add the last node which is the company is being the parent search.
+                ChainHistory rootCompany = new ChainHistory(companyId, 0);
+                rootCompany.CompanyName = companies.Where(c => c.CompanyId == rootCompany.CompanyId).Single().Name;
+                transaction.ChainHistories.Add(rootCompany);
+            }
+
+            return transactionsGroupedByDrugName;
         }
 
         async Task<int> ICompanyService.GetTotalCompanies()
