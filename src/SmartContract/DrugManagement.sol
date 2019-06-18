@@ -77,25 +77,5 @@ contract DrugManagement {
     function getTransaction(uint transactionId) public view returns(uint, uint, bytes32, uint) {
         return (transactions[transactionId].fromCompanyId, transactions[transactionId].toCompanyId,
             transactions[transactionId].drugName, transactions[transactionId].amount);
-    }
-    
-    /* In progress 
-    function getCurrentStorageOfCompany(uint companyId) public view returns(bytes32[], uint[]) {
-        bytes32[] resultDrugNames;
-        uint[] drugAmounts;
-        
-        // Add drugs this company has received
-        for(uint i = 0; i < totalTransactions; i++) {
-            if (transactions[i].toCompanyId == companyId) {
-                drugs.push(transactions[i].drugName);
-                drugAmounts.push(transactions[i].amount);
-            }
-        }
-        
-        // Then delete drugs that this company has sent away
-        
-        return (drugs, drugAmounts);
-    }
-    */
-    
+    }    
 }
