@@ -16,6 +16,8 @@ namespace PharmaceuticalChain.API.Models.Database
         public Guid ReceiptId { get; set; }
         public Receipt Receipt { get; set; }
 
-
+        public string DrugName { get; set; }
+        public uint Amount { get; set; }
+        public string PackageId { get; set; }
     }
 }

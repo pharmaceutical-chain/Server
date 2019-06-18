@@ -56,7 +56,10 @@ namespace PharmaceuticalChain.API.Services.Implementations
                 {
                     EthereumTransactionHash = result,
                     Id = (uint)id,
-                    ReceiptId = receiptId 
+                    ReceiptId = receiptId,
+                    DrugName = pillName,
+                    Amount = amount,
+                    PackageId = packageId
                 });
 
                 return new CreateDrugTransactionResult()

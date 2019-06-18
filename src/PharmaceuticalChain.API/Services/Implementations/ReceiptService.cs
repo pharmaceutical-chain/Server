@@ -39,23 +39,11 @@ namespace PharmaceuticalChain.API.Services.Implementations
 
         async Task<ReceiptQuery> IReceiptService.GetReceipts(int companyId)
         {
-            var getCompanyFunction = ethereumService.GetFunction("getCompany");
-            var getTotalFunction = ethereumService.GetFunction("getTotalCompanies");
+            ReceiptQuery result = new ReceiptQuery
+            {
+                Receipts = receiptRepository.GetReceipts((uint)companyId)
+            };
 
-            var total = await ethereumService.CallFunction(getTotalFunction);
-            CompanyInformation companyInfo = null;
-            ReceiptQuery result = new ReceiptQuery();
-
-            //companyInfo = await getCompanyFunction.CallDeserializingToObjectAsync<CompanyInformation>(
-            //    "0xa5eE58Df60d9f6c2FE211D287926948292DffbD3",
-            //    new HexBigInteger(300000),
-            //    new HexBigInteger(0),
-            //    functionInput: new object[] { companyId }
-            //    );
-
-            result.Receipts = receiptRepository.GetReceipts((uint)companyId);
-
-            
 
             return result;
         }

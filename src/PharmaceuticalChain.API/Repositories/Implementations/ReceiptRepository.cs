@@ -37,6 +37,8 @@ namespace PharmaceuticalChain.API.Repositories.Implementations
             foreach(var receipt in result)
             {
                 dbContext.Entry(receipt).Collection(r => r.Transactions).Load();
+
+                receipt.ToCompanyName = dbContext.Companies.Where(c => c.Id == receipt.ToCompanyId).Single().Name;
             }
             return result;
         }
