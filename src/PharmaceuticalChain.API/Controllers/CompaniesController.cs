@@ -84,5 +84,20 @@ namespace PharmaceuticalChain.API.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
+
+        [HttpGet]
+        [Route("{companyId}/test")]
+        public async Task<IActionResult> Test(uint companyId)
+        {
+            try
+            {
+                companyService.Test();
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
     }
 }

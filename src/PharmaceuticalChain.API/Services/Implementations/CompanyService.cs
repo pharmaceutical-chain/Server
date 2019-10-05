@@ -160,5 +160,11 @@ namespace PharmaceuticalChain.API.Services.Implementations
                 throw;
             }
         }
+
+        void ICompanyService.Test()
+        {
+            var function = ethereumService.GetFunction("addChainPoint");
+
+        }
     }
 }
