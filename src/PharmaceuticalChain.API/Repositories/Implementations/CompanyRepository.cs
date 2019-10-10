@@ -13,19 +13,19 @@ namespace PharmaceuticalChain.API.Repositories.Implementations
         {
         }
 
-        void ICompanyRepository.Create(Company company)
+        void ICompanyRepository.Create(Tenant company)
         {
             dbContext.Companies.Add(company);
             dbContext.SaveChanges();
         }
 
-        Company ICompanyRepository.Get(int companyId)
+        Tenant ICompanyRepository.Get(int companyId)
         {
             var result = dbContext.Companies.Where(c => c.Id == companyId).SingleOrDefault();
             return result;
         }
 
-        List<Company> ICompanyRepository.GetCompanies()
+        List<Tenant> ICompanyRepository.GetCompanies()
         {
             throw new NotImplementedException();
         }

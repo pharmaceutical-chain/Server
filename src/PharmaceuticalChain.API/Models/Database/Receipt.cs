@@ -11,7 +11,7 @@ namespace PharmaceuticalChain.API.Models.Database
         public Guid Id { get; set; }
 
         public int CompanyId { get; set; }
-        public Company Company { get; set; }
+        public Tenant Company { get; set; }
 
 
         public int ToCompanyId { get; set; }

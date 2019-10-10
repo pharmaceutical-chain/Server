@@ -8,8 +8,8 @@ namespace PharmaceuticalChain.API.Repositories.Interfaces
 {
     public interface ICompanyRepository
     {
-        void Create(Company company);
-        List<Company> GetCompanies();
-        Company Get(int companyId);
+        void Create(Tenant company);
+        List<Tenant> GetCompanies();
+        Tenant Get(int companyId);
     }
 }

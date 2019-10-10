@@ -45,7 +45,7 @@ namespace PharmaceuticalChain.API.Services.Implementations
                     new HexBigInteger(0),
                     functionInput: new object[] { name });
 
-                companyRepository.Create(new Models.Database.Company()
+                companyRepository.Create(new Models.Database.Tenant()
                 {
                     Id = newCompanyId,
                     Name = name
