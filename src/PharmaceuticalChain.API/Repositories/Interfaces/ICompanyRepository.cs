@@ -11,7 +11,11 @@ namespace PharmaceuticalChain.API.Repositories.Interfaces
         void Create(Tenant company);
         Guid CreateAndReturnId(Tenant tenant);
 
+        void Update(Tenant tenant);
+
         List<Tenant> GetCompanies();
         Tenant Get(Guid companyId);
+
+        void Delete(Guid id);
     }
 }

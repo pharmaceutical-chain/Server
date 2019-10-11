@@ -25,6 +25,13 @@ namespace PharmaceuticalChain.API.Repositories.Implementations
             return tenant.Id;
         }
 
+        void ICompanyRepository.Delete(Guid id)
+        {
+            var tenantToBeDeleted = (this as ICompanyRepository).Get(id);
+            dbContext.Tenants.Remove(tenantToBeDeleted);
+            dbContext.SaveChanges();
+        }
+
         Tenant ICompanyRepository.Get(Guid companyId)
         {
             var result = dbContext.Tenants.Where(c => c.Id == companyId).SingleOrDefault();
@@ -34,6 +41,12 @@ namespace PharmaceuticalChain.API.Repositories.Implementations
         List<Tenant> ICompanyRepository.GetCompanies()
         {
             throw new NotImplementedException();
+        }
+
+        void ICompanyRepository.Update(Tenant tenant)
+        {
+            dbContext.Tenants.Update(tenant);
+            dbContext.SaveChanges();
         }
     }
 }

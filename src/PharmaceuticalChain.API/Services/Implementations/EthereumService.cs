@@ -22,9 +22,6 @@ namespace PharmaceuticalChain.API.Services.Implementations
 
         //private readonly string contractAddress = "0x3e18A6DB759fCB7429f1Bd73C9E1C94875450aB8"; // POA Consortium
         private readonly string contractAddress = "0x11211022f9927F9fFb996DAc14D9be85fcD9623f"; // Ropsten
-        
-        // Local
-        //private readonly string contractAddress = "0xafa0e5114e8c8cac9ae6addc93d380d27b790b54";
 
         public EthereumService(IOptions<EthereumSettings> options)
         {
@@ -42,43 +39,7 @@ namespace PharmaceuticalChain.API.Services.Implementations
         {
            return web3.Eth.GetContract(abi, contractAddress);
         }
-
-        async void IEthereumService.Set(uint value)
-        {
-            var method = (this as IEthereumService).GetFunction("set");
-            var estimate = await method.EstimateGasAsync();
-            try
-            {
-                var result = await method.SendTransactionAsync(ethereumAccount,
-                    new HexBigInteger(300000),
-                    new HexBigInteger(0),
-                    value);
-            }
-            catch (Exception ex)
-            {
-                throw;
-            }
-        }
-
-        async Task<string> IEthereumService.Get()
-        {
-            //var isUnlokced = await web3.Personal.UnlockAccount.SendRequestAsync(ethereumAccount, ethereumPassword, 60);
-            //if (!isUnlokced) { throw new UnauthorizedAccessException(); }
-
-            var method = (this as IEthereumService).GetFunction("get");
-            var estimate = await method.EstimateGasAsync();
-            try
-            {
-                var result = await method.CallAsync<int>(ethereumAccount,
-                    new HexBigInteger(estimate.Value / 100 * 140),
-                    new HexBigInteger(0));
-                return result.ToString();
-            }
-            catch (Exception ex)
-            {
-                throw;
-            }
-        }
+        
 
 
         Function IEthereumService.GetFunction(string name)

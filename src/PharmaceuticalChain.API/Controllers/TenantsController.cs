@@ -13,10 +13,10 @@ namespace PharmaceuticalChain.API.Controllers
     [ApiController]
     public class TenantsController : ControllerBase
     {
-        private readonly ICompanyService companyService;
-        public TenantsController(ICompanyService companyService)
+        private readonly ICompanyService tenantService;
+        public TenantsController(ICompanyService tenantService)
         {
-            this.companyService = companyService;
+            this.tenantService = tenantService;
         }
 
         /// <summary>
@@ -30,7 +30,7 @@ namespace PharmaceuticalChain.API.Controllers
         {
             try
             {
-                var result = await companyService.Create(
+                var result = await tenantService.Create(
                     command.Name, 
                     command.Address, 
                     command.PhoneNumber, 
@@ -38,6 +38,21 @@ namespace PharmaceuticalChain.API.Controllers
                     command.BRCLink, 
                     command.GPCLink);
                 return Ok(new { CompanyId = result });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
+
+        [HttpDelete]
+        public async Task<IActionResult> DeleteTenantAsync(
+            [FromBody] Guid tenantId)
+        {
+            try
+            {
+                await tenantService.Remove(tenantId);
+                return Ok();
             }
             catch (Exception ex)
             {
@@ -99,7 +114,7 @@ namespace PharmaceuticalChain.API.Controllers
         {
             try
             {
-                var result = await companyService.GetContractAddress(tenantId);
+                var result = await tenantService.GetContractAddress(tenantId);
                 return Ok(result);
             }
             catch (Exception ex)

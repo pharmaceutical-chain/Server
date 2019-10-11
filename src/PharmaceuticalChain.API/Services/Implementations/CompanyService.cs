@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using PharmaceuticalChain.API.Models.Database;
 
 namespace PharmaceuticalChain.API.Services.Implementations
 {
@@ -36,7 +37,7 @@ namespace PharmaceuticalChain.API.Services.Implementations
             var function = ethereumService.GetFunction(EthereumFunctions.AddChainPoint);
             try
             {
-                Guid newCompanyId = companyRepository.CreateAndReturnId(new Models.Database.Tenant()
+                var tenant = new Tenant()
                 {
                     Name = name,
                     Address = address,
@@ -44,14 +45,15 @@ namespace PharmaceuticalChain.API.Services.Implementations
                     TaxCode = taxCode,
                     BRCLink = BRCLink,
                     GPCLink = GPCLink
-                });
-                
-                var result = await function.SendTransactionAsync(
+                };
+                Guid newTenantId = companyRepository.CreateAndReturnId(tenant);
+
+                var transactionHash = await function.SendTransactionAsync(
                     ethereumService.GetEthereumAccount(),
                     new HexBigInteger(1000000),
                     new HexBigInteger(0),
                     functionInput: new object[] {
-                        newCompanyId.ToString(),
+                        newTenantId.ToString(),
                         name,
                         address,
                         phoneNumber,
@@ -59,12 +61,14 @@ namespace PharmaceuticalChain.API.Services.Implementations
                         BRCLink,
                         GPCLink
                     });
+                tenant.TransactionHash = transactionHash;
+                companyRepository.Update(tenant);
 
-                return newCompanyId;
+                return newTenantId;
             }
             catch (Exception ex)
             {
-                throw;
+                throw ex;
             }
         }
 
@@ -73,7 +77,7 @@ namespace PharmaceuticalChain.API.Services.Implementations
             var function = ethereumService.GetFunction("getAddressByID");
             try
             {
-                var result = await function.CallDecodingToDefaultAsync(
+                var result = await function.CallAsync<string>(
                    ethereumService.GetEthereumAccount(),
                    new HexBigInteger(600000),
                    new HexBigInteger(0),
@@ -81,7 +85,7 @@ namespace PharmaceuticalChain.API.Services.Implementations
                    {
                        id.ToString()
                    });
-                return result[0].Result.ToString();
+                return result;
             }
             catch (Exception ex)
             {
@@ -89,6 +93,28 @@ namespace PharmaceuticalChain.API.Services.Implementations
             }
         }
 
+        async Task ICompanyService.Remove(Guid tenantId)
+        {
+            var function = ethereumService.GetFunction(EthereumFunctions.RemoveChainPoint);
+            try
+            {
+                var transactionHash = await function.SendTransactionAsync(
+                                  ethereumService.GetEthereumAccount(),
+                                  new HexBigInteger(1000000),
+                                  new HexBigInteger(0),
+                                  functionInput: new object[] {
+                                       tenantId.ToString()
+                });
+                companyRepository.Delete(tenantId);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+
+        #region OLD & WAITING TO BE REFACTOR-ED
         async Task<List<CompanyInformation>> ICompanyService.GetInformationOfAllCompanies()
         {
             try
@@ -190,5 +216,6 @@ namespace PharmaceuticalChain.API.Services.Implementations
                 throw;
             }
         }
+        #endregion
     }
 }
