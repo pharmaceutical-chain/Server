@@ -28,19 +28,20 @@ namespace PharmaceuticalChain.API.Repositories.Implementations
             return receipt;
         }
 
-        List<Receipt> IReceiptRepository.GetReceipts(uint companyId)
+        List<Receipt> IReceiptRepository.GetReceipts(Guid companyId)
         {
-            var receipts = dbContext.Receipts.ToList();
-            var result = (from r in receipts
-                         where r.CompanyId == companyId
-                         select r).ToList();
-            foreach(var receipt in result)
-            {
-                dbContext.Entry(receipt).Collection(r => r.Transactions).Load();
+            //var receipts = dbContext.Receipts.ToList();
+            //var result = (from r in receipts
+            //             where r.CompanyId == companyId
+            //             select r).ToList();
+            //foreach(var receipt in result)
+            //{
+            //    dbContext.Entry(receipt).Collection(r => r.Transactions).Load();
 
-                receipt.ToCompanyName = dbContext.Companies.Where(c => c.Id == receipt.ToCompanyId).Single().Name;
-            }
-            return result;
+            //    receipt.ToCompanyName = dbContext.Companies.Where(c => c.Id == receipt.ToCompanyId).Single().Name;
+            //}
+            //return result;
+            throw new NotImplementedException();
         }
     }
 }

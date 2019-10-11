@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using PharmaceuticalChain.API.Models.Database;
 
 namespace PharmaceuticalChain.API.Services.Implementations
 {
@@ -20,7 +21,7 @@ namespace PharmaceuticalChain.API.Services.Implementations
         private readonly ICompanyRepository companyRepository;
 
         public CompanyService(
-            IEthereumService ethereumService, 
+            IEthereumService ethereumService,
             IDrugTransactionService drugTransactionService,
             IReceiptRepository receiptRepository,
             ICompanyRepository companyRepository)
@@ -31,34 +32,89 @@ namespace PharmaceuticalChain.API.Services.Implementations
             this.companyRepository = companyRepository;
         }
 
-        async Task<int> ICompanyService.Create(string name)
+        async Task<Guid> ICompanyService.Create(string name, string address, string phoneNumber, string taxCode, string BRCLink, string GPCLink)
         {
-            var function = ethereumService.GetFunction("addCompany");
-            var getTotalFunction = ethereumService.GetFunction("getTotalCompanies");
+            var function = ethereumService.GetFunction(EthereumFunctions.AddChainPoint);
             try
             {
-                var newCompanyId = await ethereumService.CallFunction(getTotalFunction); // Total company is the Id of this new company.
-
-                var result = await function.SendTransactionAsync(
-                    "0xa5eE58Df60d9f6c2FE211D287926948292DffbD3",
-                    new HexBigInteger(300000),
-                    new HexBigInteger(0),
-                    functionInput: new object[] { name });
-
-                companyRepository.Create(new Models.Database.Company()
+                var tenant = new Tenant()
                 {
-                    Id = newCompanyId,
-                    Name = name
-                });
+                    Name = name,
+                    Address = address,
+                    PhoneNumber = phoneNumber,
+                    TaxCode = taxCode,
+                    BRCLink = BRCLink,
+                    GPCLink = GPCLink
+                };
+                Guid newTenantId = companyRepository.CreateAndReturnId(tenant);
 
-                return newCompanyId;
+                var transactionHash = await function.SendTransactionAsync(
+                    ethereumService.GetEthereumAccount(),
+                    new HexBigInteger(1000000),
+                    new HexBigInteger(0),
+                    functionInput: new object[] {
+                        newTenantId.ToString(),
+                        name,
+                        address,
+                        phoneNumber,
+                        taxCode,
+                        BRCLink,
+                        GPCLink
+                    });
+                tenant.TransactionHash = transactionHash;
+                companyRepository.Update(tenant);
+
+                return newTenantId;
             }
             catch (Exception ex)
             {
-                throw;
+                throw ex;
             }
         }
 
+        async Task<string> ICompanyService.GetContractAddress(Guid id)
+        {
+            var function = ethereumService.GetFunction("getAddressByID");
+            try
+            {
+                var result = await function.CallAsync<string>(
+                   ethereumService.GetEthereumAccount(),
+                   new HexBigInteger(600000),
+                   new HexBigInteger(0),
+                   functionInput: new object[]
+                   {
+                       id.ToString()
+                   });
+                return result;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        async Task ICompanyService.Remove(Guid tenantId)
+        {
+            var function = ethereumService.GetFunction(EthereumFunctions.RemoveChainPoint);
+            try
+            {
+                var transactionHash = await function.SendTransactionAsync(
+                                  ethereumService.GetEthereumAccount(),
+                                  new HexBigInteger(1000000),
+                                  new HexBigInteger(0),
+                                  functionInput: new object[] {
+                                       tenantId.ToString()
+                });
+                companyRepository.Delete(tenantId);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+
+        #region OLD & WAITING TO BE REFACTOR-ED
         async Task<List<CompanyInformation>> ICompanyService.GetInformationOfAllCompanies()
         {
             try
@@ -133,7 +189,7 @@ namespace PharmaceuticalChain.API.Services.Implementations
 
             foreach (var transaction in transactionsGroupedByDrugName)
             {
-                foreach(var item in transaction.ChainHistories)
+                foreach (var item in transaction.ChainHistories)
                 {
                     item.CompanyName = companies.Where(c => c.CompanyId == item.CompanyId).Single().Name;
                 }
@@ -160,5 +216,6 @@ namespace PharmaceuticalChain.API.Services.Implementations
                 throw;
             }
         }
+        #endregion
     }
 }
