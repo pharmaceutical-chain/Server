@@ -20,7 +20,7 @@ namespace PharmaceuticalChain.API.Services.Implementations
         private readonly ICompanyRepository companyRepository;
 
         public CompanyService(
-            IEthereumService ethereumService, 
+            IEthereumService ethereumService,
             IDrugTransactionService drugTransactionService,
             IReceiptRepository receiptRepository,
             ICompanyRepository companyRepository)
@@ -31,31 +31,61 @@ namespace PharmaceuticalChain.API.Services.Implementations
             this.companyRepository = companyRepository;
         }
 
-        async Task<int> ICompanyService.Create(string name)
+        async Task<Guid> ICompanyService.Create(string name, string address, string phoneNumber, string taxCode, string BRCLink, string GPCLink)
         {
-            var function = ethereumService.GetFunction("addCompany");
-            var getTotalFunction = ethereumService.GetFunction("getTotalCompanies");
+            var function = ethereumService.GetFunction(EthereumFunctions.AddChainPoint);
             try
             {
-                var newCompanyId = await ethereumService.CallFunction(getTotalFunction); // Total company is the Id of this new company.
-
-                var result = await function.SendTransactionAsync(
-                    "0xa5eE58Df60d9f6c2FE211D287926948292DffbD3",
-                    new HexBigInteger(300000),
-                    new HexBigInteger(0),
-                    functionInput: new object[] { name });
-
-                companyRepository.Create(new Models.Database.Tenant()
+                Guid newCompanyId = companyRepository.CreateAndReturnId(new Models.Database.Tenant()
                 {
-                    Id = newCompanyId,
-                    Name = name
+                    Name = name,
+                    Address = address,
+                    PhoneNumber = phoneNumber,
+                    TaxCode = taxCode,
+                    BRCLink = BRCLink,
+                    GPCLink = GPCLink
                 });
+                
+                var result = await function.SendTransactionAsync(
+                    ethereumService.GetEthereumAccount(),
+                    new HexBigInteger(1000000),
+                    new HexBigInteger(0),
+                    functionInput: new object[] {
+                        newCompanyId.ToString(),
+                        name,
+                        address,
+                        phoneNumber,
+                        taxCode,
+                        BRCLink,
+                        GPCLink
+                    });
 
                 return newCompanyId;
             }
             catch (Exception ex)
             {
                 throw;
+            }
+        }
+
+        async Task<string> ICompanyService.GetContractAddress(Guid id)
+        {
+            var function = ethereumService.GetFunction("getAddressByID");
+            try
+            {
+                var result = await function.CallDecodingToDefaultAsync(
+                   ethereumService.GetEthereumAccount(),
+                   new HexBigInteger(600000),
+                   new HexBigInteger(0),
+                   functionInput: new object[]
+                   {
+                       id.ToString()
+                   });
+                return result[0].Result.ToString();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
             }
         }
 
@@ -133,7 +163,7 @@ namespace PharmaceuticalChain.API.Services.Implementations
 
             foreach (var transaction in transactionsGroupedByDrugName)
             {
-                foreach(var item in transaction.ChainHistories)
+                foreach (var item in transaction.ChainHistories)
                 {
                     item.CompanyName = companies.Where(c => c.CompanyId == item.CompanyId).Single().Name;
                 }
@@ -159,12 +189,6 @@ namespace PharmaceuticalChain.API.Services.Implementations
             {
                 throw;
             }
-        }
-
-        void ICompanyService.Test()
-        {
-            var function = ethereumService.GetFunction("addChainPoint");
-
         }
     }
 }

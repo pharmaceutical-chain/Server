@@ -9,7 +9,9 @@ namespace PharmaceuticalChain.API.Repositories.Interfaces
     public interface ICompanyRepository
     {
         void Create(Tenant company);
+        Guid CreateAndReturnId(Tenant tenant);
+
         List<Tenant> GetCompanies();
-        Tenant Get(int companyId);
+        Tenant Get(Guid companyId);
     }
 }

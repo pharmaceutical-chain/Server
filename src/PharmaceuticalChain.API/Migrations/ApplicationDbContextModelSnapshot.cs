@@ -19,17 +19,6 @@ namespace PharmaceuticalChain.API.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("PharmaceuticalChain.API.Models.Database.Company", b =>
-                {
-                    b.Property<int>("Id");
-
-                    b.Property<string>("Name");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Companies");
-                });
-
             modelBuilder.Entity("PharmaceuticalChain.API.Models.Database.Receipt", b =>
                 {
                     b.Property<Guid>("Id")
@@ -37,15 +26,42 @@ namespace PharmaceuticalChain.API.Migrations
 
                     b.Property<int>("CompanyId");
 
+                    b.Property<Guid?>("CompanyId1");
+
                     b.Property<int>("ToCompanyId");
 
                     b.Property<string>("ToCompanyName");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CompanyId");
+                    b.HasIndex("CompanyId1");
 
                     b.ToTable("Receipts");
+                });
+
+            modelBuilder.Entity("PharmaceuticalChain.API.Models.Database.Tenant", b =>
+                {
+                    b.Property<Guid>("Id");
+
+                    b.Property<string>("Address");
+
+                    b.Property<string>("BRCLink");
+
+                    b.Property<string>("ContractAddress");
+
+                    b.Property<string>("GPCLink");
+
+                    b.Property<string>("Name");
+
+                    b.Property<string>("PhoneNumber");
+
+                    b.Property<string>("TaxCode");
+
+                    b.Property<string>("TransactionHash");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Tenants");
                 });
 
             modelBuilder.Entity("PharmaceuticalChain.API.Models.Database.Transaction", b =>
@@ -71,10 +87,9 @@ namespace PharmaceuticalChain.API.Migrations
 
             modelBuilder.Entity("PharmaceuticalChain.API.Models.Database.Receipt", b =>
                 {
-                    b.HasOne("PharmaceuticalChain.API.Models.Database.Company", "Company")
+                    b.HasOne("PharmaceuticalChain.API.Models.Database.Tenant", "Company")
                         .WithMany()
-                        .HasForeignKey("CompanyId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("CompanyId1");
                 });
 
             modelBuilder.Entity("PharmaceuticalChain.API.Models.Database.Transaction", b =>

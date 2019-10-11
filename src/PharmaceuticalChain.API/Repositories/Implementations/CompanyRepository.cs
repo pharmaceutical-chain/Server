@@ -13,15 +13,21 @@ namespace PharmaceuticalChain.API.Repositories.Implementations
         {
         }
 
-        void ICompanyRepository.Create(Tenant company)
+        void ICompanyRepository.Create(Tenant tenant)
         {
-            dbContext.Companies.Add(company);
+            dbContext.Tenants.Add(tenant);
             dbContext.SaveChanges();
         }
 
-        Tenant ICompanyRepository.Get(int companyId)
+        Guid ICompanyRepository.CreateAndReturnId(Tenant tenant)
         {
-            var result = dbContext.Companies.Where(c => c.Id == companyId).SingleOrDefault();
+            (this as ICompanyRepository).Create(tenant);
+            return tenant.Id;
+        }
+
+        Tenant ICompanyRepository.Get(Guid companyId)
+        {
+            var result = dbContext.Tenants.Where(c => c.Id == companyId).SingleOrDefault();
             return result;
         }
 

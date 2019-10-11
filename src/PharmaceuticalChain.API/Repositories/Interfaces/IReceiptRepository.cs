@@ -16,7 +16,7 @@ namespace PharmaceuticalChain.API.Repositories.Interfaces
         /// </summary>
         /// <param name="companyId"></param>
         /// <returns></returns>
-        List<Receipt> GetReceipts(uint companyId);
+        List<Receipt> GetReceipts(Guid companyId);
 
         Receipt GetReceipt(Guid receiptId);
     }

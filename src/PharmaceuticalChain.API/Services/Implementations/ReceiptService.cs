@@ -27,25 +27,27 @@ namespace PharmaceuticalChain.API.Services.Implementations
 
         Guid IReceiptService.CreateAndReturnId(CreateReceiptCommand command)
         {
-            var newReceiptId = receiptRepository.CreateAndReturnId(new Receipt()
-            {
-                CompanyId = command.companyId,
-                ToCompanyId = command.toCompanyId,
-                ToCompanyName = companyRepository.Get(command.toCompanyId).Name
-            });
+            //var newReceiptId = receiptRepository.CreateAndReturnId(new Receipt()
+            //{
+            //    CompanyId = command.companyId,
+            //    ToCompanyId = command.toCompanyId,
+            //    ToCompanyName = companyRepository.Get(command.toCompanyId).Name
+            //});
 
-            return newReceiptId;
+            //return newReceiptId;
+            throw new NotImplementedException();
         }
 
         async Task<ReceiptQuery> IReceiptService.GetReceipts(int companyId)
         {
-            ReceiptQuery result = new ReceiptQuery
-            {
-                Receipts = receiptRepository.GetReceipts((uint)companyId)
-            };
+            //ReceiptQuery result = new ReceiptQuery
+            //{
+            //    Receipts = receiptRepository.GetReceipts((uint)companyId)
+            //};
 
 
-            return result;
+            //return result;
+            throw new NotImplementedException();
         }
     }
 }

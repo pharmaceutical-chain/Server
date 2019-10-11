@@ -8,6 +8,8 @@ namespace PharmaceuticalChain.API.Services.Interfaces
 {
     public interface IEthereumService
     {
+        string GetEthereumAccount();
+
         Contract GetContract();
         Function GetFunction(string name);
 
