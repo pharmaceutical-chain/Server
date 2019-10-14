@@ -46,13 +46,13 @@ namespace PharmaceuticalChain.API
 
             services.AddTransient<IEthereumService, EthereumService>();
 
-            services.AddTransient<ICompanyService, CompanyService>();
+            services.AddTransient<ITenantService, TenantService>();
             services.AddTransient<IDrugTransactionService, DrugTransactionService>();
             services.AddTransient<IReceiptService, ReceiptService>();
 
             services.AddTransient<IReceiptRepository, ReceiptRepository>();
             services.AddTransient<ITransactionRepository, TransactionRepository>();
-            services.AddTransient<ICompanyRepository, CompanyRepository>();
+            services.AddTransient<ITenantRepository, TenantRepository>();
 
             services.AddSwaggerGen(c =>
             {

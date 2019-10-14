@@ -7,43 +7,43 @@ using System.Threading.Tasks;
 
 namespace PharmaceuticalChain.API.Repositories.Implementations
 {
-    public class CompanyRepository : BaseRepository, ICompanyRepository
+    public class TenantRepository : BaseRepository, ITenantRepository
     {
-        public CompanyRepository(ApplicationDbContext dbContext) : base(dbContext)
+        public TenantRepository(ApplicationDbContext dbContext) : base(dbContext)
         {
         }
 
-        void ICompanyRepository.Create(Tenant tenant)
+        void ITenantRepository.Create(Tenant tenant)
         {
             dbContext.Tenants.Add(tenant);
             dbContext.SaveChanges();
         }
 
-        Guid ICompanyRepository.CreateAndReturnId(Tenant tenant)
+        Guid ITenantRepository.CreateAndReturnId(Tenant tenant)
         {
-            (this as ICompanyRepository).Create(tenant);
+            (this as ITenantRepository).Create(tenant);
             return tenant.Id;
         }
 
-        void ICompanyRepository.Delete(Guid id)
+        void ITenantRepository.Delete(Guid id)
         {
-            var tenantToBeDeleted = (this as ICompanyRepository).Get(id);
+            var tenantToBeDeleted = (this as ITenantRepository).Get(id);
             dbContext.Tenants.Remove(tenantToBeDeleted);
             dbContext.SaveChanges();
         }
 
-        Tenant ICompanyRepository.Get(Guid companyId)
+        Tenant ITenantRepository.Get(Guid companyId)
         {
             var result = dbContext.Tenants.Where(c => c.Id == companyId).SingleOrDefault();
             return result;
         }
 
-        List<Tenant> ICompanyRepository.GetCompanies()
+        List<Tenant> ITenantRepository.GetAll()
         {
-            throw new NotImplementedException();
+            return dbContext.Tenants.ToList();
         }
 
-        void ICompanyRepository.Update(Tenant tenant)
+        void ITenantRepository.Update(Tenant tenant)
         {
             dbContext.Tenants.Update(tenant);
             dbContext.SaveChanges();

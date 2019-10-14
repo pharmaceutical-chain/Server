@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace PharmaceuticalChain.API.Services.Interfaces
 {
-    public interface ICompanyService
+    public interface ITenantService
     {
         /// <summary>
         /// Create a new company in the database and Ethereum network.
@@ -23,7 +23,7 @@ namespace PharmaceuticalChain.API.Services.Interfaces
 
         Task<int> GetTotalCompanies();
 
-        Task<List<CompanyInformation>> GetInformationOfAllCompanies();
+        Task<List<TenantQueryData>> GetAllTenants();
 
         Task<List<DrugStorageInformation>> GetStorageInformation(uint companyId);
 

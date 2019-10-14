@@ -14,11 +14,11 @@ namespace PharmaceuticalChain.API.Services.Implementations
     {
         private readonly IEthereumService ethereumService;
         private readonly IReceiptRepository receiptRepository;
-        private readonly ICompanyRepository companyRepository;
+        private readonly ITenantRepository companyRepository;
         public ReceiptService(
             IEthereumService ethereumService,
             IReceiptRepository receiptRepository,
-            ICompanyRepository companyRepository)
+            ITenantRepository companyRepository)
         {
             this.ethereumService = ethereumService;
             this.receiptRepository = receiptRepository;

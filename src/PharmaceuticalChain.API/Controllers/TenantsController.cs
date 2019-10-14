@@ -13,8 +13,8 @@ namespace PharmaceuticalChain.API.Controllers
     [ApiController]
     public class TenantsController : ControllerBase
     {
-        private readonly ICompanyService tenantService;
-        public TenantsController(ICompanyService tenantService)
+        private readonly ITenantService tenantService;
+        public TenantsController(ITenantService tenantService)
         {
             this.tenantService = tenantService;
         }
@@ -75,23 +75,23 @@ namespace PharmaceuticalChain.API.Controllers
         //    }
         //}
 
-        ///// <summary>
-        ///// Query and return information of companies on the Ethereum network.
-        ///// </summary>
-        ///// <returns></returns>
-        //[HttpGet]
-        //public async Task<IActionResult> GetCompanies()
-        //{
-        //    try
-        //    {
-        //        var companies = await companyService.GetInformationOfAllCompanies();
-        //        return Ok(companies);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return StatusCode(StatusCodes.Status500InternalServerError);
-        //    }
-        //}
+        /// <summary>
+        /// Query and return information of all tenants on the network.
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        public async Task<IActionResult> GetTenants()
+        {
+            try
+            {
+                var tenants = await tenantService.GetAllTenants();
+                return Ok(tenants);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
 
         //[HttpGet]
         //[Route("{companyId}/storage")]
