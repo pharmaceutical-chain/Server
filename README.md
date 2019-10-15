@@ -22,3 +22,5 @@ Run the server.
 ```
 dotnet run
 ```
+
+Providing the server is up and running at `https://localhost:5001/`. All available APIs should now be available at `https://localhost:5001/swagger.`
