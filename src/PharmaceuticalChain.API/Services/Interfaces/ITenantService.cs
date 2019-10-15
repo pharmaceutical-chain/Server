@@ -1,4 +1,5 @@
 ﻿using PharmaceuticalChain.API.Models;
+using PharmaceuticalChain.API.Models.Database;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,7 +13,7 @@ namespace PharmaceuticalChain.API.Services.Interfaces
         /// Create a new company in the database and Ethereum network.
         /// </summary>
         /// <returns>Return the Id of the newly created company</returns>
-        Task<Guid> Create(string name, string address, string phoneNumber, string taxCode, string BRCLink, string GPCLink);
+        Task<Guid> Create(string name, string address, string phoneNumber, string taxCode, string BRCLink, string GPCLink, TenantTypes type);
 
         /// <summary>
         /// Remove a tenant in the blockchain.

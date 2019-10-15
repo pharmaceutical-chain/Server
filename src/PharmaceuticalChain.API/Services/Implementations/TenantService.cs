@@ -32,7 +32,14 @@ namespace PharmaceuticalChain.API.Services.Implementations
             this.tenantRepository = companyRepository;
         }
 
-        async Task<Guid> ITenantService.Create(string name, string address, string phoneNumber, string taxCode, string BRCLink, string GPCLink)
+        async Task<Guid> ITenantService.Create(
+            string name, 
+            string address, 
+            string phoneNumber, 
+            string taxCode, 
+            string registrationCode, 
+            string goodPractices,
+            TenantTypes type)
         {
             var function = ethereumService.GetFunction(EthereumFunctions.AddChainPoint);
             try
@@ -43,9 +50,10 @@ namespace PharmaceuticalChain.API.Services.Implementations
                     PrimaryAddress = address,
                     PhoneNumber = phoneNumber,
                     TaxCode = taxCode,
-                    BRCLink = BRCLink,
-                    GPCLink = GPCLink,
-                    DateCreated = DateTime.UtcNow
+                    RegistrationCode = registrationCode,
+                    GoodPractices = goodPractices,
+                    DateCreated = DateTime.UtcNow,
+                    Type = type
                 };
                 Guid newTenantId = tenantRepository.CreateAndReturnId(tenant);
 
@@ -59,11 +67,24 @@ namespace PharmaceuticalChain.API.Services.Implementations
                         address,
                         phoneNumber,
                         taxCode,
-                        BRCLink,
-                        GPCLink
+                        registrationCode,
+                        goodPractices
                     });
-                tenant.TransactionHash = transactionHash;
+
+                tenant.TransactionHash = transactionHash.TransactionHash;
                 tenantRepository.Update(tenant);
+
+                
+                //var updateFunction = ethereumService.GetFunction(
+                //    ethereumService.GetContract(ethereumService.GetTenantABI(), await (this as ITenantService).GetContractAddress(tenant.Id)),
+                //    EthereumFunctions.UpdateTenantType);
+                //var t = await updateFunction.SendTransactionAsync(
+                //    ethereumService.GetEthereumAccount(),
+                //    new HexBigInteger(700000),
+                //    new HexBigInteger(0),
+                //    functionInput: new object[] {
+                //        type
+                //    });
 
                 return newTenantId;
             }
@@ -129,8 +150,8 @@ namespace PharmaceuticalChain.API.Services.Implementations
                         PrimaryAddress = tenant.PrimaryAddress,
                         TaxCode = tenant.TaxCode,
                         PhoneNumber = tenant.PhoneNumber,
-                        BRCLink = tenant.BRCLink,
-                        GPCLink = tenant.GPCLink,
+                        BRCLink = tenant.RegistrationCode,
+                        GPCLink = tenant.GoodPractices,
                         TransactionHash = tenant.TransactionHash
                     });
                 }

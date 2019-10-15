@@ -9,9 +9,12 @@ namespace PharmaceuticalChain.API.Services.Interfaces
     public interface IEthereumService
     {
         string GetEthereumAccount();
+        string GetTenantABI();
 
-        Contract GetContract();
+        Contract GetMasterContract();
+        Contract GetContract(string abi, string address);
         Function GetFunction(string name);
+        Function GetFunction(Contract contract, string name);
 
         Task<int> CallFunction(Function function, params object[] functionInput);
         Task SendTransaction(Function function, params object[] functionInput);

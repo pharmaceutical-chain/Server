@@ -35,8 +35,9 @@ namespace PharmaceuticalChain.API.Controllers
                     command.Address, 
                     command.PhoneNumber, 
                     command.TaxCode, 
-                    command.BRCLink, 
-                    command.GPCLink);
+                    command.RegistrationCode, 
+                    command.GoodPractices,
+                    command.Type);
                 return Ok(new { CompanyId = result });
             }
             catch (Exception ex)

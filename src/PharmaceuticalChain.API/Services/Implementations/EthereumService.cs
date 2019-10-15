@@ -19,6 +19,7 @@ namespace PharmaceuticalChain.API.Services.Implementations
 
         private Web3 web3;
         private readonly string abi;
+        private readonly string tenantAbi;
 
         //private readonly string contractAddress = "0x3e18A6DB759fCB7429f1Bd73C9E1C94875450aB8"; // POA Consortium
         private readonly string contractAddress;
@@ -28,6 +29,7 @@ namespace PharmaceuticalChain.API.Services.Implementations
             ethereumAccount = options.Value.EthereumAccount;
             ethereumPassword = options.Value.EthereumPassword;
             abi = options.Value.Abi;
+            tenantAbi = options.Value.TenantAbi;
             contractAddress = options.Value.ContractAddress;
 
             var privateKey = "0xA32C64EBF23356CE1C6E8968802515DF9AD769162741EFA693E48E1F98FE9EBE";
@@ -37,16 +39,19 @@ namespace PharmaceuticalChain.API.Services.Implementations
 
         }
 
-        Contract IEthereumService.GetContract()
+        Contract IEthereumService.GetMasterContract()
         {
+            if (String.IsNullOrEmpty(abi) || String.IsNullOrEmpty(contractAddress))
+            {
+                throw new ArgumentNullException();
+            }
            return web3.Eth.GetContract(abi, contractAddress);
         }
         
 
-
         Function IEthereumService.GetFunction(string name)
         {
-            var contract = (this as IEthereumService).GetContract();
+            var contract = (this as IEthereumService).GetMasterContract();
             return contract.GetFunction(name);
         }
 
@@ -81,6 +86,21 @@ namespace PharmaceuticalChain.API.Services.Implementations
         string IEthereumService.GetEthereumAccount()
         {
             return ethereumAccount;
+        }
+
+        Contract IEthereumService.GetContract(string abi, string address)
+        {
+            return web3.Eth.GetContract(abi, address);
+        }
+
+        Function IEthereumService.GetFunction(Contract contract, string name)
+        {
+            return contract.GetFunction(name);
+        }
+
+        string IEthereumService.GetTenantABI()
+        {
+            return tenantAbi;
         }
     }
 }
