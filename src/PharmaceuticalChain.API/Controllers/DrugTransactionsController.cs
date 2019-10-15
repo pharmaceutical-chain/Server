@@ -20,46 +20,46 @@ namespace PharmaceuticalChain.API.Controllers
         }
 
 
-        [HttpPost]
-        public async Task<IActionResult> CreateTransactions([FromBody] DrugTransactionInformation drugTransaction)
-        {
-            try
-            {
-                if (drugTransaction.ReceiptId == null || drugTransaction.ReceiptId == Guid.Empty ||
-                    !drugTransactionService.DoesReceiptExist(drugTransaction.ReceiptId))
-                {
-                    return BadRequest("Receipt doesn't exist. Please create receipt first, and passing its id in your drug transaction");
-                }
+        //[HttpPost]
+        //public async Task<IActionResult> CreateTransactions([FromBody] DrugTransactionInformation drugTransaction)
+        //{
+        //    try
+        //    {
+        //        if (drugTransaction.ReceiptId == null || drugTransaction.ReceiptId == Guid.Empty ||
+        //            !drugTransactionService.DoesReceiptExist(drugTransaction.ReceiptId))
+        //        {
+        //            return BadRequest("Receipt doesn't exist. Please create receipt first, and passing its id in your drug transaction");
+        //        }
 
-                var result = await drugTransactionService.Create(
-                    drugTransaction.FromCompanyId,
-                    drugTransaction.ToCompanyId,
-                    drugTransaction.DrugName,
-                    drugTransaction.PackageId,
-                    drugTransaction.Amount,
-                    drugTransaction.ManufactureDate,
-                    drugTransaction.ExpirationDate,
-                    drugTransaction.ReceiptId);
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError);
-            }
-        }
+        //        var result = await drugTransactionService.Create(
+        //            drugTransaction.FromCompanyId,
+        //            drugTransaction.ToCompanyId,
+        //            drugTransaction.DrugName,
+        //            drugTransaction.PackageId,
+        //            drugTransaction.Amount,
+        //            drugTransaction.ManufactureDate,
+        //            drugTransaction.ExpirationDate,
+        //            drugTransaction.ReceiptId);
+        //        return Ok(result);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return StatusCode(StatusCodes.Status500InternalServerError);
+        //    }
+        //}
 
-        [HttpGet]
-        public async Task<IActionResult> GetTransactions()
-        {
-            try
-            {
-                var result = await drugTransactionService.GetInformationOfAllDrugTransactions();
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError);
-            }
-        }
+        //[HttpGet]
+        //public async Task<IActionResult> GetTransactions()
+        //{
+        //    try
+        //    {
+        //        var result = await drugTransactionService.GetInformationOfAllDrugTransactions();
+        //        return Ok(result);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return StatusCode(StatusCodes.Status500InternalServerError);
+        //    }
+        //}
     }
 }
