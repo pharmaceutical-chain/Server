@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Options;
 using Nethereum.Contracts;
 using Nethereum.Hex.HexTypes;
+using Nethereum.RPC.Eth.DTOs;
 using Nethereum.Web3;
 using Nethereum.Web3.Accounts;
 using Nethereum.Web3.Accounts.Managed;
@@ -101,6 +102,17 @@ namespace PharmaceuticalChain.API.Services.Implementations
         string IEthereumService.GetTenantABI()
         {
             return tenantAbi;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="transactionHash"></param>
+        /// <see cref="https://docs.nethereum.com/en/latest/introduction/web3/"/>
+        async Task<TransactionReceipt> IEthereumService.GetTransactionReceipt(string transactionHash)
+        {
+            var result = await web3.Eth.Transactions.GetTransactionReceipt.SendRequestAsync(transactionHash);
+            return result;
         }
     }
 }

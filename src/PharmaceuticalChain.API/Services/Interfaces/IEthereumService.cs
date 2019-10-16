@@ -1,4 +1,5 @@
 ﻿using Nethereum.Contracts;
+using Nethereum.RPC.Eth.DTOs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,5 +21,7 @@ namespace PharmaceuticalChain.API.Services.Interfaces
         Task SendTransaction(Function function, params object[] functionInput);
 
         string GetContractAddress();
+
+        Task<TransactionReceipt> GetTransactionReceipt(string transactionHash);
     }
 }

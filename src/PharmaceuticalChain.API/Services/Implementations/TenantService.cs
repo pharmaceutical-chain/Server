@@ -71,7 +71,7 @@ namespace PharmaceuticalChain.API.Services.Implementations
                         goodPractices
                     });
 
-                tenant.TransactionHash = transactionHash.TransactionHash;
+                tenant.TransactionHash = transactionHash;
                 tenantRepository.Update(tenant);
 
                 

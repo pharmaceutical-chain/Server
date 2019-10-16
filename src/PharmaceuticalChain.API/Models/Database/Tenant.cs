@@ -29,5 +29,7 @@ namespace PharmaceuticalChain.API.Models.Database
         public string ContractAddress { get; set; }
 
         public DateTime DateCreated { get; set; }
+
+        public TransactionStatuses TransactionStatus { get; set; }
     }
 }
