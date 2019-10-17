@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Hangfire;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -14,6 +15,8 @@ using Microsoft.Extensions.Options;
 using PharmaceuticalChain.API.Models.Database;
 using PharmaceuticalChain.API.Repositories.Implementations;
 using PharmaceuticalChain.API.Repositories.Interfaces;
+using PharmaceuticalChain.API.Services.BackgroundJobs.Implementations;
+using PharmaceuticalChain.API.Services.BackgroundJobs.Interfaces;
 using PharmaceuticalChain.API.Services.Implementations;
 using PharmaceuticalChain.API.Services.Interfaces;
 using Swashbuckle.AspNetCore.Swagger;
@@ -70,6 +73,14 @@ namespace PharmaceuticalChain.API
                             .AllowAnyHeader();
                     });
             });
+
+            // Hangfire automatically creates necessary tables in the database. No need to run extra migrations for the service.
+            services.AddHangfire(
+                x => x.UseSqlServerStorage(Configuration.GetConnectionString("DefaultConnection"))
+            );
+            services.AddHangfireServer();
+
+            services.AddTransient<ITenantBackgroundJob, TenantBackgroundJob>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -96,6 +107,12 @@ namespace PharmaceuticalChain.API
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
             });
+
+            app.UseHangfireDashboard();
+            app.UseHangfireServer();
+            RecurringJob.AddOrUpdate<ITenantBackgroundJob>(
+                tenantBackgroundJob => tenantBackgroundJob.SyncDatabaseWithBlockchain(),
+                "*/30 * * * * *");
 
             app.UseHttpsRedirection();
             app.UseMvc();
