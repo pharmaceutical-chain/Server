@@ -8,7 +8,7 @@ namespace PharmaceuticalChain.API.Models.Database
     public enum TransactionStatuses
     {
         Pending,
-        Successful,
-        Success
+        Success,
+        Fail
     }
 }
