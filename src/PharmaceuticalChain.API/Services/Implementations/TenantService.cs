@@ -152,7 +152,8 @@ namespace PharmaceuticalChain.API.Services.Implementations
                         PhoneNumber = tenant.PhoneNumber,
                         BRCLink = tenant.RegistrationCode,
                         GPCLink = tenant.GoodPractices,
-                        TransactionHash = tenant.TransactionHash
+                        TransactionHash = tenant.TransactionHash,
+                        TransactionStatus = tenant.TransactionStatus
                     });
                 }
                 return result;

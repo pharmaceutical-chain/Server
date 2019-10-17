@@ -19,5 +19,6 @@ namespace PharmaceuticalChain.API.Models
         public string GPCLink { get; set; }
         public string TransactionHash { get; set; }
         public DateTime DateCreated { get; set; }
+        public TransactionStatuses TransactionStatus { get; set; }
     }
 }

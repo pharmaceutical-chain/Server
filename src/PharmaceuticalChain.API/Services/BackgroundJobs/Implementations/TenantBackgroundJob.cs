@@ -40,6 +40,7 @@ namespace PharmaceuticalChain.API.Services.BackgroundJobs.Implementations
                 {
                     var contractAddress = tenantService.GetContractAddress(tenantNotHaveContractAddress.Id).Result;
                     tenantNotHaveContractAddress.ContractAddress = contractAddress;
+                    tenantNotHaveContractAddress.TransactionStatus = Models.Database.TransactionStatuses.Success;
                     tenantRepository.Update(tenantNotHaveContractAddress);
                 }
             }
