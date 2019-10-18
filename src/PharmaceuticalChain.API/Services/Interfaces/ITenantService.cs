@@ -1,4 +1,5 @@
 ﻿using PharmaceuticalChain.API.Models;
+using PharmaceuticalChain.API.Models.Database;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,13 +7,13 @@ using System.Threading.Tasks;
 
 namespace PharmaceuticalChain.API.Services.Interfaces
 {
-    public interface ICompanyService
+    public interface ITenantService
     {
         /// <summary>
         /// Create a new company in the database and Ethereum network.
         /// </summary>
         /// <returns>Return the Id of the newly created company</returns>
-        Task<Guid> Create(string name, string address, string phoneNumber, string taxCode, string BRCLink, string GPCLink);
+        Task<Guid> Create(string name, string address, string phoneNumber, string taxCode, string BRCLink, string GPCLink, TenantTypes type);
 
         /// <summary>
         /// Remove a tenant in the blockchain.
@@ -23,7 +24,7 @@ namespace PharmaceuticalChain.API.Services.Interfaces
 
         Task<int> GetTotalCompanies();
 
-        Task<List<CompanyInformation>> GetInformationOfAllCompanies();
+        Task<List<TenantQueryData>> GetAllTenants();
 
         Task<List<DrugStorageInformation>> GetStorageInformation(uint companyId);
 
@@ -32,5 +33,7 @@ namespace PharmaceuticalChain.API.Services.Interfaces
         /// </summary>
         /// <param name="id"></param>
         Task<string> GetContractAddress(Guid id);
+
+        TenantQueryData GetTenant(Guid id);
     }
 }

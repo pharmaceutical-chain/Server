@@ -7,7 +7,11 @@ namespace PharmaceuticalChain.API.Services
 {
     public class EthereumFunctions
     {
-        public static readonly string AddChainPoint = "addChainPoint";
-        public static readonly string RemoveChainPoint = "removeChainPoint";
+        public static readonly string AddChainPoint = "addTenant";
+        public static readonly string RemoveChainPoint = "removeTenant";
+
+        public static readonly string UpdateTenantType = "updateTenantType";
+
+        public static readonly string GetAddressByID = "getAddressByID";
     }
 }

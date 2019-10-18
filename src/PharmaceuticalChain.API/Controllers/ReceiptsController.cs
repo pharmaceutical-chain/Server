@@ -19,40 +19,40 @@ namespace PharmaceuticalChain.API.Controllers
             this.receiptService = receiptService;
         }
 
-        [HttpPost]
-        public IActionResult CreateReceipt([FromBody] CreateReceiptCommand command)
-        {
-            try
-            {
-                Guid receiptId = receiptService.CreateAndReturnId(command);
-                return Ok(receiptId);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError);
-            }
-        }
+        //[HttpPost]
+        //public IActionResult CreateReceipt([FromBody] CreateReceiptCommand command)
+        //{
+        //    try
+        //    {
+        //        Guid receiptId = receiptService.CreateAndReturnId(command);
+        //        return Ok(receiptId);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return StatusCode(StatusCodes.Status500InternalServerError);
+        //    }
+        //}
 
-        [HttpGet]
-        public async Task<IActionResult> GetReceipts([FromQuery] int? companyId)
-        {
-            try
-            {
-                if (companyId.HasValue)
-                {
-                    var result = await receiptService.GetReceipts(companyId.Value);
-                    return Ok(result);
-                }
-                else
-                {
-                    // TODO: Get all
-                    return null;
-                }
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError);
-            }
-        }
+        //[HttpGet]
+        //public async Task<IActionResult> GetReceipts([FromQuery] int? companyId)
+        //{
+        //    try
+        //    {
+        //        if (companyId.HasValue)
+        //        {
+        //            var result = await receiptService.GetReceipts(companyId.Value);
+        //            return Ok(result);
+        //        }
+        //        else
+        //        {
+        //            // TODO: Get all
+        //            return null;
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return StatusCode(StatusCodes.Status500InternalServerError);
+        //    }
+        //}
     }
 }

@@ -11,11 +11,13 @@ namespace PharmaceuticalChain.API.Models.Database
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }        
         public string Name { get; set; }
-        public string Address { get; set; }
+        public string PrimaryAddress { get; set; }
         public string PhoneNumber { get; set; }
         public string TaxCode { get; set; }
-        public string BRCLink { get; set; }
-        public string GPCLink { get; set; }
+        public string RegistrationCode { get; set; }
+        public string GoodPractices { get; set; }
+
+        public TenantTypes Type { get; set; }
 
         /// <summary>
         /// Transaction hash of the master transaction used to initialize internal contract to create this tenant.
@@ -25,5 +27,9 @@ namespace PharmaceuticalChain.API.Models.Database
         /// Address of the Tenant contract object on the blockchain network.
         /// </summary>
         public string ContractAddress { get; set; }
+
+        public DateTime DateCreated { get; set; }
+
+        public TransactionStatuses TransactionStatus { get; set; }
     }
 }
