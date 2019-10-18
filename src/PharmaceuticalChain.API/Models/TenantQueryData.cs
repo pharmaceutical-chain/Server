@@ -18,7 +18,9 @@ namespace PharmaceuticalChain.API.Models
         public string RegistrationCode { get; set; }
         public string GoodPractices { get; set; }
         public string TransactionHash { get; set; }
+        public string ContractAddress { get; set; }
+        public string Type { get; set; }
         public DateTime DateCreated { get; set; }
-        public TransactionStatuses TransactionStatus { get; set; }
+        public string TransactionStatus { get; set; }
     }
 }

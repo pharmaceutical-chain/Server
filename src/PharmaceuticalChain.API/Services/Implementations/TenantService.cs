@@ -155,8 +155,10 @@ namespace PharmaceuticalChain.API.Services.Implementations
                         RegistrationCode = tenant.RegistrationCode,
                         GoodPractices = tenant.GoodPractices,
                         TransactionHash = tenant.TransactionHash,
-                        TransactionStatus = tenant.TransactionStatus,
-                        DateCreated = tenant.DateCreated
+                        TransactionStatus = tenant.TransactionStatus.ToString(),
+                        DateCreated = tenant.DateCreated,
+                        ContractAddress = tenant.ContractAddress,
+                        Type = tenant.Type.ToString()
                     });
                 }
                 return result;
@@ -180,8 +182,10 @@ namespace PharmaceuticalChain.API.Services.Implementations
                 RegistrationCode = tenant.RegistrationCode,
                 GoodPractices = tenant.GoodPractices,
                 TransactionHash = tenant.TransactionHash,
-                TransactionStatus = tenant.TransactionStatus,
-                DateCreated = tenant.DateCreated
+                TransactionStatus = tenant.TransactionStatus.ToString(),
+                DateCreated = tenant.DateCreated,
+                ContractAddress = tenant.ContractAddress,
+                Type = tenant.Type.ToString()
             };
             return result;
         }
