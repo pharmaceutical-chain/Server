@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using PharmaceuticalChain.API.Models;
+using PharmaceuticalChain.API.Models.Database;
 using PharmaceuticalChain.API.Services.Interfaces;
 
 namespace PharmaceuticalChain.API.Controllers
@@ -22,6 +23,10 @@ namespace PharmaceuticalChain.API.Controllers
         /// <summary>
         /// Send a transaction to create a new tenant on the Ethereum network.
         /// </summary>
+        /// <param name="command">
+        ///     Command with options to create new tenant.
+        ///     Phone number is optional.
+        /// </param>
         /// <returns></returns>
         /// <remarks>
         ///     The API creates a transaction to create a new tenant on the network and returns right away.
@@ -35,14 +40,20 @@ namespace PharmaceuticalChain.API.Controllers
         {
             try
             {
+                if (command.PhoneNumber == null)
+                    command.PhoneNumber = String.Empty;
+
+                Enum.TryParse<TenantTypes>(command.Type, true, out TenantTypes tenantType);
+
                 var result = await tenantService.Create(
                     command.Name, 
-                    command.Address, 
+                    command.PrimaryAddress, 
                     command.PhoneNumber, 
                     command.TaxCode, 
                     command.RegistrationCode, 
                     command.GoodPractices,
-                    command.Type);
+                    tenantType);
+
                 return Ok(new { CompanyId = result });
             }
             catch (Exception ex)
