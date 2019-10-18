@@ -15,8 +15,8 @@ namespace PharmaceuticalChain.API.Models
         public List<string> BranchAddresses { get; set; }
         public string PhoneNumber { get; set; }
         public string TaxCode { get; set; }
-        public string RegistrationCode { get; set; }
-        public string GoodPractices { get; set; }
+        public string BRCLink { get; set; }
+        public string GPCLink { get; set; }
         public string TransactionHash { get; set; }
         public DateTime DateCreated { get; set; }
         public TransactionStatuses TransactionStatus { get; set; }

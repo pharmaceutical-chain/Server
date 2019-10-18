@@ -8,10 +8,6 @@
             <summary>
             Send a transaction to create a new tenant on the Ethereum network.
             </summary>
-            <param name="command">
-                Command with options to create new tenant.
-                Phone number is optional.
-            </param>
             <returns></returns>
             <remarks>
                 The API creates a transaction to create a new tenant on the network and returns right away.
