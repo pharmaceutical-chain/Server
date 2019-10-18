@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using PharmaceuticalChain.API.Models.Database;
+using Nethereum.Util;
 
 namespace PharmaceuticalChain.API.Services.Implementations
 {
@@ -59,7 +60,8 @@ namespace PharmaceuticalChain.API.Services.Implementations
 
                 var transactionHash = await function.SendTransactionAsync(
                     ethereumService.GetEthereumAccount(),
-                    new HexBigInteger(1000000),
+                    new HexBigInteger(4000000),
+                    new HexBigInteger(Nethereum.Web3.Web3.Convert.ToWei(50, UnitConversion.EthUnit.Gwei)),
                     new HexBigInteger(0),
                     functionInput: new object[] {
                         newTenantId.ToString(),
@@ -150,10 +152,11 @@ namespace PharmaceuticalChain.API.Services.Implementations
                         PrimaryAddress = tenant.PrimaryAddress,
                         TaxCode = tenant.TaxCode,
                         PhoneNumber = tenant.PhoneNumber,
-                        BRCLink = tenant.RegistrationCode,
-                        GPCLink = tenant.GoodPractices,
+                        RegistrationCode = tenant.RegistrationCode,
+                        GoodPractices = tenant.GoodPractices,
                         TransactionHash = tenant.TransactionHash,
-                        TransactionStatus = tenant.TransactionStatus
+                        TransactionStatus = tenant.TransactionStatus,
+                        DateCreated = tenant.DateCreated
                     });
                 }
                 return result;
@@ -174,14 +177,14 @@ namespace PharmaceuticalChain.API.Services.Implementations
                 PrimaryAddress = tenant.PrimaryAddress,
                 TaxCode = tenant.TaxCode,
                 PhoneNumber = tenant.PhoneNumber,
-                BRCLink = tenant.RegistrationCode,
-                GPCLink = tenant.GoodPractices,
+                RegistrationCode = tenant.RegistrationCode,
+                GoodPractices = tenant.GoodPractices,
                 TransactionHash = tenant.TransactionHash,
-                TransactionStatus = tenant.TransactionStatus
+                TransactionStatus = tenant.TransactionStatus,
+                DateCreated = tenant.DateCreated
             };
             return result;
         }
-
 
 
         #region OLD & WAITING TO BE REFACTOR-ED
