@@ -164,6 +164,26 @@ namespace PharmaceuticalChain.API.Services.Implementations
             }
         }
 
+        TenantQueryData ITenantService.GetTenant(Guid id)
+        {
+            var tenant = tenantRepository.Get(id);
+            var result = new TenantQueryData()
+            {
+                Id = tenant.Id,
+                Name = tenant.Name,
+                PrimaryAddress = tenant.PrimaryAddress,
+                TaxCode = tenant.TaxCode,
+                PhoneNumber = tenant.PhoneNumber,
+                BRCLink = tenant.RegistrationCode,
+                GPCLink = tenant.GoodPractices,
+                TransactionHash = tenant.TransactionHash,
+                TransactionStatus = tenant.TransactionStatus
+            };
+            return result;
+        }
+
+
+
         #region OLD & WAITING TO BE REFACTOR-ED
         async Task<List<DrugStorageInformation>> ITenantService.GetStorageInformation(uint companyId)
         {

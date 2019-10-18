@@ -46,6 +46,11 @@ namespace PharmaceuticalChain.API.Controllers
             }
         }
 
+        /// <summary>
+        /// Delete a tenant from the blockchain and database.
+        /// </summary>
+        /// <param name="tenantId"></param>
+        /// <returns></returns>
         [HttpDelete]
         public async Task<IActionResult> DeleteTenantAsync(
             [FromBody] Guid tenantId)
@@ -61,23 +66,8 @@ namespace PharmaceuticalChain.API.Controllers
             }
         }
 
-        //[HttpGet]
-        //[Route("total")]
-        //public async Task<IActionResult> GetTotalAsync()
-        //{
-        //    try
-        //    {
-        //        var result = await companyService.GetTotalCompanies();
-        //        return Ok(result);
-        //    }
-        //    catch (Exception)
-        //    {
-        //        return StatusCode(StatusCodes.Status500InternalServerError);
-        //    }
-        //}
-
         /// <summary>
-        /// Query and return information of all tenants on the network.
+        /// Query and return information of all tenants on the network/database.
         /// </summary>
         /// <returns></returns>
         [HttpGet]
@@ -94,21 +84,29 @@ namespace PharmaceuticalChain.API.Controllers
             }
         }
 
-        //[HttpGet]
-        //[Route("{companyId}/storage")]
-        //public async Task<IActionResult> GetStorage(uint companyId)
-        //{
-        //    try
-        //    {
-        //        var result = await companyService.GetStorageInformation(companyId);
-        //        return Ok(result);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return StatusCode(StatusCodes.Status500InternalServerError);
-        //    }
-        //}
+        /// <summary>
+        /// Query a tenant information with its Id.
+        /// </summary>
+        /// <returns>Return information about a tenant.</returns>
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetTenant(Guid id)
+        {
+            try
+            {
+                TenantQueryData tenant = tenantService.GetTenant(id);
+                return Ok(tenant);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+        }
 
+        /// <summary>
+        /// Get contract address on the blockchain network that preresents a tenant object.
+        /// </summary>
+        /// <param name="tenantId">Id of the tenant</param>
+        /// <returns>Contract address for the tenant on the blockchain.</returns>
         [HttpGet]
         [Route("{tenantId}/contract-address")]
         public async Task<IActionResult> GetContractAddress(Guid tenantId)

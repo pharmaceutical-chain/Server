@@ -6,6 +6,11 @@
     <UserSecretsId>49997e30-2758-400e-b584-fc19ff723be9</UserSecretsId>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>src\PharmaceuticalChain.API\PharmaceuticalChain.API.xml</DocumentationFile>
+    <NoWarn>1701;1702;1591</NoWarn>
+  </PropertyGroup>
+
   <ItemGroup>
     <PackageReference Include="Hangfire.AspNetCore" Version="1.7.6" />
     <PackageReference Include="HangFire.Core" Version="1.7.6" />

@@ -33,5 +33,7 @@ namespace PharmaceuticalChain.API.Services.Interfaces
         /// </summary>
         /// <param name="id"></param>
         Task<string> GetContractAddress(Guid id);
+
+        TenantQueryData GetTenant(Guid id);
     }
 }
