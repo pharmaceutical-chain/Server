@@ -20,10 +20,15 @@ namespace PharmaceuticalChain.API.Controllers
         }
 
         /// <summary>
-        /// Create a new company on the Ethereum network.
+        /// Send a transaction to create a new tenant on the Ethereum network.
         /// </summary>
-        /// <param name="name">Name of the company</param>
         /// <returns></returns>
+        /// <remarks>
+        ///     The API creates a transaction to create a new tenant on the network and returns right away.
+        ///     It does not wait for the transaction to be mined to the network.
+        ///     There will be background jobs to check the status of this transaction.
+        ///     Consider using query APIs to get the status of the tenant or the transaction.
+        /// </remarks>
         [HttpPost]
         public async Task<IActionResult> CreateCompanyAsync(
             [FromBody] CreateCompanyCommand command)

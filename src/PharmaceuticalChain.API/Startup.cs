@@ -67,8 +67,7 @@ namespace PharmaceuticalChain.API
                     Version = "v1"
                 });
 
-                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.XML";
-                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                var xmlFile = Path.ChangeExtension(typeof(Startup).Assembly.Location, ".xml");
                 c.IncludeXmlComments(xmlFile);
             });
 
