@@ -18,6 +18,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using PharmaceuticalChain.API.Auth0;
+using PharmaceuticalChain.API.Auth0.Services.Implementations;
+using PharmaceuticalChain.API.Auth0.Services.Interfaces;
 using PharmaceuticalChain.API.Models.Database;
 using PharmaceuticalChain.API.Repositories.Implementations;
 using PharmaceuticalChain.API.Repositories.Interfaces;
@@ -54,6 +56,8 @@ namespace PharmaceuticalChain.API
             services.Configure<EthereumSettings>(ethereumSettings);
 
             services.AddTransient<IEthereumService, EthereumService>();
+
+            services.AddTransient<IAuth0Service, Auth0Service>();
 
             services.AddTransient<ITenantService, TenantService>();
             services.AddTransient<IDrugTransactionService, DrugTransactionService>();
@@ -111,6 +115,7 @@ namespace PharmaceuticalChain.API
             services.AddAuthorization(options =>
             {
                 options.AddPolicy("create:users", policy => policy.Requirements.Add(new HasScopeRequirement("scope", "create:users", domain)));
+                options.AddPolicy("roles:admin", policy => policy.Requirements.Add(new HasScopeRequirement("https://www.pharmachain.net/roles", "admin", domain)));
             });
 
             // Register the scope authorization handler
@@ -144,21 +149,14 @@ namespace PharmaceuticalChain.API
 
             app.UseHangfireDashboard();
             app.UseHangfireServer();
-            //using (var connection = JobStorage.Current.GetConnection())
-            //{
-            //    foreach (var recurringJob in connection.GetRecurringJobs())
-            //    {
-            //        RecurringJob.RemoveIfExists(recurringJob.Id);
-            //    }
-            //}
             RecurringJob.AddOrUpdate<ITenantBackgroundJob>(
                 tenantBackgroundJob => tenantBackgroundJob.SyncDatabaseWithBlockchain(),
                 "*/30 * * * * *");
 
             app.UseHttpsRedirection();
-            app.UseMvc();
-
+            app.UseCors("AllowSpecificOrigin");
             app.UseAuthentication();
+            app.UseMvc();
         }
     }
 }

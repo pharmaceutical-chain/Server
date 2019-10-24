@@ -8,7 +8,7 @@ namespace PharmaceuticalChain.API.Auth0
 {
     public class HasScopeRequirement : IAuthorizationRequirement
     {
-        // 'scope', 'issuer', 'https://www.pharmachain.net/roles'
+        // 'scope', 'https://www.pharmachain.net/roles'
         public string RequirementName { get; }
         public string Requirement { get; }
         public string Issuer { get; }
