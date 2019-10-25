@@ -54,10 +54,12 @@ namespace PharmaceuticalChain.API
             services.AddTransient<ITenantService, TenantService>();
             services.AddTransient<IDrugTransactionService, DrugTransactionService>();
             services.AddTransient<IReceiptService, ReceiptService>();
+            services.AddTransient<IMedicineBatchService, MedicineBatchService>();
 
             services.AddTransient<IReceiptRepository, ReceiptRepository>();
             services.AddTransient<ITransactionRepository, TransactionRepository>();
             services.AddTransient<ITenantRepository, TenantRepository>();
+            services.AddTransient<IMedicineBatchRepository, MedicineBatchRepository>();
 
             services.AddSwaggerGen(c =>
             {
@@ -90,6 +92,7 @@ namespace PharmaceuticalChain.API
             services.AddHangfireServer();
 
             services.AddTransient<ITenantBackgroundJob, TenantBackgroundJob>();
+            services.AddTransient<IMedicineBatchBackgroundJob, MedicineBatchBackgroundJob>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

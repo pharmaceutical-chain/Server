@@ -1,17 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace PharmaceuticalChain.API.Models.Database
+namespace PharmaceuticalChain.API.Controllers.Models.Commands
 {
-    public class MedicineBatch : BlockchainObject
+    public class CreateMedicineBatchCommand
     {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public Guid Id { get; set; }
         public string CommercialName { get; set; }
         public string RegistrationCode { get; set; }
         public string BatchNumber { get; set; }
