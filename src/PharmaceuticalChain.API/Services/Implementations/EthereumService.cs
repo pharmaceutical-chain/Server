@@ -23,7 +23,7 @@ namespace PharmaceuticalChain.API.Services.Implementations
         private readonly string tenantAbi;
 
         //private readonly string contractAddress = "0x3e18A6DB759fCB7429f1Bd73C9E1C94875450aB8"; // POA Consortium
-        private readonly string contractAddress;
+        private readonly string masterContractAddress;
 
         public EthereumService(IOptions<EthereumSettings> options)
         {
@@ -31,7 +31,7 @@ namespace PharmaceuticalChain.API.Services.Implementations
             ethereumPassword = options.Value.EthereumPassword;
             abi = options.Value.Abi;
             tenantAbi = options.Value.TenantAbi;
-            contractAddress = options.Value.ContractAddress;
+            masterContractAddress = options.Value.ContractAddress;
 
             var privateKey = "0xA32C64EBF23356CE1C6E8968802515DF9AD769162741EFA693E48E1F98FE9EBE";
             var account = new Account(privateKey);
@@ -42,11 +42,11 @@ namespace PharmaceuticalChain.API.Services.Implementations
 
         Contract IEthereumService.GetMasterContract()
         {
-            if (String.IsNullOrEmpty(abi) || String.IsNullOrEmpty(contractAddress))
+            if (String.IsNullOrEmpty(abi) || String.IsNullOrEmpty(masterContractAddress))
             {
                 throw new ArgumentNullException();
             }
-           return web3.Eth.GetContract(abi, contractAddress);
+           return web3.Eth.GetContract(abi, masterContractAddress);
         }
         
 
@@ -79,9 +79,9 @@ namespace PharmaceuticalChain.API.Services.Implementations
             throw new NotImplementedException();
         }
 
-        string IEthereumService.GetContractAddress()
+        string IEthereumService.GetMasterContractAddress()
         {
-            return contractAddress;
+            return masterContractAddress;
         }
 
         string IEthereumService.GetEthereumAccount()
@@ -113,6 +113,27 @@ namespace PharmaceuticalChain.API.Services.Implementations
         {
             var result = await web3.Eth.Transactions.GetTransactionReceipt.SendRequestAsync(transactionHash);
             return result;
+        }
+
+        async Task<string> IEthereumService.GetObjectContractAddress(Guid id)
+        {
+            var function = (this as IEthereumService).GetFunction("getAddressByID");
+            try
+            {
+                var result = await function.CallAsync<string>(
+                   (this as IEthereumService).GetEthereumAccount(),
+                   new HexBigInteger(600000),
+                   new HexBigInteger(0),
+                   functionInput: new object[]
+                   {
+                       id.ToString()
+                   });
+                return result;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
     }
 }

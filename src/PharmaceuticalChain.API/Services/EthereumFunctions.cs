@@ -13,5 +13,9 @@ namespace PharmaceuticalChain.API.Services
         public static readonly string UpdateTenantType = "updateTenantType";
 
         public static readonly string GetAddressByID = "getAddressByID";
+
+        public static readonly string AddMedicineBatch = "addMedicineBatch";
+        public static readonly string UpdateMedicineBatchInformation = "updateMedicineBatchInformations";
+
     }
 }
