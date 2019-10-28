@@ -7,23 +7,23 @@ namespace PharmaceuticalChain.API.Auth0.Services.Models
 {
     public class User
     {
-        public string UserId;
-        public string Email;
-        public bool IsEmailVerified;
-        public bool IsVerifyingEmail;
-        public string Password;
-        public string Connection;
-        public object AppMetadata;
+        public string user_id;
+        public string email;
+        public bool email_verified;
+        public bool verify_email;
+        public string password;
+        public string connection;
+        public object app_metadata;
 
-        public User(string userId, string email, string password, string role)
+        public User(string user_id, string email, string password, string role)
         {
-            this.UserId = userId;
-            this.Email = email;
-            this.Password = password;
-            this.IsEmailVerified = false;
-            this.IsVerifyingEmail = true;
-            this.Connection = "PharmaChain-DB";
-            this.AppMetadata = new { roles = role };
+            this.user_id = user_id;
+            this.email = email;
+            this.password = password;
+            this.email_verified = false;
+            this.verify_email = true;
+            this.connection = "PharmaChain-DB";
+            this.app_metadata = new { roles = role };
         }
     }
 }

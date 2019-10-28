@@ -12,7 +12,7 @@ namespace PharmaceuticalChain.API.Auth0.Services.Implementations
 {
     public class Auth0Service : IAuth0Service
     {
-        public IRestResponse CreateUser(string userId, string email, string password, string role)
+        public IRestResponse CreateUser(string user_id, string email, string password, string role)
         {
             var accessToken = ObtainAccessToken();
             if (accessToken != null)
@@ -21,7 +21,7 @@ namespace PharmaceuticalChain.API.Auth0.Services.Implementations
                 var requestCreateUser = new RestRequest(Method.POST);
                 requestCreateUser.AddHeader("content-type", "application/json");
                 requestCreateUser.AddHeader("authorization", $"Bearer {accessToken}");
-                requestCreateUser.AddJsonBody(new User(userId, email, password, role));
+                requestCreateUser.AddJsonBody(new User(user_id, email, password, role));
                 IRestResponse response = clientUser.Execute(requestCreateUser);
 
                 return response;
