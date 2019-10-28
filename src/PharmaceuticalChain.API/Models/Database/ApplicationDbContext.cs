@@ -17,5 +17,6 @@ namespace PharmaceuticalChain.API.Models.Database
         public DbSet<Transaction> Transactions { get; set; }
         public DbSet<Receipt> Receipts { get; set; }
         public DbSet<Tenant> Tenants { get; set; }
+        public DbSet<MedicineBatch> MedicineBatches { get; set; }
     }
 }
