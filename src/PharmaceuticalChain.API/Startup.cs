@@ -5,6 +5,9 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using Hangfire;
+using Hangfire.Storage;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -14,6 +17,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using PharmaceuticalChain.API.Auth0;
+using PharmaceuticalChain.API.Auth0.Services.Implementations;
+using PharmaceuticalChain.API.Auth0.Services.Interfaces;
 using PharmaceuticalChain.API.Models.Database;
 using PharmaceuticalChain.API.Repositories.Implementations;
 using PharmaceuticalChain.API.Repositories.Interfaces;
@@ -51,6 +57,8 @@ namespace PharmaceuticalChain.API
 
             services.AddTransient<IEthereumService, EthereumService>();
 
+            services.AddTransient<IAuth0Service, Auth0Service>();
+
             services.AddTransient<ITenantService, TenantService>();
             services.AddTransient<IDrugTransactionService, DrugTransactionService>();
             services.AddTransient<IReceiptService, ReceiptService>();
@@ -68,6 +76,24 @@ namespace PharmaceuticalChain.API
                     Title = "PharmaChain Server API",
                     Version = "v1"
                 });
+
+                c.AddSecurityDefinition("Bearer",
+                    new ApiKeyScheme
+                    {
+                        In = "header",
+                        Description = "Please enter into field the word 'Bearer' following by space and JWT",
+                        Name = "Authorization",
+                        Type = "apiKey"
+                    }
+                );
+                c.AddSecurityRequirement(
+                    new Dictionary<string, IEnumerable<string>>
+                    {
+                        {
+                            "Bearer", Enumerable.Empty<string>()
+                        },
+                    }
+                );
 
                 var xmlFile = Path.ChangeExtension(typeof(Startup).Assembly.Location, ".xml");
                 c.IncludeXmlComments(xmlFile);
@@ -93,6 +119,28 @@ namespace PharmaceuticalChain.API
 
             services.AddTransient<ITenantBackgroundJob, TenantBackgroundJob>();
             services.AddTransient<IMedicineBatchBackgroundJob, MedicineBatchBackgroundJob>();
+
+            // Auth0 configure
+            var domain = $"https://{Configuration["Auth0:Domain"]}/";
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+
+            }).AddJwtBearer(options =>
+            {
+                options.Authority = domain;
+                options.Audience = Configuration["Auth0:ApiIdentifier"];
+            });
+
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("create:users", policy => policy.Requirements.Add(new HasScopeRequirement("scope", "create:users", domain)));
+                options.AddPolicy("roles:admin", policy => policy.Requirements.Add(new HasScopeRequirement("https://www.pharmachain.net/roles", "admin", domain)));
+            });
+
+            // Register the scope authorization handler
+            services.AddSingleton<IAuthorizationHandler, HasScopeHandler>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -127,6 +175,8 @@ namespace PharmaceuticalChain.API
                 "*/30 * * * * *");
 
             app.UseHttpsRedirection();
+            app.UseCors("AllowSpecificOrigin");
+            app.UseAuthentication();
             app.UseMvc();
         }
     }
