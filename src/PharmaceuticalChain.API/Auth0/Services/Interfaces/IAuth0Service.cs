@@ -10,6 +10,6 @@ namespace PharmaceuticalChain.API.Auth0.Services.Interfaces
     {
         string ObtainAccessToken();
 
-        IRestResponse CreateUser();
+        IRestResponse CreateUser(string user_id, string email, string password, string role);
     }
 }
