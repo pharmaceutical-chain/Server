@@ -77,6 +77,24 @@ namespace PharmaceuticalChain.API
                     Version = "v1"
                 });
 
+                c.AddSecurityDefinition("Bearer",
+                    new ApiKeyScheme
+                    {
+                        In = "header",
+                        Description = "Please enter into field the word 'Bearer' following by space and JWT",
+                        Name = "Authorization",
+                        Type = "apiKey"
+                    }
+                );
+                c.AddSecurityRequirement(
+                    new Dictionary<string, IEnumerable<string>>
+                    {
+                        {
+                            "Bearer", Enumerable.Empty<string>()
+                        },
+                    }
+                );
+
                 var xmlFile = Path.ChangeExtension(typeof(Startup).Assembly.Location, ".xml");
                 c.IncludeXmlComments(xmlFile);
             });
