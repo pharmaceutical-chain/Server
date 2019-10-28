@@ -83,7 +83,7 @@ namespace PharmaceuticalChain.API.Services.Implementations
 
                 // Create auth0 user
                 var userRole = (type == TenantTypes.Manufacturer) ? "manufacturer" : (type == TenantTypes.Distributor ? "distributor" : (type == TenantTypes.Retailer ? "retailer" : "unknown"));
-                var userAuth0 = auth0Service.CreateUser(newTenantId.ToString(), $"{taxCode}.pca@gmail.com", "123456789?a", userRole);
+                var userAuth0 = auth0Service.CreateUser(newTenantId.ToString(), $"{name}.pca@gmail.com", "123456789?a", userRole);
 
                 //var updateFunction = ethereumService.GetFunction(
                 //    ethereumService.GetContract(ethereumService.GetTenantABI(), await (this as ITenantService).GetContractAddress(tenant.Id)),
