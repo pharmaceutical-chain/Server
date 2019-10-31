@@ -81,13 +81,6 @@
             Address of the Tenant contract object on the blockchain network.
             </summary>
         </member>
-        <member name="M:PharmaceuticalChain.API.Repositories.Interfaces.IReceiptRepository.GetReceipts(System.Guid)">
-            <summary>
-            Get receipts of a company.
-            </summary>
-            <param name="companyId"></param>
-            <returns></returns>
-        </member>
         <member name="M:PharmaceuticalChain.API.Services.Implementations.EthereumService.PharmaceuticalChain#API#Services#Interfaces#IEthereumService#GetTransactionReceipt(System.String)">
             <summary>
             

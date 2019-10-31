@@ -21,21 +21,17 @@ namespace PharmaceuticalChain.API.Services.Implementations
 
         private readonly IDrugTransactionService drugTransactionService;
 
-        private readonly IReceiptRepository receiptRepository;
-
         private readonly ITenantRepository tenantRepository;
 
         public TenantService(
             IAuth0Service auth0Service,
             IEthereumService ethereumService,
             IDrugTransactionService drugTransactionService,
-            IReceiptRepository receiptRepository,
             ITenantRepository companyRepository)
         {
             this.auth0Service = auth0Service;
             this.ethereumService = ethereumService;
             this.drugTransactionService = drugTransactionService;
-            this.receiptRepository = receiptRepository;
             this.tenantRepository = companyRepository;
         }
 
