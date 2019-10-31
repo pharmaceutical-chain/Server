@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace PharmaceuticalChain.API.Services.Interfaces
 {
-    public interface IMedicineBatchService
+    public interface IMedicineService
     {
         Task<Guid> Create(string CommercialName,
             string RegistrationCode,

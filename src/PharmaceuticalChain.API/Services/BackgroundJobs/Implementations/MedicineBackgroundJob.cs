@@ -12,14 +12,14 @@ using System.Threading.Tasks;
 
 namespace PharmaceuticalChain.API.Services.BackgroundJobs.Implementations
 {
-    public class MedicineBatchBackgroundJob : IMedicineBatchBackgroundJob
+    public class MedicineBackgroundJob : IMedicineBackgroundJob
     {
         private readonly IEthereumService ethereumService;
-        private readonly IMedicineBatchRepository medicineBatchRepository;
+        private readonly IMedicineRepository medicineBatchRepository;
         private readonly string MedicineBatchAbi;
-        public MedicineBatchBackgroundJob(
+        public MedicineBackgroundJob(
             IEthereumService ethereumService,
-            IMedicineBatchRepository medicineBatchRepository,
+            IMedicineRepository medicineBatchRepository,
             IOptions<EthereumSettings> options
             )
         {
@@ -28,7 +28,7 @@ namespace PharmaceuticalChain.API.Services.BackgroundJobs.Implementations
             MedicineBatchAbi = options.Value.MedicineBatchAbi;
         }
 
-        void IMedicineBatchBackgroundJob.WaitForTransactionToSuccessThenFinishCreatingMedicineBatch(Guid medicineBatchId)
+        void IMedicineBackgroundJob.WaitForTransactionToSuccessThenFinishCreatingMedicineBatch(Guid medicineBatchId)
         {
             var medicineBatch = medicineBatchRepository.Get(medicineBatchId);
             bool isTransactionSuccess = false;

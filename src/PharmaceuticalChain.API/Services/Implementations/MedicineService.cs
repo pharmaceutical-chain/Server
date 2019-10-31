@@ -13,23 +13,23 @@ using System.Threading.Tasks;
 
 namespace PharmaceuticalChain.API.Services.Implementations
 {
-    public class MedicineBatchService : IMedicineBatchService
+    public class MedicineService : IMedicineService
     {
         private readonly IEthereumService ethereumService;
-        private readonly IMedicineBatchRepository medicineBatchRepository;
-        private readonly IMedicineBatchBackgroundJob medicineBatchBackgroundJob;
+        private readonly IMedicineRepository medicineRepository;
+        private readonly IMedicineBackgroundJob medicineBackgroundJob;
 
-        public MedicineBatchService(
+        public MedicineService(
             IEthereumService ethereumService,
-            IMedicineBatchRepository medicineBatchRepository,
-            IMedicineBatchBackgroundJob medicineBatchBackgroundJob)
+            IMedicineRepository medicineBatchRepository,
+            IMedicineBackgroundJob medicineBatchBackgroundJob)
         {
             this.ethereumService = ethereumService;
-            this.medicineBatchRepository = medicineBatchRepository;
-            this.medicineBatchBackgroundJob = medicineBatchBackgroundJob;
+            this.medicineRepository = medicineBatchRepository;
+            this.medicineBackgroundJob = medicineBatchBackgroundJob;
         }
 
-        async Task<Guid> IMedicineBatchService.Create(
+        async Task<Guid> IMedicineService.Create(
             string commercialName, 
             string registrationCode, 
             string batchNumber, 
@@ -59,7 +59,7 @@ namespace PharmaceuticalChain.API.Services.Implementations
                     //ExpiryDate = expiryDate,
                     DateCreated = DateTime.UtcNow
                 };
-                Guid newMedicineBatchId = medicineBatchRepository.CreateAndReturnId(medicineBatch);
+                Guid newMedicineBatchId = medicineRepository.CreateAndReturnId(medicineBatch);
 
                 var function = ethereumService.GetFunction(EthereumFunctions.AddMedicineBatch);
                 var transactionHash = await function.SendTransactionAsync(
@@ -78,9 +78,9 @@ namespace PharmaceuticalChain.API.Services.Implementations
                     });
 
                 medicineBatch.TransactionHash = transactionHash;
-                medicineBatchRepository.Update(medicineBatch);
+                medicineRepository.Update(medicineBatch);
 
-                BackgroundJob.Schedule<IMedicineBatchBackgroundJob>(
+                BackgroundJob.Schedule<IMedicineBackgroundJob>(
                     medicineBatchBackgroundJob => medicineBatchBackgroundJob.WaitForTransactionToSuccessThenFinishCreatingMedicineBatch(newMedicineBatchId),
                     TimeSpan.FromSeconds(3)
                     );

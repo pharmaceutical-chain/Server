@@ -13,8 +13,8 @@ namespace PharmaceuticalChain.API.Controllers
     [ApiController]
     public class MedicineBatchesController : ControllerBase
     {
-        private readonly IMedicineBatchService medicineBatchService;
-        public MedicineBatchesController(IMedicineBatchService medicineBatchService)
+        private readonly IMedicineService medicineBatchService;
+        public MedicineBatchesController(IMedicineService medicineBatchService)
         {
             this.medicineBatchService = medicineBatchService;
         }

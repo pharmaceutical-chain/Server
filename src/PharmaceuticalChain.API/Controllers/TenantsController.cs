@@ -92,7 +92,6 @@ namespace PharmaceuticalChain.API.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet] 
-        [Authorize("roles:admin")]
         public async Task<IActionResult> GetTenants()
         {
             try
@@ -111,7 +110,6 @@ namespace PharmaceuticalChain.API.Controllers
         /// </summary>
         /// <returns>Return information about a tenant.</returns>
         [HttpGet("{id}")]
-        [Authorize("roles:admin")]
         public async Task<IActionResult> GetTenant(Guid id)
         {
             try
@@ -132,7 +130,6 @@ namespace PharmaceuticalChain.API.Controllers
         /// <returns>Contract address for the tenant on the blockchain.</returns>
         [HttpGet]
         [Route("{tenantId}/contract-address")]
-        [Authorize("roles:admin")]
         public async Task<IActionResult> GetContractAddress(Guid tenantId)
         {
             try

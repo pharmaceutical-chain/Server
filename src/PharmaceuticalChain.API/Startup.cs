@@ -61,11 +61,13 @@ namespace PharmaceuticalChain.API
 
             services.AddTransient<ITenantService, TenantService>();
             services.AddTransient<IDrugTransactionService, DrugTransactionService>();
-            services.AddTransient<IMedicineBatchService, MedicineBatchService>();
+            services.AddTransient<IMedicineService, MedicineService>();
 
             services.AddTransient<ITransactionRepository, TransactionRepository>();
             services.AddTransient<ITenantRepository, TenantRepository>();
+            services.AddTransient<IMedicineRepository, MedicineRepository>();
             services.AddTransient<IMedicineBatchRepository, MedicineBatchRepository>();
+            services.AddTransient<IMedicineBatchTransferRepository, MedicineBatchTransferRepository>();
 
             services.AddSwaggerGen(c =>
             {
@@ -116,7 +118,7 @@ namespace PharmaceuticalChain.API
             services.AddHangfireServer();
 
             services.AddTransient<ITenantBackgroundJob, TenantBackgroundJob>();
-            services.AddTransient<IMedicineBatchBackgroundJob, MedicineBatchBackgroundJob>();
+            services.AddTransient<IMedicineBackgroundJob, MedicineBackgroundJob>();
 
             // Auth0 configure
             var domain = $"https://{Configuration["Auth0:Domain"]}/";

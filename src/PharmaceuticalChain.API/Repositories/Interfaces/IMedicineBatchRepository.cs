@@ -8,13 +8,13 @@ namespace PharmaceuticalChain.API.Repositories.Interfaces
 {
     public interface IMedicineBatchRepository
     {
-        void Create(Medicine medicineBatch);
-        Guid CreateAndReturnId(Medicine medicineBatch);
+        void Create(MedicineBatch medicineBatch);
+        Guid CreateAndReturnId(MedicineBatch medicineBatch);
 
-        void Update(Medicine medicineBatch);
+        void Update(MedicineBatch medicineBatch);
 
-        List<Medicine> GetAll();
-        Medicine Get(Guid id);
+        List<MedicineBatch> GetAll();
+        MedicineBatch Get(Guid id);
 
         void Delete(Guid id);
     }
