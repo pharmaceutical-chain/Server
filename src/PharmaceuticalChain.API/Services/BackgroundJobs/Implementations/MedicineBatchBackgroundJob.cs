@@ -59,9 +59,9 @@ namespace PharmaceuticalChain.API.Services.BackgroundJobs.Implementations
                             medicineBatch.IsPrescriptionMedicine,
                             medicineBatch.IngredientConcentration,
                             medicineBatch.PackingSpecification,
-                            medicineBatch.Quantity,
-                            medicineBatch.ManufactureDate.ToUnixTimestamp(),
-                            medicineBatch.ExpiryDate.ToUnixTimestamp(),
+                            //medicineBatch.Quantity,
+                            //medicineBatch.ManufactureDate.ToUnixTimestamp(),
+                            //medicineBatch.ExpiryDate.ToUnixTimestamp(),
                             medicineBatch.DosageForm,
                             medicineBatch.DeclaredPrice
                         }).Result;

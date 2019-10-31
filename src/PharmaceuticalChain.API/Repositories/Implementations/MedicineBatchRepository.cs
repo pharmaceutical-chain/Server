@@ -14,13 +14,13 @@ namespace PharmaceuticalChain.API.Repositories.Implementations
 
         }
 
-        void IMedicineBatchRepository.Create(MedicineBatch medicineBatch)
+        void IMedicineBatchRepository.Create(Medicine medicineBatch)
         {
-            dbContext.MedicineBatches.Add(medicineBatch);
+            dbContext.Medicines.Add(medicineBatch);
             dbContext.SaveChanges();
         }
 
-        Guid IMedicineBatchRepository.CreateAndReturnId(MedicineBatch medicineBatch)
+        Guid IMedicineBatchRepository.CreateAndReturnId(Medicine medicineBatch)
         {
             (this as IMedicineBatchRepository).Create(medicineBatch);
             return medicineBatch.Id;
@@ -29,24 +29,24 @@ namespace PharmaceuticalChain.API.Repositories.Implementations
         void IMedicineBatchRepository.Delete(Guid id)
         {
             var recordToBeDeleted = (this as IMedicineBatchRepository).Get(id);
-            dbContext.MedicineBatches.Remove(recordToBeDeleted);
+            dbContext.Medicines.Remove(recordToBeDeleted);
             dbContext.SaveChanges();
         }
 
-        MedicineBatch IMedicineBatchRepository.Get(Guid id)
+        Medicine IMedicineBatchRepository.Get(Guid id)
         {
-            var result = dbContext.MedicineBatches.Where(c => c.Id == id).SingleOrDefault();
+            var result = dbContext.Medicines.Where(c => c.Id == id).SingleOrDefault();
             return result;
         }
 
-        List<MedicineBatch> IMedicineBatchRepository.GetAll()
+        List<Medicine> IMedicineBatchRepository.GetAll()
         {
-            return dbContext.MedicineBatches.ToList();
+            return dbContext.Medicines.ToList();
         }
 
-        void IMedicineBatchRepository.Update(MedicineBatch medicineBatch)
+        void IMedicineBatchRepository.Update(Medicine medicineBatch)
         {
-            dbContext.MedicineBatches.Update(medicineBatch);
+            dbContext.Medicines.Update(medicineBatch);
             dbContext.SaveChanges();
         }
     }

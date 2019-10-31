@@ -4,7 +4,7 @@
         <name>PharmaceuticalChain.API</name>
     </assembly>
     <members>
-        <member name="M:PharmaceuticalChain.API.Controllers.TenantsController.CreateCompanyAsync(PharmaceuticalChain.API.Models.CreateCompanyCommand)">
+        <member name="M:PharmaceuticalChain.API.Controllers.TenantsController.CreateCompanyAsync(PharmaceuticalChain.API.Controllers.Models.Commands.CreateTenantCommand)">
             <summary>
             Send a transaction to create a new tenant on the Ethereum network.
             </summary>
@@ -54,6 +54,21 @@
         <member name="P:PharmaceuticalChain.API.Models.Database.BlockchainObject.ContractAddress">
             <summary>
             Address of the Tenant contract object on the blockchain network.
+            </summary>
+        </member>
+        <member name="P:PharmaceuticalChain.API.Models.Database.Tenant.ManufacturedBatches">
+            <summary>
+            Batches of medicines that are manufactured by this tenant.
+            </summary>
+        </member>
+        <member name="P:PharmaceuticalChain.API.Models.Database.Tenant.SendTransfers">
+            <summary>
+            Transfers which are made by this tenant.
+            </summary>
+        </member>
+        <member name="P:PharmaceuticalChain.API.Models.Database.Tenant.ReceiveTransfers">
+            <summary>
+            Transfers that are sent to this tenant.
             </summary>
         </member>
         <member name="P:PharmaceuticalChain.API.Models.Database.Tenant.TransactionHash">

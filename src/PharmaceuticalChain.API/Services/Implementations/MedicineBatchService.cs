@@ -44,7 +44,7 @@ namespace PharmaceuticalChain.API.Services.Implementations
         {
             try
             {
-                var medicineBatch = new MedicineBatch()
+                var medicineBatch = new Medicine()
                 {
                     CommercialName = commercialName,
                     RegistrationCode = registrationCode,
@@ -53,10 +53,10 @@ namespace PharmaceuticalChain.API.Services.Implementations
                     DosageForm = dosageForm,
                     IngredientConcentration = ingredientConcentration,
                     PackingSpecification = packingSpecification,
-                    Quantity = quantity,
+                    //Quantity = quantity,
                     DeclaredPrice = declaredPrice,
-                    ManufactureDate = manufactureDate,
-                    ExpiryDate = expiryDate,
+                    //ManufactureDate = manufactureDate,
+                    //ExpiryDate = expiryDate,
                     DateCreated = DateTime.UtcNow
                 };
                 Guid newMedicineBatchId = medicineBatchRepository.CreateAndReturnId(medicineBatch);

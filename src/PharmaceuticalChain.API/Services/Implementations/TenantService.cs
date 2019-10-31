@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using PharmaceuticalChain.API.Models.Database;
 using Nethereum.Util;
 using PharmaceuticalChain.API.Auth0.Services.Interfaces;
+using PharmaceuticalChain.API.Controllers.Models.Queries;
 
 namespace PharmaceuticalChain.API.Services.Implementations
 {

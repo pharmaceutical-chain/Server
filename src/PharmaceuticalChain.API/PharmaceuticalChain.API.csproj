@@ -35,8 +35,4 @@
     </None>
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Controllers\Models\Queries\" />
-  </ItemGroup>
-
 </Project>

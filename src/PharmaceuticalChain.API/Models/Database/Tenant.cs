@@ -19,6 +19,23 @@ namespace PharmaceuticalChain.API.Models.Database
 
         public TenantTypes Type { get; set; }
 
+        public ICollection<Medicine> Medicines { get; set; }
+
+        /// <summary>
+        /// Batches of medicines that are manufactured by this tenant.
+        /// </summary>
+        public ICollection<MedicineBatch> ManufacturedBatches { get; set; }
+
+        /// <summary>
+        /// Transfers which are made by this tenant.
+        /// </summary>
+        public ICollection<MedicineBatchTransfer> SendTransfers { get; set; }
+
+        /// <summary>
+        /// Transfers that are sent to this tenant.
+        /// </summary>
+        public ICollection<MedicineBatchTransfer> ReceiveTransfers { get; set; }
+
         /// <summary>
         /// Transaction hash of the master transaction used to initialize internal contract to create this tenant.
         /// </summary>

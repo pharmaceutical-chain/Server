@@ -5,7 +5,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using PharmaceuticalChain.API.Models;
+using PharmaceuticalChain.API.Controllers.Models.Commands;
+using PharmaceuticalChain.API.Controllers.Models.Queries;
 using PharmaceuticalChain.API.Models.Database;
 using PharmaceuticalChain.API.Services.Interfaces;
 
@@ -37,9 +38,9 @@ namespace PharmaceuticalChain.API.Controllers
         /// </remarks>
         [HttpPost]
         [Authorize("create:users")]
-        [Authorize("roles:admin")]
+        //[Authorize("roles:admin")]
         public async Task<IActionResult> CreateCompanyAsync(
-            [FromBody] CreateCompanyCommand command)
+            [FromBody] CreateTenantCommand command)
         {
             try
             {
