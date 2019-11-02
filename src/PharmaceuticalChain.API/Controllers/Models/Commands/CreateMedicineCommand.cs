@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace PharmaceuticalChain.API.Controllers.Models.Commands
 {
-    public class CreateMedicineBatchCommand
+    public class CreateMedicineCommand
     {
         public string CommercialName { get; set; }
         public string RegistrationCode { get; set; }
@@ -14,11 +14,7 @@ namespace PharmaceuticalChain.API.Controllers.Models.Commands
         public string DosageForm { get; set; }
         public string IngredientConcentration { get; set; }
         public string PackingSpecification { get; set; }
-
-        public uint Quantity { get; set; }
         public uint DeclaredPrice { get; set; }
-
-        public DateTime ManufactureDate { get; set; }
-        public DateTime ExpiryDate { get; set; }
+        public Guid CurrentlyLoggedInTenant { get; set; }
     }
 }

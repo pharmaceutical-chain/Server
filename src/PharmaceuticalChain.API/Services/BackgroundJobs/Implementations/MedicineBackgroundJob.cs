@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Options;
 using Nethereum.Hex.HexTypes;
 using Nethereum.Util;
+using PharmaceuticalChain.API.Models.Database;
 using PharmaceuticalChain.API.Repositories.Interfaces;
 using PharmaceuticalChain.API.Services.BackgroundJobs.Interfaces;
 using PharmaceuticalChain.API.Services.Interfaces;
@@ -16,7 +17,7 @@ namespace PharmaceuticalChain.API.Services.BackgroundJobs.Implementations
     {
         private readonly IEthereumService ethereumService;
         private readonly IMedicineRepository medicineBatchRepository;
-        private readonly string MedicineBatchAbi;
+        private readonly string MedicineAbi;
         public MedicineBackgroundJob(
             IEthereumService ethereumService,
             IMedicineRepository medicineBatchRepository,
@@ -25,45 +26,41 @@ namespace PharmaceuticalChain.API.Services.BackgroundJobs.Implementations
         {
             this.ethereumService = ethereumService;
             this.medicineBatchRepository = medicineBatchRepository;
-            MedicineBatchAbi = options.Value.MedicineBatchAbi;
+            MedicineAbi = options.Value.MedicineAbi;
         }
 
-        void IMedicineBackgroundJob.WaitForTransactionToSuccessThenFinishCreatingMedicineBatch(Guid medicineBatchId)
+        void IMedicineBackgroundJob.WaitForTransactionToSuccessThenFinishCreatingMedicine(Medicine medicine)
         {
-            var medicineBatch = medicineBatchRepository.Get(medicineBatchId);
             bool isTransactionSuccess = false;
             do
             {
-                var receipt = ethereumService.GetTransactionReceipt(medicineBatch.TransactionHash).Result;
+                var receipt = ethereumService.GetTransactionReceipt(medicine.TransactionHash).Result;
                 if (receipt == null)
                     continue;
                 if (receipt.Status.Value == (new HexBigInteger(1)).Value)
                 {
                     isTransactionSuccess = true;
-                    var contractAddress = ethereumService.GetObjectContractAddress(medicineBatch.Id).Result;
-                    medicineBatch.ContractAddress = contractAddress;
-                    medicineBatch.TransactionStatus = Models.Database.TransactionStatuses.Success;
-                    medicineBatchRepository.Update(medicineBatch);
+                    var contractAddress = ethereumService.GetObjectContractAddress(medicine.Id).Result;
+                    medicine.ContractAddress = contractAddress;
+                    medicine.TransactionStatus = Models.Database.TransactionStatuses.Success;
+                    medicineBatchRepository.Update(medicine);
 
-                    var medicineBatchContract = ethereumService.GetContract(MedicineBatchAbi, medicineBatch.ContractAddress);
-                    var updateFunction = ethereumService.GetFunction(medicineBatchContract, EthereumFunctions.UpdateMedicineBatchInformation);
+                    var medicineBatchContract = ethereumService.GetContract(MedicineAbi, medicine.ContractAddress);
+                    var updateFunction = ethereumService.GetFunction(medicineBatchContract, EthereumFunctions.UpdateMedicineInformation);
                     var updateReceipt = updateFunction.SendTransactionAndWaitForReceiptAsync(
                         ethereumService.GetEthereumAccount(),
                         new HexBigInteger(6000000),
-                        new HexBigInteger(Nethereum.Web3.Web3.Convert.ToWei(50, UnitConversion.EthUnit.Gwei)),
+                        new HexBigInteger(Nethereum.Web3.Web3.Convert.ToWei(30, UnitConversion.EthUnit.Gwei)),
                         new HexBigInteger(0),
                         functionInput: new object[] {
-                            medicineBatch.CommercialName,
-                            medicineBatch.RegistrationCode,
-                            medicineBatch.BatchNumber,
-                            medicineBatch.IsPrescriptionMedicine,
-                            medicineBatch.IngredientConcentration,
-                            medicineBatch.PackingSpecification,
-                            //medicineBatch.Quantity,
-                            //medicineBatch.ManufactureDate.ToUnixTimestamp(),
-                            //medicineBatch.ExpiryDate.ToUnixTimestamp(),
-                            medicineBatch.DosageForm,
-                            medicineBatch.DeclaredPrice
+                            medicine.CommercialName,
+                            medicine.RegistrationCode,
+                            medicine.IsPrescriptionMedicine,
+                            medicine.IngredientConcentration,
+                            medicine.PackingSpecification,
+                            medicine.DosageForm,
+                            medicine.DeclaredPrice,
+                            medicine.SubmittedTenantId.ToString()
                         }).Result;
                 }
 

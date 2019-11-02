@@ -39,7 +39,7 @@ namespace PharmaceuticalChain.API.Controllers
         [HttpPost]
         [Authorize("create:users")]
         //[Authorize("roles:admin")]
-        public async Task<IActionResult> CreateCompanyAsync(
+        public async Task<IActionResult> CreateTenantAsync(
             [FromBody] CreateTenantCommand command)
         {
             try

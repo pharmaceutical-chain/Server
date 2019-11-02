@@ -7,16 +7,14 @@ namespace PharmaceuticalChain.API.Services.Interfaces
 {
     public interface IMedicineService
     {
-        Task<Guid> Create(string CommercialName,
-            string RegistrationCode,
-            string BatchNumber,
-            bool IsPrescriptionMedicine,
-            string DosageForm,
-            string IngredientConcentration,
-            string PackingSpecification,
-            uint Quantity,
-            uint DeclaredPrice,
-            DateTime ManufactureDate,
-            DateTime ExpiryDate);
+        Task<Guid> Create(
+            string commercialName,
+            string registrationCode,
+            bool isPrescriptionMedicine,
+            string dosageForm,
+            string ingredientConcentration,
+            string packingSpecification,
+            uint declaredPrice,
+            Guid submittedTenantId);
     }
 }
