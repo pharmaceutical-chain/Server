@@ -1,4 +1,5 @@
-﻿using PharmaceuticalChain.API.Models.Database;
+﻿using Microsoft.EntityFrameworkCore;
+using PharmaceuticalChain.API.Models.Database;
 using PharmaceuticalChain.API.Repositories.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -41,7 +42,10 @@ namespace PharmaceuticalChain.API.Repositories.Implementations
 
         List<MedicineBatch> IMedicineBatchRepository.GetAll()
         {
-            return dbContext.MedicineBatches.ToList();
+            return dbContext.MedicineBatches
+                .Include(m => m.Manufacturer)
+                .Include(m => m.Medicine)
+                .ToList();
         }
 
         void IMedicineBatchRepository.Update(MedicineBatch medicineBatch)

@@ -62,6 +62,7 @@ namespace PharmaceuticalChain.API
             services.AddTransient<ITenantService, TenantService>();
             services.AddTransient<IDrugTransactionService, DrugTransactionService>();
             services.AddTransient<IMedicineService, MedicineService>();
+            services.AddTransient<IMedicineBatchService, MedicineBatchService>();
 
             services.AddTransient<ITransactionRepository, TransactionRepository>();
             services.AddTransient<ITenantRepository, TenantRepository>();
@@ -119,6 +120,7 @@ namespace PharmaceuticalChain.API
 
             services.AddTransient<ITenantBackgroundJob, TenantBackgroundJob>();
             services.AddTransient<IMedicineBackgroundJob, MedicineBackgroundJob>();
+            services.AddTransient<IMedicineBatchBackgroundJob, MedicineBatchBackgroundJob>();
 
             // Auth0 configure
             var domain = $"https://{Configuration["Auth0:Domain"]}/";
@@ -172,7 +174,7 @@ namespace PharmaceuticalChain.API
             app.UseHangfireServer();
             RecurringJob.AddOrUpdate<ITenantBackgroundJob>(
                 tenantBackgroundJob => tenantBackgroundJob.SyncDatabaseWithBlockchain(),
-                "*/30 * * * * *");
+                Cron.Minutely);
 
             app.UseHttpsRedirection();
             app.UseCors("AllowSpecificOrigin");
