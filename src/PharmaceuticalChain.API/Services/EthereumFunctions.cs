@@ -14,7 +14,7 @@ namespace PharmaceuticalChain.API.Services
 
         public static readonly string GetAddressByID = "getAddressByID";
 
-        public static readonly string AddMedicine = "addMedicineBatch";
+        public static readonly string AddMedicine = "addMedicine";
         public static readonly string UpdateMedicineInformation = "updateMedicineInformation";
 
         public static readonly string AddMedicineBatch = "addMedicineBatch";

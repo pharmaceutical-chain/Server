@@ -17,9 +17,10 @@ namespace PharmaceuticalChain.API.Controllers.Models.Queries
         public string TaxCode { get; set; }
         public string RegistrationCode { get; set; }
         public string GoodPractices { get; set; }
+        public string Type { get; set; }
+
         public string TransactionHash { get; set; }
         public string ContractAddress { get; set; }
-        public string Type { get; set; }
         public DateTime DateCreated { get; set; }
         public string TransactionStatus { get; set; }
     }

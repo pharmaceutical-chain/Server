@@ -1,4 +1,5 @@
-﻿using PharmaceuticalChain.API.Models.Database;
+﻿using Microsoft.EntityFrameworkCore;
+using PharmaceuticalChain.API.Models.Database;
 using PharmaceuticalChain.API.Repositories.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -36,12 +37,20 @@ namespace PharmaceuticalChain.API.Repositories.Implementations
         Medicine IMedicineRepository.Get(Guid id)
         {
             var result = dbContext.Medicines.Where(c => c.Id == id).SingleOrDefault();
+            if (result != null)
+            {
+                dbContext.Entry(result)
+                    .Reference(r => r.SubmittedTenant)
+                    .Load();
+            }
             return result;
         }
 
         List<Medicine> IMedicineRepository.GetAll()
         {
-            return dbContext.Medicines.ToList();
+            return dbContext.Medicines
+                .Include(m => m.SubmittedTenant)
+                .ToList();
         }
 
         void IMedicineRepository.Update(Medicine medicine)

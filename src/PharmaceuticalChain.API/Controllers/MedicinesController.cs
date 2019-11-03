@@ -54,5 +54,81 @@ namespace PharmaceuticalChain.API.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, ex);
             }
         }
+
+        [HttpPatch("{id}")]
+        [Authorize]
+        public async Task<IActionResult> UpdateMedicineAsync(
+            Guid id,
+            [FromBody] CreateMedicineCommand command)
+        {
+            try
+            {
+                await medicineService.Update(
+                    id,
+                    command.CommercialName,
+                    command.RegistrationCode,
+                    command.IsPrescriptionMedicine,
+                    command.IngredientConcentration,
+                    command.PackingSpecification,
+                    command.DosageForm,
+                    command.DeclaredPrice,
+                    command.CurrentlyLoggedInTenant
+                    );
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex);
+            }
+        }
+
+        /// <summary>
+        /// Return all medicines in the network/database.
+        /// Might or might not include data of the tenant which submitted the medicine basing on the query parameter.
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        public IActionResult GetMedicinesAsync([FromQuery]bool? includeSubmittedTenant = true)
+        {
+            try
+            {
+                var result = medicineService.GetMedicines();
+
+                if (includeSubmittedTenant.HasValue)
+                {
+                    if (includeSubmittedTenant == false)
+                    {
+                        foreach(var item in result)
+                        {
+                            item.SubmittedTenant = null;
+                        }
+                    }
+                }
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex);
+            }
+        }
+
+        /// <summary>
+        /// Query a medicine information with its Id.
+        /// </summary>
+        /// <returns>Return information about a medicine on the network.</returns>
+        [HttpGet("{id}")]
+        public IActionResult GetMedicine(Guid id)
+        {
+            try
+            {
+                var medicine = medicineService.GetMedicine(id);
+                return Ok(medicine);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex);
+            }
+        }
     }
 }

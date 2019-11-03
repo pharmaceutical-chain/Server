@@ -4,6 +4,19 @@
         <name>PharmaceuticalChain.API</name>
     </assembly>
     <members>
+        <member name="M:PharmaceuticalChain.API.Controllers.MedicinesController.GetMedicinesAsync(System.Nullable{System.Boolean})">
+            <summary>
+            Return all medicines in the network/database.
+            Might or might not include data of the tenant which submitted the medicine basing on the query parameter.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:PharmaceuticalChain.API.Controllers.MedicinesController.GetMedicine(System.Guid)">
+            <summary>
+            Query a medicine information with its Id.
+            </summary>
+            <returns>Return information about a medicine on the network.</returns>
+        </member>
         <member name="M:PharmaceuticalChain.API.Controllers.TenantsController.CreateTenantAsync(PharmaceuticalChain.API.Controllers.Models.Commands.CreateTenantCommand)">
             <summary>
             Send a transaction to create a new tenant on the Ethereum network.
