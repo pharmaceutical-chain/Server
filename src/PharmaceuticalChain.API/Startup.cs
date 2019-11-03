@@ -61,13 +61,14 @@ namespace PharmaceuticalChain.API
 
             services.AddTransient<ITenantService, TenantService>();
             services.AddTransient<IDrugTransactionService, DrugTransactionService>();
-            services.AddTransient<IReceiptService, ReceiptService>();
+            services.AddTransient<IMedicineService, MedicineService>();
             services.AddTransient<IMedicineBatchService, MedicineBatchService>();
 
-            services.AddTransient<IReceiptRepository, ReceiptRepository>();
             services.AddTransient<ITransactionRepository, TransactionRepository>();
             services.AddTransient<ITenantRepository, TenantRepository>();
+            services.AddTransient<IMedicineRepository, MedicineRepository>();
             services.AddTransient<IMedicineBatchRepository, MedicineBatchRepository>();
+            services.AddTransient<IMedicineBatchTransferRepository, MedicineBatchTransferRepository>();
 
             services.AddSwaggerGen(c =>
             {
@@ -118,6 +119,7 @@ namespace PharmaceuticalChain.API
             services.AddHangfireServer();
 
             services.AddTransient<ITenantBackgroundJob, TenantBackgroundJob>();
+            services.AddTransient<IMedicineBackgroundJob, MedicineBackgroundJob>();
             services.AddTransient<IMedicineBatchBackgroundJob, MedicineBatchBackgroundJob>();
 
             // Auth0 configure
@@ -172,7 +174,7 @@ namespace PharmaceuticalChain.API
             app.UseHangfireServer();
             RecurringJob.AddOrUpdate<ITenantBackgroundJob>(
                 tenantBackgroundJob => tenantBackgroundJob.SyncDatabaseWithBlockchain(),
-                "*/30 * * * * *");
+                Cron.Minutely);
 
             app.UseHttpsRedirection();
             app.UseCors("AllowSpecificOrigin");

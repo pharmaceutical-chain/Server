@@ -1,6 +1,7 @@
 ﻿using Hangfire;
 using Nethereum.Hex.HexTypes;
 using Nethereum.Util;
+using PharmaceuticalChain.API.Controllers.Models.Queries;
 using PharmaceuticalChain.API.Models.Database;
 using PharmaceuticalChain.API.Repositories.Interfaces;
 using PharmaceuticalChain.API.Services.BackgroundJobs.Interfaces;
@@ -15,83 +16,71 @@ namespace PharmaceuticalChain.API.Services.Implementations
 {
     public class MedicineBatchService : IMedicineBatchService
     {
-        private readonly IEthereumService ethereumService;
         private readonly IMedicineBatchRepository medicineBatchRepository;
-        private readonly IMedicineBatchBackgroundJob medicineBatchBackgroundJob;
-
+        private readonly IEthereumService ethereumService;
         public MedicineBatchService(
-            IEthereumService ethereumService,
             IMedicineBatchRepository medicineBatchRepository,
-            IMedicineBatchBackgroundJob medicineBatchBackgroundJob)
+             IEthereumService ethereumService
+            )
         {
-            this.ethereumService = ethereumService;
             this.medicineBatchRepository = medicineBatchRepository;
-            this.medicineBatchBackgroundJob = medicineBatchBackgroundJob;
+            this.ethereumService = ethereumService;
         }
 
         async Task<Guid> IMedicineBatchService.Create(
-            string commercialName, 
-            string registrationCode, 
             string batchNumber, 
-            bool isPrescriptionMedicine, 
-            string dosageForm, 
-            string ingredientConcentration, 
-            string packingSpecification, 
-            uint quantity, 
-            uint declaredPrice, 
+            Guid medicineId,
+            Guid manufacturerId, 
             DateTime manufactureDate, 
-            DateTime expiryDate)
+            DateTime expiryDate, 
+            uint quantity, 
+            string unit)
         {
-            try
+            var medicineBatch = new MedicineBatch()
             {
-                var medicineBatch = new MedicineBatch()
-                {
-                    CommercialName = commercialName,
-                    RegistrationCode = registrationCode,
-                    BatchNumber = batchNumber,
-                    IsPrescriptionMedicine = isPrescriptionMedicine,
-                    DosageForm = dosageForm,
-                    IngredientConcentration = ingredientConcentration,
-                    PackingSpecification = packingSpecification,
-                    Quantity = quantity,
-                    DeclaredPrice = declaredPrice,
-                    ManufactureDate = manufactureDate,
-                    ExpiryDate = expiryDate,
-                    DateCreated = DateTime.UtcNow
-                };
-                Guid newMedicineBatchId = medicineBatchRepository.CreateAndReturnId(medicineBatch);
+                BatchNumber = batchNumber,
+                MedicineId = medicineId,
+                ManufacturerId = manufacturerId,
+                ManufactureDate = manufactureDate,
+                ExpiryDate = expiryDate,
+                Quantity = quantity,
+                Unit = unit
+            };
+            Guid newMedicineBatchId = medicineBatchRepository.CreateAndReturnId(medicineBatch);
 
-                var function = ethereumService.GetFunction(EthereumFunctions.AddMedicineBatch);
-                var transactionHash = await function.SendTransactionAsync(
-                    ethereumService.GetEthereumAccount(),
-                    new HexBigInteger(6000000),
-                    new HexBigInteger(Nethereum.Web3.Web3.Convert.ToWei(50, UnitConversion.EthUnit.Gwei)),
-                    new HexBigInteger(0),
-                    functionInput: new object[] {
+            var function = ethereumService.GetFunction(EthereumFunctions.AddMedicineBatch);
+            var transactionHash = await function.SendTransactionAsync(
+                ethereumService.GetEthereumAccount(),
+                new HexBigInteger(6000000),
+                new HexBigInteger(Nethereum.Web3.Web3.Convert.ToWei(50, UnitConversion.EthUnit.Gwei)),
+                new HexBigInteger(0),
+                functionInput: new object[] {
                         newMedicineBatchId.ToString(),
-                        commercialName,
-                        registrationCode,
-                        batchNumber,
-                        quantity,
-                        manufactureDate.ToUnixTimestamp(),
-                        expiryDate.ToUnixTimestamp()
-                    });
+                        medicineBatch.MedicineId.ToString(),
+                        medicineBatch.BatchNumber,
+                        medicineBatch.ManufacturerId.ToString()
+                });
 
-                medicineBatch.TransactionHash = transactionHash;
-                medicineBatchRepository.Update(medicineBatch);
+            medicineBatch.TransactionHash = transactionHash;
+            medicineBatchRepository.Update(medicineBatch);
 
-                BackgroundJob.Schedule<IMedicineBatchBackgroundJob>(
-                    medicineBatchBackgroundJob => medicineBatchBackgroundJob.WaitForTransactionToSuccessThenFinishCreatingMedicineBatch(newMedicineBatchId),
-                    TimeSpan.FromSeconds(3)
-                    );
+            BackgroundJob.Schedule<IMedicineBatchBackgroundJob>(
+                medicineBatchBackgroundJob => medicineBatchBackgroundJob.WaitForTransactionToSuccessThenFinishCreatingMedicineBatch(medicineBatch),
+                TimeSpan.FromSeconds(3)
+                );
 
-                return newMedicineBatchId;
-            }
-            catch (Exception ex)
+            return newMedicineBatchId;
+        }
+
+        List<MedicineBatchQueryData> IMedicineBatchService.GetAll()
+        {
+            var result = new List<MedicineBatchQueryData>();
+            var rawList = medicineBatchRepository.GetAll();
+            foreach(var item in rawList)
             {
-                throw ex;
+                result.Add(item.ToMedicineBatchQueryData());
             }
-           
+            return result;
         }
     }
 }

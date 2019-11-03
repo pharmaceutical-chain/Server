@@ -5,7 +5,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using PharmaceuticalChain.API.Models;
+using PharmaceuticalChain.API.Controllers.Models.Commands;
+using PharmaceuticalChain.API.Controllers.Models.Queries;
 using PharmaceuticalChain.API.Models.Database;
 using PharmaceuticalChain.API.Services.Interfaces;
 
@@ -37,9 +38,9 @@ namespace PharmaceuticalChain.API.Controllers
         /// </remarks>
         [HttpPost]
         [Authorize("create:users")]
-        [Authorize("roles:admin")]
-        public async Task<IActionResult> CreateCompanyAsync(
-            [FromBody] CreateCompanyCommand command)
+        //[Authorize("roles:admin")]
+        public async Task<IActionResult> CreateTenantAsync(
+            [FromBody] CreateTenantCommand command)
         {
             try
             {
@@ -91,7 +92,6 @@ namespace PharmaceuticalChain.API.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet] 
-        [Authorize("roles:admin")]
         public async Task<IActionResult> GetTenants()
         {
             try
@@ -110,7 +110,6 @@ namespace PharmaceuticalChain.API.Controllers
         /// </summary>
         /// <returns>Return information about a tenant.</returns>
         [HttpGet("{id}")]
-        [Authorize("roles:admin")]
         public async Task<IActionResult> GetTenant(Guid id)
         {
             try
@@ -131,7 +130,6 @@ namespace PharmaceuticalChain.API.Controllers
         /// <returns>Contract address for the tenant on the blockchain.</returns>
         [HttpGet]
         [Route("{tenantId}/contract-address")]
-        [Authorize("roles:admin")]
         public async Task<IActionResult> GetContractAddress(Guid tenantId)
         {
             try

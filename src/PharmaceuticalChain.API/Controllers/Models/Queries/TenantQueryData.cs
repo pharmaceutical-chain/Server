@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace PharmaceuticalChain.API.Models
+namespace PharmaceuticalChain.API.Controllers.Models.Queries
 {
     public class TenantQueryData
     {
@@ -17,9 +17,10 @@ namespace PharmaceuticalChain.API.Models
         public string TaxCode { get; set; }
         public string RegistrationCode { get; set; }
         public string GoodPractices { get; set; }
+        public string Type { get; set; }
+
         public string TransactionHash { get; set; }
         public string ContractAddress { get; set; }
-        public string Type { get; set; }
         public DateTime DateCreated { get; set; }
         public string TransactionStatus { get; set; }
     }

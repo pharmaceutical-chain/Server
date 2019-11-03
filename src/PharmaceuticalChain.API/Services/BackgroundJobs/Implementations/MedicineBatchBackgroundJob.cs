@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Options;
 using Nethereum.Hex.HexTypes;
 using Nethereum.Util;
+using PharmaceuticalChain.API.Models.Database;
 using PharmaceuticalChain.API.Repositories.Interfaces;
 using PharmaceuticalChain.API.Services.BackgroundJobs.Interfaces;
 using PharmaceuticalChain.API.Services.Interfaces;
@@ -28,9 +29,8 @@ namespace PharmaceuticalChain.API.Services.BackgroundJobs.Implementations
             MedicineBatchAbi = options.Value.MedicineBatchAbi;
         }
 
-        void IMedicineBatchBackgroundJob.WaitForTransactionToSuccessThenFinishCreatingMedicineBatch(Guid medicineBatchId)
+        void IMedicineBatchBackgroundJob.WaitForTransactionToSuccessThenFinishCreatingMedicineBatch(MedicineBatch medicineBatch)
         {
-            var medicineBatch = medicineBatchRepository.Get(medicineBatchId);
             bool isTransactionSuccess = false;
             do
             {
@@ -53,23 +53,17 @@ namespace PharmaceuticalChain.API.Services.BackgroundJobs.Implementations
                         new HexBigInteger(Nethereum.Web3.Web3.Convert.ToWei(50, UnitConversion.EthUnit.Gwei)),
                         new HexBigInteger(0),
                         functionInput: new object[] {
-                            medicineBatch.CommercialName,
-                            medicineBatch.RegistrationCode,
+                            medicineBatch.MedicineId.ToString(),
                             medicineBatch.BatchNumber,
-                            medicineBatch.IsPrescriptionMedicine,
-                            medicineBatch.IngredientConcentration,
-                            medicineBatch.PackingSpecification,
+                            medicineBatch.ManufacturerId.ToString(),
                             medicineBatch.Quantity,
+                            medicineBatch.Unit,
                             medicineBatch.ManufactureDate.ToUnixTimestamp(),
-                            medicineBatch.ExpiryDate.ToUnixTimestamp(),
-                            medicineBatch.DosageForm,
-                            medicineBatch.DeclaredPrice
+                            medicineBatch.ExpiryDate.ToUnixTimestamp()
                         }).Result;
                 }
-
             }
             while (isTransactionSuccess != true);
-
         }
     }
 }

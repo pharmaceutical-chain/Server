@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using PharmaceuticalChain.API.Models.Database;
 using Nethereum.Util;
 using PharmaceuticalChain.API.Auth0.Services.Interfaces;
+using PharmaceuticalChain.API.Controllers.Models.Queries;
 
 namespace PharmaceuticalChain.API.Services.Implementations
 {
@@ -20,21 +21,17 @@ namespace PharmaceuticalChain.API.Services.Implementations
 
         private readonly IDrugTransactionService drugTransactionService;
 
-        private readonly IReceiptRepository receiptRepository;
-
         private readonly ITenantRepository tenantRepository;
 
         public TenantService(
             IAuth0Service auth0Service,
             IEthereumService ethereumService,
             IDrugTransactionService drugTransactionService,
-            IReceiptRepository receiptRepository,
             ITenantRepository companyRepository)
         {
             this.auth0Service = auth0Service;
             this.ethereumService = ethereumService;
             this.drugTransactionService = drugTransactionService;
-            this.receiptRepository = receiptRepository;
             this.tenantRepository = companyRepository;
         }
 
@@ -83,7 +80,7 @@ namespace PharmaceuticalChain.API.Services.Implementations
 
                 // Create auth0 user
                 var userRole = (type == TenantTypes.Manufacturer) ? "manufacturer" : (type == TenantTypes.Distributor ? "distributor" : (type == TenantTypes.Retailer ? "retailer" : "unknown"));
-                var userAuth0 = auth0Service.CreateUser(newTenantId.ToString(), $"{name}.pca@gmail.com", "123456789?a", userRole);
+                var userAuth0 = auth0Service.CreateUser(newTenantId.ToString(), $"{name}.pca@yopmail.com", "123456789?a", userRole);
 
                 //var updateFunction = ethereumService.GetFunction(
                 //    ethereumService.GetContract(ethereumService.GetTenantABI(), await (this as ITenantService).GetContractAddress(tenant.Id)),

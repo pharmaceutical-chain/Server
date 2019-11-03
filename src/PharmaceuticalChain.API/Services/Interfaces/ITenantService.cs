@@ -1,4 +1,5 @@
-﻿using PharmaceuticalChain.API.Models;
+﻿using PharmaceuticalChain.API.Controllers.Models.Queries;
+using PharmaceuticalChain.API.Models;
 using PharmaceuticalChain.API.Models.Database;
 using System;
 using System.Collections.Generic;

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using PharmaceuticalChain.API.Controllers.Models.Commands;
@@ -20,26 +21,38 @@ namespace PharmaceuticalChain.API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateMedicineBatchAsync(
+        [Authorize]
+        public async Task<IActionResult> CreateMedicineAsync(
             [FromBody] CreateMedicineBatchCommand command)
         {
             try
             {
                 var result = await medicineBatchService.Create(
-                    command.CommercialName,
-                    command.RegistrationCode,
                     command.BatchNumber,
-                    command.IsPrescriptionMedicine,
-                    command.DosageForm,
-                    command.IngredientConcentration,
-                    command.PackingSpecification,
-                    command.Quantity,
-                    command.DeclaredPrice,
+                    command.MedicineId,
+                    command.ManufacturerId,
                     command.ManufactureDate,
-                    command.ExpiryDate);
+                    command.ExpiryDate,
+                    command.Quantity,
+                    command.Unit);
                 return Ok(new { MedicineBatchId = result });
             }
-            catch(Exception ex)
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex);
+            }
+        }
+
+        [HttpGet]
+        public IActionResult GetMedicinesAsync()
+        {
+            try
+            {
+                var result = medicineBatchService.GetAll();
+
+                return Ok(result);
+            }
+            catch (Exception ex)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, ex);
             }

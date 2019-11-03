@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace PharmaceuticalChain.API.Services.BackgroundJobs.Interfaces
 {
-    public interface IMedicineBatchBackgroundJob
+    public interface IMedicineBackgroundJob
     {
-        void WaitForTransactionToSuccessThenFinishCreatingMedicineBatch(MedicineBatch medicineBatch);
+        void WaitForTransactionToSuccessThenFinishCreatingMedicine(Medicine medicine);
     }
 }

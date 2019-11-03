@@ -19,7 +19,7 @@ namespace PharmaceuticalChain.API.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("PharmaceuticalChain.API.Models.Database.MedicineBatch", b =>
+            modelBuilder.Entity("PharmaceuticalChain.API.Models.Database.Medicine", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
@@ -36,19 +36,15 @@ namespace PharmaceuticalChain.API.Migrations
 
                     b.Property<string>("DosageForm");
 
-                    b.Property<DateTime>("ExpiryDate");
-
                     b.Property<string>("IngredientConcentration");
 
                     b.Property<bool>("IsPrescriptionMedicine");
 
-                    b.Property<DateTime>("ManufactureDate");
-
                     b.Property<string>("PackingSpecification");
 
-                    b.Property<long>("Quantity");
-
                     b.Property<string>("RegistrationCode");
+
+                    b.Property<Guid>("SubmittedTenantId");
 
                     b.Property<string>("TransactionHash");
 
@@ -56,7 +52,77 @@ namespace PharmaceuticalChain.API.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("SubmittedTenantId");
+
+                    b.ToTable("Medicines");
+                });
+
+            modelBuilder.Entity("PharmaceuticalChain.API.Models.Database.MedicineBatch", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("BatchNumber");
+
+                    b.Property<string>("ContractAddress");
+
+                    b.Property<DateTime>("DateCreated");
+
+                    b.Property<DateTime>("ExpiryDate");
+
+                    b.Property<DateTime>("ManufactureDate");
+
+                    b.Property<Guid>("ManufacturerId");
+
+                    b.Property<Guid>("MedicineId");
+
+                    b.Property<long>("Quantity");
+
+                    b.Property<string>("TransactionHash");
+
+                    b.Property<int>("TransactionStatus");
+
+                    b.Property<string>("Unit");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ManufacturerId");
+
+                    b.HasIndex("MedicineId");
+
                     b.ToTable("MedicineBatches");
+                });
+
+            modelBuilder.Entity("PharmaceuticalChain.API.Models.Database.MedicineBatchTransfer", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("ContractAddress");
+
+                    b.Property<DateTime>("DateCreated");
+
+                    b.Property<Guid>("FromId");
+
+                    b.Property<Guid>("MedicineBatchId");
+
+                    b.Property<long>("Quantity");
+
+                    b.Property<Guid>("ToId");
+
+                    b.Property<string>("TransactionHash");
+
+                    b.Property<int>("TransactionStatus");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FromId");
+
+                    b.HasIndex("MedicineBatchId");
+
+                    b.HasIndex("ToId");
+
+                    b.ToTable("MedicineBatchTransfers");
                 });
 
             modelBuilder.Entity("PharmaceuticalChain.API.Models.Database.Receipt", b =>
@@ -130,6 +196,45 @@ namespace PharmaceuticalChain.API.Migrations
                     b.HasIndex("ReceiptId");
 
                     b.ToTable("Transactions");
+                });
+
+            modelBuilder.Entity("PharmaceuticalChain.API.Models.Database.Medicine", b =>
+                {
+                    b.HasOne("PharmaceuticalChain.API.Models.Database.Tenant", "SubmittedTenant")
+                        .WithMany("Medicines")
+                        .HasForeignKey("SubmittedTenantId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("PharmaceuticalChain.API.Models.Database.MedicineBatch", b =>
+                {
+                    b.HasOne("PharmaceuticalChain.API.Models.Database.Tenant", "Manufacturer")
+                        .WithMany("ManufacturedBatches")
+                        .HasForeignKey("ManufacturerId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("PharmaceuticalChain.API.Models.Database.Medicine", "Medicine")
+                        .WithMany("MedicineBatches")
+                        .HasForeignKey("MedicineId")
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+            modelBuilder.Entity("PharmaceuticalChain.API.Models.Database.MedicineBatchTransfer", b =>
+                {
+                    b.HasOne("PharmaceuticalChain.API.Models.Database.Tenant", "From")
+                        .WithMany("SendTransfers")
+                        .HasForeignKey("FromId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("PharmaceuticalChain.API.Models.Database.MedicineBatch", "MedicineBatch")
+                        .WithMany("MedicineBatchTransfers")
+                        .HasForeignKey("MedicineBatchId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("PharmaceuticalChain.API.Models.Database.Tenant", "To")
+                        .WithMany("ReceiveTransfers")
+                        .HasForeignKey("ToId")
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("PharmaceuticalChain.API.Models.Database.Receipt", b =>

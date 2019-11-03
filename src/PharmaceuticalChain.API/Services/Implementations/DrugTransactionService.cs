@@ -16,15 +16,12 @@ namespace PharmaceuticalChain.API.Services.Implementations
     {
         private readonly IEthereumService ethereumService;
         private readonly ITransactionRepository transactionRepository;
-        private readonly IReceiptRepository receiptRepository;
         public DrugTransactionService(
             IEthereumService ethereumService,
-            ITransactionRepository transactionRepository,
-            IReceiptRepository receiptRepository)
+            ITransactionRepository transactionRepository)
         {
             this.ethereumService = ethereumService;
             this.transactionRepository = transactionRepository;
-            this.receiptRepository = receiptRepository;
         }
 
         async Task<CreateDrugTransactionResult> IDrugTransactionService.Create(
@@ -83,14 +80,7 @@ namespace PharmaceuticalChain.API.Services.Implementations
 
         bool IDrugTransactionService.DoesReceiptExist(Guid receiptId)
         {
-            if (receiptRepository.GetReceipt(receiptId) == null)
-            {
-                return false;
-            }
-            else
-            {
-                return true;
-            }
+            throw new NotImplementedException();
         }
 
         async Task<List<DrugTransactionInformation>> IDrugTransactionService.GetInformationOfAllDrugTransactions()

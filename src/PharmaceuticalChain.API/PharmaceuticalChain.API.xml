@@ -4,7 +4,20 @@
         <name>PharmaceuticalChain.API</name>
     </assembly>
     <members>
-        <member name="M:PharmaceuticalChain.API.Controllers.TenantsController.CreateCompanyAsync(PharmaceuticalChain.API.Models.CreateCompanyCommand)">
+        <member name="M:PharmaceuticalChain.API.Controllers.MedicinesController.GetMedicinesAsync(System.Nullable{System.Boolean})">
+            <summary>
+            Return all medicines in the network/database.
+            Might or might not include data of the tenant which submitted the medicine basing on the query parameter.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:PharmaceuticalChain.API.Controllers.MedicinesController.GetMedicine(System.Guid)">
+            <summary>
+            Query a medicine information with its Id.
+            </summary>
+            <returns>Return information about a medicine on the network.</returns>
+        </member>
+        <member name="M:PharmaceuticalChain.API.Controllers.TenantsController.CreateTenantAsync(PharmaceuticalChain.API.Controllers.Models.Commands.CreateTenantCommand)">
             <summary>
             Send a transaction to create a new tenant on the Ethereum network.
             </summary>
@@ -46,6 +59,16 @@
             <param name="tenantId">Id of the tenant</param>
             <returns>Contract address for the tenant on the blockchain.</returns>
         </member>
+        <member name="P:PharmaceuticalChain.API.EthereumSettings.Abi">
+            <summary>
+            Abi of the master contract.
+            </summary>
+        </member>
+        <member name="P:PharmaceuticalChain.API.EthereumSettings.ContractAddress">
+            <summary>
+            Address of the master contract on Ethereum blockchain.
+            </summary>
+        </member>
         <member name="P:PharmaceuticalChain.API.Models.Database.BlockchainObject.TransactionHash">
             <summary>
             Transaction hash of the master transaction used to initialize internal contract to create this tenant.
@@ -54,6 +77,21 @@
         <member name="P:PharmaceuticalChain.API.Models.Database.BlockchainObject.ContractAddress">
             <summary>
             Address of the Tenant contract object on the blockchain network.
+            </summary>
+        </member>
+        <member name="P:PharmaceuticalChain.API.Models.Database.Tenant.ManufacturedBatches">
+            <summary>
+            Batches of medicines that are manufactured by this tenant.
+            </summary>
+        </member>
+        <member name="P:PharmaceuticalChain.API.Models.Database.Tenant.SendTransfers">
+            <summary>
+            Transfers which are made by this tenant.
+            </summary>
+        </member>
+        <member name="P:PharmaceuticalChain.API.Models.Database.Tenant.ReceiveTransfers">
+            <summary>
+            Transfers that are sent to this tenant.
             </summary>
         </member>
         <member name="P:PharmaceuticalChain.API.Models.Database.Tenant.TransactionHash">
@@ -65,13 +103,6 @@
             <summary>
             Address of the Tenant contract object on the blockchain network.
             </summary>
-        </member>
-        <member name="M:PharmaceuticalChain.API.Repositories.Interfaces.IReceiptRepository.GetReceipts(System.Guid)">
-            <summary>
-            Get receipts of a company.
-            </summary>
-            <param name="companyId"></param>
-            <returns></returns>
         </member>
         <member name="M:PharmaceuticalChain.API.Services.Implementations.EthereumService.PharmaceuticalChain#API#Services#Interfaces#IEthereumService#GetTransactionReceipt(System.String)">
             <summary>

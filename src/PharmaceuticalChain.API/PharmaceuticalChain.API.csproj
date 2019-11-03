@@ -17,6 +17,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Auth0.ManagementApi" Version="6.5.4" />
     <PackageReference Include="Hangfire.AspNetCore" Version="1.7.6" />
     <PackageReference Include="HangFire.Core" Version="1.7.6" />
     <PackageReference Include="HangFire.SqlServer" Version="1.7.6" />
@@ -33,10 +34,6 @@
     <None Update="PharmaceuticalChain.API.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Controllers\Models\Queries\" />
   </ItemGroup>
 
 </Project>
