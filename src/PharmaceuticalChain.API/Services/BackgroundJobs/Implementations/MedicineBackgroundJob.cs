@@ -45,8 +45,8 @@ namespace PharmaceuticalChain.API.Services.BackgroundJobs.Implementations
                     medicine.TransactionStatus = Models.Database.TransactionStatuses.Success;
                     medicineBatchRepository.Update(medicine);
 
-                    var medicineBatchContract = ethereumService.GetContract(MedicineAbi, medicine.ContractAddress);
-                    var updateFunction = ethereumService.GetFunction(medicineBatchContract, EthereumFunctions.UpdateMedicineInformation);
+                    var medicineContract = ethereumService.GetContract(MedicineAbi, medicine.ContractAddress);
+                    var updateFunction = ethereumService.GetFunction(medicineContract, EthereumFunctions.UpdateMedicineInformation);
                     var updateReceipt = updateFunction.SendTransactionAndWaitForReceiptAsync(
                         ethereumService.GetEthereumAccount(),
                         new HexBigInteger(6000000),
