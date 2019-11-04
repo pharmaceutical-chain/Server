@@ -138,7 +138,7 @@
                 This id is created by the backend in the creation process (before it is used to in creation transaction on blockchain.)
             </param>
         </member>
-        <member name="M:PharmaceuticalChain.API.Services.Interfaces.ITenantService.Create(System.String,System.String,System.String,System.String,System.String,System.String,PharmaceuticalChain.API.Models.Database.TenantTypes)">
+        <member name="M:PharmaceuticalChain.API.Services.Interfaces.ITenantService.Create(System.String,System.String,System.String,System.String,System.String,System.String,System.String,PharmaceuticalChain.API.Models.Database.TenantTypes)">
             <summary>
             Create a new company in the database and Ethereum network.
             </summary>

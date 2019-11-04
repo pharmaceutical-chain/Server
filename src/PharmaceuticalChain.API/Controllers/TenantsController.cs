@@ -51,6 +51,7 @@ namespace PharmaceuticalChain.API.Controllers
 
                 var result = await tenantService.Create(
                     command.Name, 
+                    command.Email,
                     command.PrimaryAddress, 
                     command.PhoneNumber, 
                     command.TaxCode, 

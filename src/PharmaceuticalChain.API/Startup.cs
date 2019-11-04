@@ -139,6 +139,8 @@ namespace PharmaceuticalChain.API
             {
                 options.AddPolicy("create:users", policy => policy.Requirements.Add(new HasScopeRequirement("scope", "create:users", domain)));
                 options.AddPolicy("roles:admin", policy => policy.Requirements.Add(new HasScopeRequirement("https://www.pharmachain.net/roles", "admin", domain)));
+                options.AddPolicy("roles:manufacturer", policy => policy.Requirements.Add(new HasScopeRequirement("https://www.pharmachain.net/roles", "manufacturer", domain)));
+                options.AddPolicy("roles:retailer", policy => policy.Requirements.Add(new HasScopeRequirement("https://www.pharmachain.net/roles", "retailer", domain)));
             });
 
             // Register the scope authorization handler
@@ -172,9 +174,9 @@ namespace PharmaceuticalChain.API
 
             app.UseHangfireDashboard();
             app.UseHangfireServer();
-            RecurringJob.AddOrUpdate<ITenantBackgroundJob>(
-                tenantBackgroundJob => tenantBackgroundJob.SyncDatabaseWithBlockchain(),
-                Cron.Minutely);
+            //RecurringJob.AddOrUpdate<ITenantBackgroundJob>(
+            //    tenantBackgroundJob => tenantBackgroundJob.SyncDatabaseWithBlockchain(),
+            //    Cron.Minutely);
 
             app.UseHttpsRedirection();
             app.UseCors("AllowSpecificOrigin");

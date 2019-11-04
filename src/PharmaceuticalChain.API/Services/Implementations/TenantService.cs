@@ -10,6 +10,8 @@ using PharmaceuticalChain.API.Models.Database;
 using Nethereum.Util;
 using PharmaceuticalChain.API.Auth0.Services.Interfaces;
 using PharmaceuticalChain.API.Controllers.Models.Queries;
+using Hangfire;
+using PharmaceuticalChain.API.Services.BackgroundJobs.Interfaces;
 
 namespace PharmaceuticalChain.API.Services.Implementations
 {
@@ -37,6 +39,7 @@ namespace PharmaceuticalChain.API.Services.Implementations
 
         async Task<Guid> ITenantService.Create(
             string name,
+            string email,
             string address,
             string phoneNumber,
             string taxCode,
@@ -50,6 +53,7 @@ namespace PharmaceuticalChain.API.Services.Implementations
                 var tenant = new Tenant()
                 {
                     Name = name,
+                    Email = email,
                     PrimaryAddress = address,
                     PhoneNumber = phoneNumber,
                     TaxCode = taxCode,
@@ -78,20 +82,14 @@ namespace PharmaceuticalChain.API.Services.Implementations
                 tenant.TransactionHash = transactionHash;
                 tenantRepository.Update(tenant);
 
-                // Create auth0 user
+                // Create auth0 user.
                 var userRole = (type == TenantTypes.Manufacturer) ? "manufacturer" : (type == TenantTypes.Distributor ? "distributor" : (type == TenantTypes.Retailer ? "retailer" : "unknown"));
-                var userAuth0 = auth0Service.CreateUser(newTenantId.ToString(), $"{name}.pca@yopmail.com", "123456789?a", userRole);
+                var userAuth0 = auth0Service.CreateUser(newTenantId.ToString(), email, "123456789?a", userRole);
 
-                //var updateFunction = ethereumService.GetFunction(
-                //    ethereumService.GetContract(ethereumService.GetTenantABI(), await (this as ITenantService).GetContractAddress(tenant.Id)),
-                //    EthereumFunctions.UpdateTenantType);
-                //var t = await updateFunction.SendTransactionAsync(
-                //    ethereumService.GetEthereumAccount(),
-                //    new HexBigInteger(700000),
-                //    new HexBigInteger(0),
-                //    functionInput: new object[] {
-                //        type
-                //    });
+                BackgroundJob.Schedule<ITenantBackgroundJob>(
+                    medicineBackgroundJob => medicineBackgroundJob.WaitForTransactionToSuccessThenFinishCreatingTenant(tenant),
+                    TimeSpan.FromSeconds(3)
+                );
 
                 return newTenantId;
             }
