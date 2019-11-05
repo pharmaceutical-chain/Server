@@ -11,6 +11,7 @@ namespace PharmaceuticalChain.API.Controllers.Models.Queries
     {
         public Guid Id { get; set; }
         public string Name { get; set; }
+        public string Email { get; set; }
         public string PrimaryAddress { get; set; }
         public List<string> BranchAddresses { get; set; }
         public string PhoneNumber { get; set; }

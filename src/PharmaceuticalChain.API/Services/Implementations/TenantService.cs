@@ -10,33 +10,38 @@ using PharmaceuticalChain.API.Models.Database;
 using Nethereum.Util;
 using PharmaceuticalChain.API.Auth0.Services.Interfaces;
 using PharmaceuticalChain.API.Controllers.Models.Queries;
+using Hangfire;
+using PharmaceuticalChain.API.Services.BackgroundJobs.Interfaces;
+using Microsoft.Extensions.Options;
+using PharmaceuticalChain.API.Utilities;
 
 namespace PharmaceuticalChain.API.Services.Implementations
 {
     public class TenantService : ITenantService
     {
         private readonly IAuth0Service auth0Service;
-
         private readonly IEthereumService ethereumService;
-
         private readonly IDrugTransactionService drugTransactionService;
-
         private readonly ITenantRepository tenantRepository;
+        private readonly string TenantAbi;
 
         public TenantService(
             IAuth0Service auth0Service,
             IEthereumService ethereumService,
             IDrugTransactionService drugTransactionService,
-            ITenantRepository companyRepository)
+            ITenantRepository tenantRepository,
+            IOptions<EthereumSettings> options)
         {
             this.auth0Service = auth0Service;
             this.ethereumService = ethereumService;
             this.drugTransactionService = drugTransactionService;
-            this.tenantRepository = companyRepository;
+            this.tenantRepository = tenantRepository;
+            TenantAbi = options.Value.TenantAbi;
         }
 
         async Task<Guid> ITenantService.Create(
             string name,
+            string email,
             string address,
             string phoneNumber,
             string taxCode,
@@ -50,6 +55,7 @@ namespace PharmaceuticalChain.API.Services.Implementations
                 var tenant = new Tenant()
                 {
                     Name = name,
+                    Email = email,
                     PrimaryAddress = address,
                     PhoneNumber = phoneNumber,
                     TaxCode = taxCode,
@@ -71,27 +77,20 @@ namespace PharmaceuticalChain.API.Services.Implementations
                         address,
                         phoneNumber,
                         taxCode,
-                        registrationCode,
-                        goodPractices
+                        registrationCode
                     });
 
                 tenant.TransactionHash = transactionHash;
                 tenantRepository.Update(tenant);
 
-                // Create auth0 user
+                // Create auth0 user.
                 var userRole = (type == TenantTypes.Manufacturer) ? "manufacturer" : (type == TenantTypes.Distributor ? "distributor" : (type == TenantTypes.Retailer ? "retailer" : "unknown"));
-                var userAuth0 = auth0Service.CreateUser(newTenantId.ToString(), $"{name}.pca@yopmail.com", "123456789?a", userRole);
+                var userAuth0 = auth0Service.CreateUser(newTenantId.ToString(), email, "123456789?a", userRole);
 
-                //var updateFunction = ethereumService.GetFunction(
-                //    ethereumService.GetContract(ethereumService.GetTenantABI(), await (this as ITenantService).GetContractAddress(tenant.Id)),
-                //    EthereumFunctions.UpdateTenantType);
-                //var t = await updateFunction.SendTransactionAsync(
-                //    ethereumService.GetEthereumAccount(),
-                //    new HexBigInteger(700000),
-                //    new HexBigInteger(0),
-                //    functionInput: new object[] {
-                //        type
-                //    });
+                BackgroundJob.Schedule<ITenantBackgroundJob>(
+                    backgroundJob => backgroundJob.WaitForTransactionToSuccessThenFinishCreatingTenant(tenant),
+                    TimeSpan.FromSeconds(3)
+                );
 
                 return newTenantId;
             }
@@ -150,21 +149,7 @@ namespace PharmaceuticalChain.API.Services.Implementations
                 List<TenantQueryData> result = new List<TenantQueryData>();
                 foreach (var tenant in tenants)
                 {
-                    result.Add(new TenantQueryData()
-                    {
-                        Id = tenant.Id,
-                        Name = tenant.Name,
-                        PrimaryAddress = tenant.PrimaryAddress,
-                        TaxCode = tenant.TaxCode,
-                        PhoneNumber = tenant.PhoneNumber,
-                        RegistrationCode = tenant.RegistrationCode,
-                        GoodPractices = tenant.GoodPractices,
-                        TransactionHash = tenant.TransactionHash,
-                        TransactionStatus = tenant.TransactionStatus.ToString(),
-                        DateCreated = tenant.DateCreated,
-                        ContractAddress = tenant.ContractAddress,
-                        Type = tenant.Type.ToString()
-                    });
+                    result.Add(tenant.ToTenantQueryData());
                 }
                 return result;
             }
@@ -177,22 +162,57 @@ namespace PharmaceuticalChain.API.Services.Implementations
         TenantQueryData ITenantService.GetTenant(Guid id)
         {
             var tenant = tenantRepository.Get(id);
-            var result = new TenantQueryData()
-            {
-                Id = tenant.Id,
-                Name = tenant.Name,
-                PrimaryAddress = tenant.PrimaryAddress,
-                TaxCode = tenant.TaxCode,
-                PhoneNumber = tenant.PhoneNumber,
-                RegistrationCode = tenant.RegistrationCode,
-                GoodPractices = tenant.GoodPractices,
-                TransactionHash = tenant.TransactionHash,
-                TransactionStatus = tenant.TransactionStatus.ToString(),
-                DateCreated = tenant.DateCreated,
-                ContractAddress = tenant.ContractAddress,
-                Type = tenant.Type.ToString()
-            };
+            var result = tenant.ToTenantQueryData();
             return result;
+        }
+
+        async Task ITenantService.Update(
+            Guid id, 
+            string name, 
+            string email, 
+            string address, 
+            string phoneNumber, 
+            string taxCode, 
+            string registrationCode, 
+            string goodPractices, 
+            TenantTypes type)
+        {
+            var tenant = tenantRepository.Get(id);
+            if (tenant == null)
+            {
+                throw new ArgumentException("Id does not exist in the system.", nameof(id));
+            }
+
+            tenant.Name = name;
+            tenant.Email = email;
+            tenant.PrimaryAddress = address;
+            tenant.PhoneNumber = phoneNumber;
+            tenant.TaxCode = taxCode;
+            tenant.RegistrationCode = registrationCode;
+            tenant.GoodPractices = goodPractices;
+            tenant.Type = type;
+
+            tenantRepository.Update(tenant);
+
+            // Update the blockchain.
+            var tenantContract = ethereumService.GetContract(TenantAbi, tenant.ContractAddress);
+            var updateFunction = ethereumService.GetFunction(tenantContract, EthereumFunctions.UpdateTenantInformation);
+            var updateReceipt = await updateFunction.SendTransactionAsync(
+                ethereumService.GetEthereumAccount(),
+                new HexBigInteger(6000000),
+                new HexBigInteger(Nethereum.Web3.Web3.Convert.ToWei(20, UnitConversion.EthUnit.Gwei)),
+                new HexBigInteger(0),
+                functionInput: new object[] {
+                    tenant.Name,
+                    tenant.Email,
+                    tenant.PrimaryAddress,
+                    tenant.PhoneNumber,
+                    tenant.TaxCode,
+                    tenant.RegistrationCode,
+                    tenant.GoodPractices,
+                    (uint)tenant.Type
+                });
+
         }
 
 

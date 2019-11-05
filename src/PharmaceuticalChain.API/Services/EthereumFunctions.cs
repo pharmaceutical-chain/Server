@@ -10,7 +10,7 @@ namespace PharmaceuticalChain.API.Services
         public static readonly string AddChainPoint = "addTenant";
         public static readonly string RemoveChainPoint = "removeTenant";
 
-        public static readonly string UpdateTenantType = "updateTenantType";
+        public static readonly string UpdateTenantInformation = "updateTenantInformation";
 
         public static readonly string GetAddressByID = "getAddressByID";
 

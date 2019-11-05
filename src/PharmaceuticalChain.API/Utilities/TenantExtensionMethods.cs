@@ -19,6 +19,7 @@ namespace PharmaceuticalChain.API.Utilities
                 DateCreated = tenant.DateCreated,
                 GoodPractices = tenant.GoodPractices,
                 Name = tenant.Name,
+                Email = tenant.Email,
                 PhoneNumber = tenant.PhoneNumber,
                 PrimaryAddress = tenant.PrimaryAddress,
                 RegistrationCode = tenant.RegistrationCode,

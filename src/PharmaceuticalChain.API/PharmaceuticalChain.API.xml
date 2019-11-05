@@ -40,6 +40,14 @@
             <param name="tenantId"></param>
             <returns></returns>
         </member>
+        <member name="M:PharmaceuticalChain.API.Controllers.TenantsController.UpdateTenantAsync(System.Guid,PharmaceuticalChain.API.Controllers.Models.Commands.CreateTenantCommand)">
+            <summary>
+            Update a tenant that has already existed on the blockchain and the database.
+            </summary>
+            <param name="id">Id of the tenant.</param>
+            <param name="command">Information</param>
+            <returns></returns>
+        </member>
         <member name="M:PharmaceuticalChain.API.Controllers.TenantsController.GetTenants">
             <summary>
             Query and return information of all tenants on the network/database.
@@ -138,7 +146,7 @@
                 This id is created by the backend in the creation process (before it is used to in creation transaction on blockchain.)
             </param>
         </member>
-        <member name="M:PharmaceuticalChain.API.Services.Interfaces.ITenantService.Create(System.String,System.String,System.String,System.String,System.String,System.String,PharmaceuticalChain.API.Models.Database.TenantTypes)">
+        <member name="M:PharmaceuticalChain.API.Services.Interfaces.ITenantService.Create(System.String,System.String,System.String,System.String,System.String,System.String,System.String,PharmaceuticalChain.API.Models.Database.TenantTypes)">
             <summary>
             Create a new company in the database and Ethereum network.
             </summary>
