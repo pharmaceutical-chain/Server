@@ -75,8 +75,7 @@ namespace PharmaceuticalChain.API.Services.Implementations
                         address,
                         phoneNumber,
                         taxCode,
-                        registrationCode,
-                        goodPractices
+                        registrationCode
                     });
 
                 tenant.TransactionHash = transactionHash;
@@ -87,7 +86,7 @@ namespace PharmaceuticalChain.API.Services.Implementations
                 var userAuth0 = auth0Service.CreateUser(newTenantId.ToString(), email, "123456789?a", userRole);
 
                 BackgroundJob.Schedule<ITenantBackgroundJob>(
-                    medicineBackgroundJob => medicineBackgroundJob.WaitForTransactionToSuccessThenFinishCreatingTenant(tenant),
+                    backgroundJob => backgroundJob.WaitForTransactionToSuccessThenFinishCreatingTenant(tenant),
                     TimeSpan.FromSeconds(3)
                 );
 
