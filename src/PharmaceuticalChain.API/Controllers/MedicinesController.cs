@@ -55,7 +55,7 @@ namespace PharmaceuticalChain.API.Controllers
             }
         }
 
-        [HttpPatch("{id}")]
+        [HttpPut("{id}")]
         [Authorize]
         public async Task<IActionResult> UpdateMedicineAsync(
             Guid id,
