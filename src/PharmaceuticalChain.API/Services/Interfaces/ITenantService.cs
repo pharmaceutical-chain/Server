@@ -14,7 +14,26 @@ namespace PharmaceuticalChain.API.Services.Interfaces
         /// Create a new company in the database and Ethereum network.
         /// </summary>
         /// <returns>Return the Id of the newly created company</returns>
-        Task<Guid> Create(string name, string email, string address, string phoneNumber, string taxCode, string BRCLink, string GPCLink, TenantTypes type);
+        Task<Guid> Create(
+            string name, 
+            string email, 
+            string address, 
+            string phoneNumber, 
+            string taxCode, 
+            string registrationCode, 
+            string goodPractices, 
+            TenantTypes type);
+
+        Task Update(
+            Guid id, 
+            string name, 
+            string email, 
+            string address, 
+            string phoneNumber, 
+            string taxCode, 
+            string registrationCode, 
+            string goodPractices,
+            TenantTypes type);
 
         /// <summary>
         /// Remove a tenant in the blockchain.

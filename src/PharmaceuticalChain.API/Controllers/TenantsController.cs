@@ -89,6 +89,39 @@ namespace PharmaceuticalChain.API.Controllers
         }
 
         /// <summary>
+        /// Update a tenant that has already existed on the blockchain and the database.
+        /// </summary>
+        /// <param name="id">Id of the tenant.</param>
+        /// <param name="command">Information</param>
+        /// <returns></returns>
+        [HttpPut("{id}")]
+        [Authorize]
+        public async Task<IActionResult> UpdateTenantAsync(
+            Guid id,
+            [FromBody] CreateTenantCommand command)
+        {
+            try
+            {
+                Enum.TryParse<TenantTypes>(command.Type, true, out TenantTypes tenantType);
+                await tenantService.Update(
+                    id,
+                    command.Name,
+                    command.Email,
+                    command.PrimaryAddress,
+                    command.PhoneNumber,
+                    command.TaxCode,
+                    command.RegistrationCode,
+                    command.GoodPractices,
+                    tenantType);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex);
+            }
+        }
+
+        /// <summary>
         /// Query and return information of all tenants on the network/database.
         /// </summary>
         /// <returns></returns>
