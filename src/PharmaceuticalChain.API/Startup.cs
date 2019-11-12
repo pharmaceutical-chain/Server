@@ -63,6 +63,7 @@ namespace PharmaceuticalChain.API
             services.AddTransient<IDrugTransactionService, DrugTransactionService>();
             services.AddTransient<IMedicineService, MedicineService>();
             services.AddTransient<IMedicineBatchService, MedicineBatchService>();
+            services.AddTransient<IMedicineBatchTransferService, MedicineBatchTransferService>();
 
             services.AddTransient<ITransactionRepository, TransactionRepository>();
             services.AddTransient<ITenantRepository, TenantRepository>();
