@@ -87,6 +87,17 @@
             Address of the Tenant contract object on the blockchain network.
             </summary>
         </member>
+        <member name="P:PharmaceuticalChain.API.Models.Database.MedicineBatchTransfer.Tier">
+            <summary>
+            Tier of the transfer in the supply chain, zero-based.
+            Tier of a transfer is determined by the tier of the sending tenant.
+            The focal tenant is the manufacturer of a batch. Tier (tier customer) is count from there.
+            </summary>
+            <example>
+                - Tier 0 means the transfer is made from the manufacturer.
+                - If 2nd-tier tenant sends a transfer to 4th-tier tenant, tier of the transfer is 2.
+            </example>
+        </member>
         <member name="P:PharmaceuticalChain.API.Models.Database.Tenant.ManufacturedBatches">
             <summary>
             Batches of medicines that are manufactured by this tenant.
