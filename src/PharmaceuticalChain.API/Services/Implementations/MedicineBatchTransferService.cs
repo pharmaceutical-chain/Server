@@ -1,6 +1,7 @@
 ﻿using Hangfire;
 using Nethereum.Hex.HexTypes;
 using Nethereum.Util;
+using PharmaceuticalChain.API.Controllers.Models.Queries;
 using PharmaceuticalChain.API.Models.Database;
 using PharmaceuticalChain.API.Repositories.Interfaces;
 using PharmaceuticalChain.API.Services.BackgroundJobs.Interfaces;
@@ -100,6 +101,23 @@ namespace PharmaceuticalChain.API.Services.Implementations
             );
 
             return newTransferId;
+        }
+
+        MedicineBatchTransferQueryData IMedicineBatchTransferService.Get(Guid id)
+        {
+            var result = medicineBatchTransferRepository.Get(id).ToMedicineBatchTransferQueryData();
+            return result;
+        }
+
+        List<MedicineBatchTransferQueryData> IMedicineBatchTransferService.GetAll()
+        {
+            var result = new List<MedicineBatchTransferQueryData>();
+            var rawTransfers = medicineBatchTransferRepository.GetAll();
+            foreach(var transfer in rawTransfers)
+            {
+                result.Add(transfer.ToMedicineBatchTransferQueryData());
+            }
+            return result;
         }
     }
 }

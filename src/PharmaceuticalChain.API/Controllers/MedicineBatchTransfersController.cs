@@ -37,7 +37,35 @@ namespace PharmaceuticalChain.API.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                return StatusCode(StatusCodes.Status500InternalServerError, ex);
+            }
+        }
+
+        [HttpGet]
+        public IActionResult GetTransfers()
+        {
+            try
+            {
+                var result = medicineBatchTransferService.GetAll();
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex);
+            }
+        }
+
+        [HttpGet("{id}")]
+        public IActionResult GetTransfer(Guid id)
+        {
+            try
+            {
+                var result = medicineBatchTransferService.Get(id);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex);
             }
         }
     }
