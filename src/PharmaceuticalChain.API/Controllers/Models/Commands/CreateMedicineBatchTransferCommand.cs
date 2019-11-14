@@ -5,9 +5,10 @@ using System.Threading.Tasks;
 
 namespace PharmaceuticalChain.API.Controllers.Models.Commands
 {
+
     public class CreateMedicineBatchTransferCommand
     {
-        public string MedicineBatchNumber { get; set; }
+        public Guid MedicineBatchId { get; set; }
 
         public Guid FromTenantId { get; set; }
         public Guid ToTenantId { get; set; }

@@ -8,7 +8,7 @@ namespace PharmaceuticalChain.API.Services.Interfaces
     public interface IMedicineBatchTransferService
     {
         Task<Guid> Create(
-            string medicineBatchNumber,
+            Guid medicineBatchId,
             Guid fromTenantId,
             Guid toTenantId,
             uint quantity

@@ -3,6 +3,7 @@ using Nethereum.Hex.HexTypes;
 using Nethereum.Util;
 using PharmaceuticalChain.API.Models.Database;
 using PharmaceuticalChain.API.Repositories.Interfaces;
+using PharmaceuticalChain.API.Services.BackgroundJobs.Interfaces;
 using PharmaceuticalChain.API.Services.Interfaces;
 using PharmaceuticalChain.API.Utilities;
 using System;
@@ -27,13 +28,12 @@ namespace PharmaceuticalChain.API.Services.Implementations
             this.ethereumService = ethereumService;
         }
 
-        async Task<Guid> IMedicineBatchTransferService.Create(string medicineBatchNumber, Guid fromTenantId, Guid toTenantId, uint quantity)
+        async Task<Guid> IMedicineBatchTransferService.Create(Guid medicineBatchId, Guid fromTenantId, Guid toTenantId, uint quantity)
         {
             var allTransfer = medicineBatchTransferRepository.GetAll();
-            var batch = medicineBatchRepository.GetAll().Where(b => b.BatchNumber == medicineBatchNumber).Single();
+            var batch = medicineBatchRepository.Get(medicineBatchId);
             var transfer = new MedicineBatchTransfer()
             {
-                MedicineBatch = batch,
                 MedicineBatchId = batch.Id,
                 FromId = fromTenantId,
                 ToId = toTenantId,
@@ -78,7 +78,7 @@ namespace PharmaceuticalChain.API.Services.Implementations
             var transactionHash = await function.SendTransactionAsync(
                 ethereumService.GetEthereumAccount(),
                 new HexBigInteger(6000000),
-                new HexBigInteger(Nethereum.Web3.Web3.Convert.ToWei(50, UnitConversion.EthUnit.Gwei)),
+                new HexBigInteger(Nethereum.Web3.Web3.Convert.ToWei(10, UnitConversion.EthUnit.Gwei)),
                 new HexBigInteger(0),
                 functionInput: new object[] {
                     newTransferId.ToString(),
@@ -92,6 +92,12 @@ namespace PharmaceuticalChain.API.Services.Implementations
 
             transfer.TransactionHash = transactionHash;
             medicineBatchTransferRepository.Update(transfer);
+
+
+            BackgroundJob.Schedule<IMedicineBatchTransferBackgroundJob>(
+                job => job.WaitForTransactionToSuccessThenFinishCreating(transfer),
+                TimeSpan.FromSeconds(3)
+            );
 
             return newTransferId;
         }

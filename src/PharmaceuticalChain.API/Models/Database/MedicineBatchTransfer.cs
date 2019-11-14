@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace PharmaceuticalChain.API.Models.Database
 {
+    [Newtonsoft.Json.JsonObject(IsReference = true)]
     public class MedicineBatchTransfer : BlockchainObject
     {
         [Key]

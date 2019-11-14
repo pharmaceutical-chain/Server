@@ -122,6 +122,7 @@ namespace PharmaceuticalChain.API
             services.AddTransient<ITenantBackgroundJob, TenantBackgroundJob>();
             services.AddTransient<IMedicineBackgroundJob, MedicineBackgroundJob>();
             services.AddTransient<IMedicineBatchBackgroundJob, MedicineBatchBackgroundJob>();
+            services.AddTransient<IMedicineBatchTransferBackgroundJob, MedicineBatchTransferBackgroundJob>();
 
             // Auth0 configure
             var domain = $"https://{Configuration["Auth0:Domain"]}/";

@@ -29,7 +29,7 @@ namespace PharmaceuticalChain.API.Controllers
             try
             {
                 var result = await medicineBatchTransferService.Create(
-                    command.MedicineBatchNumber,
+                    command.MedicineBatchId,
                     command.FromTenantId,
                     command.ToTenantId,
                     command.Quantity);
