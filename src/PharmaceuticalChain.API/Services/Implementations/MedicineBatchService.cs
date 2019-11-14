@@ -52,7 +52,7 @@ namespace PharmaceuticalChain.API.Services.Implementations
             var transactionHash = await function.SendTransactionAsync(
                 ethereumService.GetEthereumAccount(),
                 new HexBigInteger(6000000),
-                new HexBigInteger(Nethereum.Web3.Web3.Convert.ToWei(50, UnitConversion.EthUnit.Gwei)),
+                new HexBigInteger(Nethereum.Web3.Web3.Convert.ToWei(10, UnitConversion.EthUnit.Gwei)),
                 new HexBigInteger(0),
                 functionInput: new object[] {
                         newMedicineBatchId.ToString(),

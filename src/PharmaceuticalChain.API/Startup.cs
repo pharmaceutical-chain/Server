@@ -63,6 +63,7 @@ namespace PharmaceuticalChain.API
             services.AddTransient<IDrugTransactionService, DrugTransactionService>();
             services.AddTransient<IMedicineService, MedicineService>();
             services.AddTransient<IMedicineBatchService, MedicineBatchService>();
+            services.AddTransient<IMedicineBatchTransferService, MedicineBatchTransferService>();
 
             services.AddTransient<ITransactionRepository, TransactionRepository>();
             services.AddTransient<ITenantRepository, TenantRepository>();
@@ -121,6 +122,7 @@ namespace PharmaceuticalChain.API
             services.AddTransient<ITenantBackgroundJob, TenantBackgroundJob>();
             services.AddTransient<IMedicineBackgroundJob, MedicineBackgroundJob>();
             services.AddTransient<IMedicineBatchBackgroundJob, MedicineBatchBackgroundJob>();
+            services.AddTransient<IMedicineBatchTransferBackgroundJob, MedicineBatchTransferBackgroundJob>();
 
             // Auth0 configure
             var domain = $"https://{Configuration["Auth0:Domain"]}/";

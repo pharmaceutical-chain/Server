@@ -1,4 +1,5 @@
-﻿using PharmaceuticalChain.API.Models.Database;
+﻿using Microsoft.EntityFrameworkCore;
+using PharmaceuticalChain.API.Models.Database;
 using PharmaceuticalChain.API.Repositories.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -35,12 +36,25 @@ namespace PharmaceuticalChain.API.Repositories.Implementations
         MedicineBatchTransfer IMedicineBatchTransferRepository.Get(Guid id)
         {
             var result = dbContext.MedicineBatchTransfers.Where(c => c.Id == id).SingleOrDefault();
+            if (result != null)
+            {
+                dbContext.Entry(result)
+                    .Reference(r => r.From).Load();
+                dbContext.Entry(result)
+                    .Reference(r => r.To).Load();
+                dbContext.Entry(result)
+                    .Reference(r => r.MedicineBatch).Load();
+            }
             return result;
         }
 
         List<MedicineBatchTransfer> IMedicineBatchTransferRepository.GetAll()
         {
-            return dbContext.MedicineBatchTransfers.ToList();
+            return dbContext.MedicineBatchTransfers
+                .Include(t => t.MedicineBatch)
+                .Include(t => t.From)
+                .Include(t => t.To)
+                .ToList();
         }
 
         void IMedicineBatchTransferRepository.Update(MedicineBatchTransfer medicineBatchTransfer)
