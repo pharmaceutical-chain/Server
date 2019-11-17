@@ -11,7 +11,6 @@ namespace PharmaceuticalChain.API.Controllers.Models.Queries
 
         public string CommercialName { get; set; }
         public string RegistrationCode { get; set; }
-        public string BatchNumber { get; set; }
         public bool IsPrescriptionMedicine { get; set; }
         public string DosageForm { get; set; }
         public string IngredientConcentration { get; set; }

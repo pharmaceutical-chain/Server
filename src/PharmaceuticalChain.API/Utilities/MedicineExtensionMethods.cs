@@ -15,7 +15,6 @@ namespace PharmaceuticalChain.API.Utilities
             var result = new MedicineQueryData()
             {
                 Id = medicine.Id,
-                BatchNumber = medicine.BatchNumber,
                 CommercialName = medicine.CommercialName,
                 DeclaredPrice = medicine.DeclaredPrice,
                 DosageForm = medicine.DosageForm,
