@@ -18,7 +18,11 @@ namespace PharmaceuticalChain.API.Utilities
                 To = transfer.To.ToTenantQueryData(),
                 Id = transfer.Id,
                 MedicineBatch = transfer.MedicineBatch.ToMedicineBatchQueryData(),
-                Quantity = transfer.Quantity
+                Quantity = transfer.Quantity,
+                ContractAddress = transfer.ContractAddress,
+                DateCreated = transfer.DateCreated,
+                TransactionHash = transfer.TransactionHash,
+                TransactionStatus = transfer.TransactionStatus.ToString()
             };
             return result;
         }

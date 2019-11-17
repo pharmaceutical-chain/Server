@@ -5,6 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace PharmaceuticalChain.API.Models.Database
 {
+    [Newtonsoft.Json.JsonObject(IsReference = true)]
     public class Tenant
     {
         [Key]
