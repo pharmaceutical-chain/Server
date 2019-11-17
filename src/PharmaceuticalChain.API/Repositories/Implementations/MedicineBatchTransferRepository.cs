@@ -35,16 +35,12 @@ namespace PharmaceuticalChain.API.Repositories.Implementations
 
         MedicineBatchTransfer IMedicineBatchTransferRepository.Get(Guid id)
         {
-            var result = dbContext.MedicineBatchTransfers.Where(c => c.Id == id).SingleOrDefault();
-            if (result != null)
-            {
-                dbContext.Entry(result)
-                    .Reference(r => r.From).Load();
-                dbContext.Entry(result)
-                    .Reference(r => r.To).Load();
-                dbContext.Entry(result)
-                    .Reference(r => r.MedicineBatch).Load();
-            }
+            var result = dbContext.MedicineBatchTransfers.Where(c => c.Id == id)
+                .Include(t => t.MedicineBatch)
+                    .ThenInclude(b => b.Medicine)
+                .Include(t => t.From)
+                .Include(t => t.To)
+                .SingleOrDefault();
             return result;
         }
 
@@ -52,6 +48,7 @@ namespace PharmaceuticalChain.API.Repositories.Implementations
         {
             return dbContext.MedicineBatchTransfers
                 .Include(t => t.MedicineBatch)
+                    .ThenInclude(b => b.Medicine)
                 .Include(t => t.From)
                 .Include(t => t.To)
                 .ToList();
