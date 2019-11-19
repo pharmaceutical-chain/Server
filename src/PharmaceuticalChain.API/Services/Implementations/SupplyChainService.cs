@@ -37,6 +37,7 @@ namespace PharmaceuticalChain.API.Services.Implementations
                 .ToList();
 
             result.TransferChains = new List<List<MedicineBatchTransferQueryData>>();
+
             // Trace backwards
             foreach (var transfer in lastTierTransfers)
             {
@@ -55,6 +56,7 @@ namespace PharmaceuticalChain.API.Services.Implementations
 
                 result.TransferChains.Add(transferChain);
             }
+            // TODO: Trace tier backwards. There might be missing chains in which transfers have lower tier than the highest one of the whole batch supply chain.
 
             // Calculate the summary section
             var tempTransfers = new List<MedicineBatchTransferQueryData>();
