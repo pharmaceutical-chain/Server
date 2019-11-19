@@ -22,9 +22,9 @@ namespace PharmaceuticalChain.API.Services.Implementations
             this.medicineBatchTransferRepository = medicineBatchTransferRepository;
         }
 
-        BatchSupplyChainQueryData ISupplyChainService.GetBatchSupplyChain(Guid batchId)
+        DetailedBatchSupplyChainQueryData ISupplyChainService.GetDetailedBatchSupplyChain(Guid batchId)
         {
-            var result = new BatchSupplyChainQueryData();
+            var result = new DetailedBatchSupplyChainQueryData();
 
             var transfersOfThatBatch = medicineBatchTransferRepository.GetAll()
                 .Where(t => t.MedicineBatchId == batchId)
@@ -56,8 +56,52 @@ namespace PharmaceuticalChain.API.Services.Implementations
                 result.TransferChains.Add(transferChain);
             }
 
-            // Finalize the result
-            
+            // Calculate the summary section
+            var tempTransfers = new List<MedicineBatchTransferQueryData>();
+            foreach (var chain in result.TransferChains)
+            {
+                tempTransfers.AddRange(chain);
+            }
+            var tempTenants = new List<TenantQueryData>();
+            foreach(var transfer in tempTransfers)
+            {
+                tempTenants.Add(transfer.From);
+                tempTenants.Add(transfer.To);
+            }
+            result.TotalTransfers = (uint)tempTransfers.Count();
+            result.TotalTenants = (uint)tempTenants.GroupBy(t => t.Id).Count();
+
+            // Format the result
+            foreach(var chain in result.TransferChains)
+            {
+                chain.Reverse();
+            }
+
+            return result;
+        }
+
+        BatchSupplyChainQueryData ISupplyChainService.GetSimpleBatchSupplyChain(Guid batchId)
+        {
+            var result = new BatchSupplyChainQueryData();
+
+            var tempTenants = new List<Tenant>();
+
+            var transfersOfThatBatch = medicineBatchTransferRepository.GetAll()
+                .Where(t => t.MedicineBatchId == batchId)
+                .ToList();
+
+            transfersOfThatBatch = transfersOfThatBatch.OrderBy(t => t.Tier).ToList();
+
+            foreach(var transfer in transfersOfThatBatch)
+            {
+                result.Transfers.Add(transfer.ToMedicineBatchTransferQueryData());
+
+                tempTenants.Add(transfer.From);
+                tempTenants.Add(transfer.To);
+            }
+
+            result.TotalTransfers = (uint)result.Transfers.Count();
+            result.TotalTenants = (uint)tempTenants.GroupBy(t => t.Id).Count();
 
             return result;
         }

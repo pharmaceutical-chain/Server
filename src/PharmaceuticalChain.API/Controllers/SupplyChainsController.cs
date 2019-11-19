@@ -21,12 +21,20 @@ namespace PharmaceuticalChain.API.Controllers
         }
 
         [HttpGet("{batchId}")]
-        public IActionResult GetSupplyChain(Guid batchId)
+        public IActionResult GetSupplyChain(Guid batchId, [FromQuery]bool? isDetailed)
         {
             try
             {
-                BatchSupplyChainQueryData result = supplyChainService.GetBatchSupplyChain(batchId);
-                return Ok(result);
+                if (isDetailed.HasValue && isDetailed.Value == true)
+                {
+                    DetailedBatchSupplyChainQueryData result = supplyChainService.GetDetailedBatchSupplyChain(batchId);
+                    return Ok(result);
+                }
+                else
+                {
+                    BatchSupplyChainQueryData result = supplyChainService.GetSimpleBatchSupplyChain(batchId);
+                    return Ok(result);
+                }
             }
             catch (Exception ex)
             {

@@ -7,9 +7,14 @@ namespace PharmaceuticalChain.API.Controllers.Models.Queries
 {
     public class BatchSupplyChainQueryData
     {
-        public uint TotalTenants { get; set; }
-        public uint TotalTransfers { get; set; }
+        public uint TotalTenants { get; set; } = 0;
+        public uint TotalTransfers { get; set; } = 0;
 
-        public List<List<MedicineBatchTransferQueryData>> TransferChains { get; set; }
+        public List<MedicineBatchTransferQueryData> Transfers { get; set; }
+
+        public BatchSupplyChainQueryData()
+        {
+            Transfers = new List<MedicineBatchTransferQueryData>();
+        }
     }
 }

@@ -8,6 +8,7 @@ namespace PharmaceuticalChain.API.Services.Interfaces
 {
     public interface ISupplyChainService
     {
-        BatchSupplyChainQueryData GetBatchSupplyChain(Guid batchId);
+        DetailedBatchSupplyChainQueryData GetDetailedBatchSupplyChain(Guid batchId);
+        BatchSupplyChainQueryData GetSimpleBatchSupplyChain(Guid batchId);
     }
 }
