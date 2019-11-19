@@ -59,6 +59,8 @@ namespace PharmaceuticalChain.API
 
             services.AddTransient<IAuth0Service, Auth0Service>();
 
+            services.AddTransient<ISupplyChainService, SupplyChainService>();
+
             services.AddTransient<ITenantService, TenantService>();
             services.AddTransient<IDrugTransactionService, DrugTransactionService>();
             services.AddTransient<IMedicineService, MedicineService>();

@@ -33,23 +33,23 @@ namespace PharmaceuticalChain.API.Services.BackgroundJobs.Implementations
 
         void ITenantBackgroundJob.SyncDatabaseWithBlockchain()
         {
-            var allTenants = tenantRepository.GetAll();
+            //var allTenants = tenantRepository.GetAll();
 
-            // Sync contract address
-            var tenantNotHaveContractAddressList = allTenants.Where(t => t.ContractAddress == null).ToList();
-            foreach (var tenantNotHaveContractAddress in tenantNotHaveContractAddressList)
-            {
-                var receipt = ethereumService.GetTransactionReceipt(tenantNotHaveContractAddress.TransactionHash).Result;
-                if (receipt == null)
-                    return;
-                if (receipt.Status.Value == (new HexBigInteger(1)).Value)
-                {
-                    var contractAddress = tenantService.GetContractAddress(tenantNotHaveContractAddress.Id).Result;
-                    tenantNotHaveContractAddress.ContractAddress = contractAddress;
-                    tenantNotHaveContractAddress.TransactionStatus = Models.Database.TransactionStatuses.Success;
-                    tenantRepository.Update(tenantNotHaveContractAddress);
-                }
-            }
+            //// Sync contract address
+            //var tenantNotHaveContractAddressList = allTenants.Where(t => t.ContractAddress == null).ToList();
+            //foreach (var tenantNotHaveContractAddress in tenantNotHaveContractAddressList)
+            //{
+            //    var receipt = ethereumService.GetTransactionReceipt(tenantNotHaveContractAddress.TransactionHash).Result;
+            //    if (receipt == null)
+            //        return;
+            //    if (receipt.Status.Value == (new HexBigInteger(1)).Value)
+            //    {
+            //        var contractAddress = tenantService.GetContractAddress(tenantNotHaveContractAddress.Id).Result;
+            //        tenantNotHaveContractAddress.ContractAddress = contractAddress;
+            //        tenantNotHaveContractAddress.TransactionStatus = Models.Database.TransactionStatuses.Success;
+            //        tenantRepository.Update(tenantNotHaveContractAddress);
+            //    }
+            //}
         }
 
         void ITenantBackgroundJob.WaitForTransactionToSuccessThenFinishCreatingTenant(Tenant tenant)
