@@ -11,13 +11,16 @@ namespace PharmaceuticalChain.API
     {
         public void Apply(Operation operation, OperationFilterContext context)
         {
-            if (operation.OperationId == "Post")
+            var fileParams = context.MethodInfo.GetParameters()
+                .Where(p => p.ParameterType.FullName.Equals(typeof(Microsoft.AspNetCore.Http.IFormFile).FullName));
+
+            if (fileParams.Any() && fileParams.Count() == 1)
             {
                 operation.Parameters = new List<IParameter>
                 {
                     new NonBodyParameter
                     {
-                        Name = "myFile",
+                        Name = fileParams.First().Name,
                         Required = true,
                         Type = "file",
                         In = "formData"
