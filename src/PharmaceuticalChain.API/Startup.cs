@@ -81,6 +81,8 @@ namespace PharmaceuticalChain.API
                     Version = "v1"
                 });
 
+                c.OperationFilter<SwaggerFileOperationFilter>();
+
                 c.AddSecurityDefinition("Bearer",
                     new ApiKeyScheme
                     {
