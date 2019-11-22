@@ -31,13 +31,31 @@ namespace PharmaceuticalChain.API.Controllers
         public async Task<IActionResult> Post(
             [FromForm(Name = "myFile")]IFormFile myFile)
         {
-            string uploadedUri = null;
+            try
+            {
+                var uniqueFileName = myFile.FileName + Guid.NewGuid().ToString();
 
-            var fileContentStream = myFile.OpenReadStream();
-            uploadedUri = await UploadToBlob(myFile.FileName, fileContentStream);
-            return CreatedAtRoute(routeName: "myFile", routeValues: new { filename = myFile.FileName }, value: null); ;
+                // Upload the file to Blob Storage
+                var fileContentStream = myFile.OpenReadStream();
+                string uploadedUri = await UploadToBlob(uniqueFileName, fileContentStream);
+
+                // Save the file URI to database for later queries.
+                // UniqueName -- Uri
+
+
+                return CreatedAtRoute(routeName: "myFile", routeValues: new { filename = myFile.FileName }, value: null);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex);
+            }
         }
 
+        /// <summary>
+        /// Use this API to get the URI of the file on Azure Blob Storage system or the file in download dialogue.
+        /// </summary>
+        /// <param name="filename"></param>
+        /// <returns></returns>
         [HttpGet("{filename}", Name = "myFile")]
         public async Task<IActionResult> Get([FromRoute] String filename)
         {
