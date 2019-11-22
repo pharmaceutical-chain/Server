@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Azure.Storage.Blobs;
+using Azure.Storage.Blobs.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
-using Microsoft.WindowsAzure.Storage;
-using Microsoft.WindowsAzure.Storage.Blob;
 
 namespace PharmaceuticalChain.API.Controllers
 {
@@ -31,16 +31,10 @@ namespace PharmaceuticalChain.API.Controllers
         public async Task<IActionResult> Post(
             [FromForm(Name = "myFile")]IFormFile myFile)
         {
-            var uploadSuccess = false;
             string uploadedUri = null;
 
-            using (var fileContentStream = new MemoryStream())
-            {
-                await myFile.CopyToAsync(fileContentStream);
-                await System.IO.File.WriteAllBytesAsync(Path.Combine(folderPath, myFile.FileName), fileContentStream.ToArray());
-
-                (uploadSuccess, uploadedUri) = await UploadToBlob(myFile.FileName, null, fileContentStream);
-            }
+            var fileContentStream = myFile.OpenReadStream();
+            uploadedUri = await UploadToBlob(myFile.FileName, fileContentStream);
             return CreatedAtRoute(routeName: "myFile", routeValues: new { filename = myFile.FileName }, value: null); ;
         }
 
@@ -56,69 +50,34 @@ namespace PharmaceuticalChain.API.Controllers
         }
 
 
-        private async Task<(bool, string)> UploadToBlob(string filename, byte[] imageBuffer = null, Stream stream = null)
+        private async Task<string> UploadToBlob(string fileName, Stream stream = null)
         {
-            CloudStorageAccount storageAccount = null;
-            CloudBlobContainer cloudBlobContainer = null;
             string storageConnectionString = configuration["StorageConnectionString"];
 
-            // Check whether the connection string can be parsed.
-            if (CloudStorageAccount.TryParse(storageConnectionString, out storageAccount))
+            // Create a BlobServiceClient object which will be used to create a container client
+            BlobServiceClient blobServiceClient = new BlobServiceClient(storageConnectionString);
+
+            //Create a unique name for the container
+            string containerName = "tenant-" + Guid.NewGuid().ToString();
+
+            // Create the container and return a container client object
+            BlobContainerClient containerClient = await blobServiceClient.CreateBlobContainerAsync(containerName);
+
+            // Get a reference to a blob
+            BlobClient blobClient = containerClient.GetBlobClient(fileName);
+            
+            try
             {
-                try
-                {
-                    // Create the CloudBlobClient that represents the Blob storage endpoint for the storage account.
-                    CloudBlobClient cloudBlobClient = storageAccount.CreateCloudBlobClient();
+            // Open the file and upload its data
+            await blobClient.UploadAsync(stream);
 
-                    // Create a container called 'uploadblob' and append a GUID value to it to make the name unique. 
-                    cloudBlobContainer = cloudBlobClient.GetContainerReference("upload-" + Guid.NewGuid().ToString());
-                    await cloudBlobContainer.CreateAsync();
-
-                    // Set the permissions so the blobs are public. 
-                    BlobContainerPermissions permissions = new BlobContainerPermissions
-                    {
-                        PublicAccess = BlobContainerPublicAccessType.Blob
-                    };
-                    await cloudBlobContainer.SetPermissionsAsync(permissions);
-
-                    // Get a reference to the blob address, then upload the file to the blob.
-                    CloudBlockBlob cloudBlockBlob = cloudBlobContainer.GetBlockBlobReference(filename);
-
-                    if (imageBuffer != null)
-                    {
-                        // OPTION A: use imageBuffer (converted from memory stream)
-                        await cloudBlockBlob.UploadFromByteArrayAsync(imageBuffer, 0, imageBuffer.Length);
-                    }
-                    else if (stream != null)
-                    {
-                        // OPTION B: pass in memory stream directly
-                        await cloudBlockBlob.UploadFromStreamAsync(stream);
-                    }
-                    else
-                    {
-                        return (false, null);
-                    }
-
-                    return (true, cloudBlockBlob.SnapshotQualifiedStorageUri.PrimaryUri.ToString());
-                }
-                catch (StorageException ex)
-                {
-                    return (false, null);
-                }
-                finally
-                {
-                    // OPTIONAL: Clean up resources, e.g. blob container
-                    //if (cloudBlobContainer != null)
-                    //{
-                    //    await cloudBlobContainer.DeleteIfExistsAsync();
-                    //}
-                }
             }
-            else
+            catch(Exception ex)
             {
-                return (false, null);
+                throw ex;
             }
 
+            return blobClient.Uri.AbsoluteUri;
         }
     }
 } 
