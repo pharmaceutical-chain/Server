@@ -5,9 +5,12 @@ using System.Linq;
 using System.Threading.Tasks;
 using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using PharmaceuticalChain.API.Models.Database;
+using PharmaceuticalChain.API.Services.Interfaces;
 
 namespace PharmaceuticalChain.API.Controllers
 {
@@ -18,32 +21,49 @@ namespace PharmaceuticalChain.API.Controllers
         const String folderName = "files";
         private readonly String folderPath = Path.Combine(Directory.GetCurrentDirectory(), folderName);
         private readonly IConfiguration configuration;
+        private readonly IUploadService uploadService;
 
-        public UploadsController(IConfiguration configuration)
+        public UploadsController(
+            IConfiguration configuration,
+            IUploadService uploadService)
         {
             if (!Directory.Exists(folderPath))
             {
                 Directory.CreateDirectory(folderPath);
             }
             this.configuration = configuration;
+            this.uploadService = uploadService;
         }
-        [HttpPost]
-        public async Task<IActionResult> Post(
+
+        [Authorize]
+        [HttpPost("tenant-certificates")]
+        public async Task<IActionResult> PostTenantCertificates(
             [FromForm(Name = "myFile")]IFormFile myFile)
         {
+
             try
             {
-                var uniqueFileName = myFile.FileName + Guid.NewGuid().ToString();
+                var (blobFileName, uri) = await uploadService.UploadFileToAzureBlob(myFile, ResourceTypes.TenantCertificates);
+                var key = uploadService.SaveAzureBlobInfoToDatabaseAndReturnKey(blobFileName, uri);
+                return CreatedAtRoute(routeName: "myFile", routeValues: new { fileName = key }, value: null);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex);
+            }
+        }
 
-                // Upload the file to Blob Storage
-                var fileContentStream = myFile.OpenReadStream();
-                string uploadedUri = await UploadToBlob(uniqueFileName, fileContentStream);
+        [Authorize]
+        [HttpPost("medicine-certificates")]
+        public async Task<IActionResult> PostMedicineCertificates(
+            [FromForm(Name = "myFile")]IFormFile myFile)
+        {
 
-                // Save the file URI to database for later queries.
-                // UniqueName -- Uri
-
-
-                return CreatedAtRoute(routeName: "myFile", routeValues: new { filename = myFile.FileName }, value: null);
+            try
+            {
+                var (blobFileName, uri) = await uploadService.UploadFileToAzureBlob(myFile, ResourceTypes.MedicineCertificates);
+                var key = uploadService.SaveAzureBlobInfoToDatabaseAndReturnKey(blobFileName, uri);
+                return CreatedAtRoute(routeName: "myFile", routeValues: new { fileName = key }, value: null);
             }
             catch (Exception ex)
             {
@@ -54,48 +74,20 @@ namespace PharmaceuticalChain.API.Controllers
         /// <summary>
         /// Use this API to get the URI of the file on Azure Blob Storage system or the file in download dialogue.
         /// </summary>
-        /// <param name="filename"></param>
+        /// <param name="fileName"></param>
         /// <returns></returns>
-        [HttpGet("{filename}", Name = "myFile")]
-        public async Task<IActionResult> Get([FromRoute] String filename)
+        [HttpGet("{fileName}", Name = "myFile")]
+        public IActionResult Get([FromRoute] string fileName)
         {
-            var filePath = Path.Combine(folderPath, filename);
-            if (System.IO.File.Exists(filePath))
+            var uri = uploadService.GetFileUri(fileName);
+            if (uri == null)
             {
-                return File(await System.IO.File.ReadAllBytesAsync(filePath), "application/octet-stream", filename);
+                return NotFound();
             }
-            return NotFound();
-        }
-
-
-        private async Task<string> UploadToBlob(string fileName, Stream stream = null)
-        {
-            string storageConnectionString = configuration["StorageConnectionString"];
-
-            // Create a BlobServiceClient object which will be used to create a container client
-            BlobServiceClient blobServiceClient = new BlobServiceClient(storageConnectionString);
-
-            //Create a unique name for the container
-            string containerName = "tenant-" + Guid.NewGuid().ToString();
-
-            // Create the container and return a container client object
-            BlobContainerClient containerClient = await blobServiceClient.CreateBlobContainerAsync(containerName);
-
-            // Get a reference to a blob
-            BlobClient blobClient = containerClient.GetBlobClient(fileName);
-            
-            try
+            else
             {
-            // Open the file and upload its data
-            await blobClient.UploadAsync(stream);
-
+                return Ok(uri);
             }
-            catch(Exception ex)
-            {
-                throw ex;
-            }
-
-            return blobClient.Uri.AbsoluteUri;
         }
     }
-} 
+}

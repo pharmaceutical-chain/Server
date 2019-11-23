@@ -42,5 +42,6 @@ namespace PharmaceuticalChain.API.Models.Database
         public DbSet<Medicine> Medicines { get; set; }
         public DbSet<MedicineBatch> MedicineBatches { get; set; }
         public DbSet<MedicineBatchTransfer> MedicineBatchTransfers { get; set; }
+        public DbSet<Resource> Resources { get; set; }
     }
 }
