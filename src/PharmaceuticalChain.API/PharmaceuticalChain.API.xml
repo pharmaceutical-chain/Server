@@ -85,7 +85,7 @@
             <summary>
             Use this API to get the URI of the file on Azure Blob Storage system or the file in download dialogue.
             </summary>
-            <param name="filename"></param>
+            <param name="fileName"></param>
             <returns></returns>
         </member>
         <member name="P:PharmaceuticalChain.API.EthereumSettings.Abi">
