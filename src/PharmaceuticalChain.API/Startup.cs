@@ -59,6 +59,8 @@ namespace PharmaceuticalChain.API
 
             services.AddTransient<IAuth0Service, Auth0Service>();
 
+            services.AddTransient<IUploadService, UploadService>();
+
             services.AddTransient<ISupplyChainService, SupplyChainService>();
 
             services.AddTransient<ITenantService, TenantService>();
@@ -72,6 +74,7 @@ namespace PharmaceuticalChain.API
             services.AddTransient<IMedicineRepository, MedicineRepository>();
             services.AddTransient<IMedicineBatchRepository, MedicineBatchRepository>();
             services.AddTransient<IMedicineBatchTransferRepository, MedicineBatchTransferRepository>();
+            services.AddTransient<IResourceRepository, ResourceRepository>();
 
             services.AddSwaggerGen(c =>
             {
@@ -80,6 +83,8 @@ namespace PharmaceuticalChain.API
                     Title = "PharmaChain Server API",
                     Version = "v1"
                 });
+
+                c.OperationFilter<SwaggerFileOperationFilter>();
 
                 c.AddSecurityDefinition("Bearer",
                     new ApiKeyScheme
