@@ -89,6 +89,13 @@
             <param name="tenantId">Id of the tenant</param>
             <returns>Contract address for the tenant on the blockchain.</returns>
         </member>
+        <member name="M:PharmaceuticalChain.API.Controllers.UploadsController.Get(System.String)">
+            <summary>
+            Use this API to get the URI of the file on Azure Blob Storage system or the file in download dialogue.
+            </summary>
+            <param name="fileName"></param>
+            <returns></returns>
+        </member>
         <member name="P:PharmaceuticalChain.API.EthereumSettings.Abi">
             <summary>
             Abi of the master contract.
@@ -119,6 +126,11 @@
                 - Tier 0 means the transfer is made from the manufacturer.
                 - If 2nd-tier tenant sends a transfer to 4th-tier tenant, tier of the transfer is 2.
             </example>
+        </member>
+        <member name="P:PharmaceuticalChain.API.Models.Database.Resource.Uri">
+            <summary>
+            URI to get this resource (from a remote storate, e.g., Azure Blob Storage).
+            </summary>
         </member>
         <member name="P:PharmaceuticalChain.API.Models.Database.Tenant.ManufacturedBatches">
             <summary>
@@ -151,6 +163,17 @@
             </summary>
             <param name="transactionHash"></param>
             <see cref="!:https://docs.nethereum.com/en/latest/introduction/web3/"/>
+        </member>
+        <member name="M:PharmaceuticalChain.API.Services.Implementations.UploadService.PharmaceuticalChain#API#Services#Interfaces#IUploadService#UploadFileToAzureBlob(Microsoft.AspNetCore.Http.IFormFile,PharmaceuticalChain.API.Models.Database.ResourceTypes)">
+            <summary>
+            Upload given file to Azure Blob Storage and return its unique name on Blob and the URI where the resource lives.
+            </summary>
+            <param name="file"></param>
+            <param name="resourceType"></param>
+            <returns>
+                First return value is the unique file name of the file on Azure Blob Storage.
+                Second return value is the URI of the resource on Azure Blob Storage.
+            </returns>
         </member>
         <member name="M:PharmaceuticalChain.API.Services.Interfaces.IDrugTransactionService.Create(System.UInt32,System.UInt32,System.String,System.String,System.UInt32,System.DateTime,System.DateTime,System.Guid)">
             <summary>
