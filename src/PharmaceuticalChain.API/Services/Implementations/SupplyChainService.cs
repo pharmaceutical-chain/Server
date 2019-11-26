@@ -59,22 +59,10 @@ namespace PharmaceuticalChain.API.Services.Implementations
             // TODO: Trace tier backwards. There might be missing chains in which transfers have lower tier than the highest one of the whole batch supply chain.
 
             // Calculate the summary section
-            var tempTransfers = new List<MedicineBatchTransferQueryData>();
-            foreach (var chain in result.TransferChains)
-            {
-                tempTransfers.AddRange(chain);
-            }
-            var tempTenants = new List<TenantQueryData>();
-            foreach(var transfer in tempTransfers)
-            {
-                tempTenants.Add(transfer.From);
-                tempTenants.Add(transfer.To);
-            }
-            result.TotalTransfers = (uint)tempTransfers.Count();
-            result.TotalTenants = (uint)tempTenants.GroupBy(t => t.Id).Count();
+            CalculateSummarySection(result);
 
             // Format the result
-            foreach(var chain in result.TransferChains)
+            foreach (var chain in result.TransferChains)
             {
                 chain.Reverse();
             }
@@ -106,6 +94,69 @@ namespace PharmaceuticalChain.API.Services.Implementations
             result.TotalTenants = (uint)tempTenants.GroupBy(t => t.Id).Count();
 
             return result;
+        }
+
+        DetailedBatchSupplyChainQueryData ISupplyChainService.GetBatchSupplyChain(Guid batchId, Guid retailerId)
+        {
+
+            var transfersOfThatBatch = medicineBatchTransferRepository.GetAll()
+                .Where(t => t.MedicineBatchId == batchId)
+                .ToList();
+
+            var transfersToRetailer = transfersOfThatBatch
+                .Where(t => t.ToId == retailerId)
+                .ToList();
+
+            var result = new DetailedBatchSupplyChainQueryData
+            {
+                TransferChains = new List<List<MedicineBatchTransferQueryData>>()
+            };
+            foreach (var transfer in transfersToRetailer)
+            {
+                // Trace backwards to get a full chain of that transfer.
+                List<MedicineBatchTransferQueryData> transferChain = new List<MedicineBatchTransferQueryData>();
+                var iterator = transfer;
+                var transferPool = transfersOfThatBatch;
+                bool parentMatchCondition(MedicineBatchTransfer t) => t.ToId == iterator.FromId;
+
+                transferChain.Add(iterator.ToMedicineBatchTransferQueryData());
+
+                while (iterator.HasParent(transferPool, parentMatchCondition))
+                {
+                    iterator = iterator.Parent(transferPool, parentMatchCondition).Single();
+                    transferChain.Add(iterator.ToMedicineBatchTransferQueryData());
+                }
+
+                result.TransferChains.Add(transferChain);
+            }
+
+            // Calculate the summary section
+            CalculateSummarySection(result);
+
+            // Format the result
+            foreach (var chain in result.TransferChains)
+            {
+                chain.Reverse();
+            }
+
+            return result;
+        }
+
+        private static void CalculateSummarySection(DetailedBatchSupplyChainQueryData result)
+        {
+            var tempTransfers = new List<MedicineBatchTransferQueryData>();
+            foreach (var chain in result.TransferChains)
+            {
+                tempTransfers.AddRange(chain);
+            }
+            var tempTenants = new List<TenantQueryData>();
+            foreach (var transfer in tempTransfers)
+            {
+                tempTenants.Add(transfer.From);
+                tempTenants.Add(transfer.To);
+            }
+            result.TotalTransfers = (uint)tempTransfers.Count();
+            result.TotalTenants = (uint)tempTenants.GroupBy(t => t.Id).Count();
         }
     }
 }
