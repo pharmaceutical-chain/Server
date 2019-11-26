@@ -27,6 +27,15 @@ namespace PharmaceuticalChain.API.Controllers
         {
             try
             {
+                if (command.ExpiryDate <= command.ManufactureDate)
+                {
+                    return BadRequest("Expiry date could not be less than or equal to Manufacture date.");
+                }
+                if (command.Quantity == 0)
+                {
+                    return BadRequest("Cannot create a medicine batch with 0 in quantity.");
+                }
+
                 var result = await medicineBatchService.Create(
                     command.BatchNumber,
                     command.MedicineId,
