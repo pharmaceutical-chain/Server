@@ -33,7 +33,8 @@ namespace PharmaceuticalChain.API.Controllers
         /// </param>
         /// <returns></returns>
         [HttpGet("{batchId}")]
-        public IActionResult GetSupplyChain(Guid batchId, [FromQuery]bool? isDetailed)
+        public IActionResult GetSupplyChain(Guid batchId, 
+            [FromQuery]bool? isDetailed)
         {
             try
             {
@@ -47,6 +48,28 @@ namespace PharmaceuticalChain.API.Controllers
                     BatchSupplyChainQueryData result = supplyChainService.GetSimpleBatchSupplyChain(batchId);
                     return Ok(result);
                 }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex);
+            }
+        }
+
+        /// <summary>
+        /// Use for end-users who buy pharmaceutical products to query products they have bought from an exact retailer.
+        /// </summary>
+        /// <param name="retailerId"></param>
+        /// <param name="batchId"></param>
+        /// <returns></returns>
+        [HttpGet("{retailerId}/{batchId}")]
+        public IActionResult GetSupplyChainAtExactRetailer(
+            Guid retailerId,
+            Guid batchId)
+        {
+            try
+            {
+                var result = supplyChainService.GetBatchSupplyChain(batchId, retailerId);
+                return Ok(result);
             }
             catch (Exception ex)
             {

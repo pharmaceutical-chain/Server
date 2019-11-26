@@ -20,7 +20,7 @@
         <member name="M:PharmaceuticalChain.API.Controllers.SupplyChainsController.GetSupplyChain(System.Guid,System.Nullable{System.Boolean})">
             <summary>
             Get supply chain for a medicine batch.
-            This API supports 2 types of data format right now:\n
+            This API supports 2 types of data format right now:
                 - The simple (Recommended): In theory, provide nodes (Tenants) and edges (Transfers) of the supply chain. Using these information, a client can then draw a supply chain.
                 - The detailed: (Still in progress) Split the supply chain into separated chains from manufacturer to the last tenant.
             </summary>
@@ -29,6 +29,14 @@
                 Specify `false` or don't pass this query to use the simple query. (RECOMMENDED)
                 Specify `true` to use a detailed query.
             </param>
+            <returns></returns>
+        </member>
+        <member name="M:PharmaceuticalChain.API.Controllers.SupplyChainsController.GetSupplyChainAtExactRetailer(System.Guid,System.Guid)">
+            <summary>
+            Use for end-users who buy pharmaceutical products to query products they have bought from an exact retailer.
+            </summary>
+            <param name="retailerId"></param>
+            <param name="batchId"></param>
             <returns></returns>
         </member>
         <member name="M:PharmaceuticalChain.API.Controllers.TenantsController.CreateTenantAsync(PharmaceuticalChain.API.Controllers.Models.Commands.CreateTenantCommand)">

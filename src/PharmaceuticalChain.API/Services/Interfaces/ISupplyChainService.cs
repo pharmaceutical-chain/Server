@@ -10,5 +10,8 @@ namespace PharmaceuticalChain.API.Services.Interfaces
     {
         DetailedBatchSupplyChainQueryData GetDetailedBatchSupplyChain(Guid batchId);
         BatchSupplyChainQueryData GetSimpleBatchSupplyChain(Guid batchId);
+
+        DetailedBatchSupplyChainQueryData GetBatchSupplyChain(Guid batchId, Guid retailerId);
+
     }
 }
