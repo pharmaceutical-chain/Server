@@ -28,6 +28,15 @@ namespace PharmaceuticalChain.API.Controllers
         {
             try
             {
+                if (command.FromTenantId == command.ToTenantId)
+                {
+                    return BadRequest("FromTenantId cannot be equal to ToTenantId.");
+                }
+                if (command.Quantity <= 0)
+                {
+                    return BadRequest("Quantity cannot be less than 0");
+                }
+
                 var result = await medicineBatchTransferService.Create(
                     command.MedicineBatchId,
                     command.FromTenantId,
