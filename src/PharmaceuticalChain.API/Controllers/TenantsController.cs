@@ -44,6 +44,11 @@ namespace PharmaceuticalChain.API.Controllers
         {
             try
             {
+                if (String.IsNullOrEmpty(command.Email))
+                {
+                    return BadRequest("Email cannot be null or empty.");
+                }
+
                 if (command.PhoneNumber == null)
                     command.PhoneNumber = String.Empty;
 

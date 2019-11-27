@@ -15,9 +15,16 @@ namespace PharmaceuticalChain.API.Controllers
     public class MedicineBatchesController : ControllerBase
     {
         private readonly IMedicineBatchService medicineBatchService;
-        public MedicineBatchesController(IMedicineBatchService medicineBatchService)
+        private readonly IMedicineService medicineService;
+        private readonly ITenantService tenantService;
+        public MedicineBatchesController(
+            IMedicineBatchService medicineBatchService,
+            IMedicineService medicineService,
+            ITenantService tenantService)
         {
             this.medicineBatchService = medicineBatchService;
+            this.medicineService = medicineService;
+            this.tenantService = tenantService;
         }
 
         [HttpPost]
@@ -27,6 +34,23 @@ namespace PharmaceuticalChain.API.Controllers
         {
             try
             {
+                if (command.ExpiryDate <= command.ManufactureDate)
+                {
+                    return BadRequest("Expiry date could not be less than or equal to Manufacture date.");
+                }
+                if (command.Quantity <= 0)
+                {
+                    return BadRequest("Cannot create a medicine batch less than 0 in quantity.");
+                }
+                if (medicineService.GetMedicine(command.MedicineId) == null)
+                {
+                    return BadRequest("MedicineId is not valid.");
+                }
+                if (tenantService.GetTenant(command.ManufacturerId) == null)
+                {
+                    return BadRequest("TenantId is not valid.");
+                }
+
                 var result = await medicineBatchService.Create(
                     command.BatchNumber,
                     command.MedicineId,

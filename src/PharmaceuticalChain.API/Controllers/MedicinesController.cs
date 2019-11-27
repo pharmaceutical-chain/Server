@@ -32,6 +32,11 @@ namespace PharmaceuticalChain.API.Controllers
         {
             try
             {
+                if (command.DeclaredPrice <= 0)
+                {
+                    return BadRequest("Declared Price cannot be less than 0.");
+                }
+
                 //var test = User.Claims.FirstOrDefault();
                 //string userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
                 //var client = new ManagementApiClient(auth0Service.ObtainAccessToken(), new Uri("https://pharmachain.au.auth0.com/api/v2/"));
