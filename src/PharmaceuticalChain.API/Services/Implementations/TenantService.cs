@@ -46,7 +46,7 @@ namespace PharmaceuticalChain.API.Services.Implementations
             string phoneNumber,
             string taxCode,
             string registrationCode,
-            string goodPractices,
+            string certificates,
             TenantTypes type)
         {
             var function = ethereumService.GetFunction(EthereumFunctions.AddChainPoint);
@@ -60,7 +60,7 @@ namespace PharmaceuticalChain.API.Services.Implementations
                     PhoneNumber = phoneNumber,
                     TaxCode = taxCode,
                     RegistrationCode = registrationCode,
-                    GoodPractices = goodPractices,
+                    Certificates = certificates,
                     DateCreated = DateTime.UtcNow,
                     Type = type
                 };
@@ -174,7 +174,7 @@ namespace PharmaceuticalChain.API.Services.Implementations
             string phoneNumber, 
             string taxCode, 
             string registrationCode, 
-            string goodPractices, 
+            string certificates, 
             TenantTypes type)
         {
             var tenant = tenantRepository.Get(id);
@@ -189,7 +189,7 @@ namespace PharmaceuticalChain.API.Services.Implementations
             tenant.PhoneNumber = phoneNumber;
             tenant.TaxCode = taxCode;
             tenant.RegistrationCode = registrationCode;
-            tenant.GoodPractices = goodPractices;
+            tenant.Certificates = certificates;
             tenant.Type = type;
 
             tenantRepository.Update(tenant);
@@ -209,7 +209,7 @@ namespace PharmaceuticalChain.API.Services.Implementations
                     tenant.PhoneNumber,
                     tenant.TaxCode,
                     tenant.RegistrationCode,
-                    tenant.GoodPractices,
+                    tenant.Certificates,
                     (uint)tenant.Type
                 });
 

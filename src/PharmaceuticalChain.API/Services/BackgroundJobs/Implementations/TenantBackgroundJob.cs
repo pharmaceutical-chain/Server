@@ -82,7 +82,7 @@ namespace PharmaceuticalChain.API.Services.BackgroundJobs.Implementations
                             tenant.PhoneNumber,
                             tenant.TaxCode,
                             tenant.RegistrationCode,
-                            tenant.GoodPractices,
+                            tenant.Certificates,
                             (uint)tenant.Type
                         }).Result;
                 }

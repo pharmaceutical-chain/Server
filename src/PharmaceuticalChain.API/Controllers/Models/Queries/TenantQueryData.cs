@@ -17,7 +17,7 @@ namespace PharmaceuticalChain.API.Controllers.Models.Queries
         public string PhoneNumber { get; set; }
         public string TaxCode { get; set; }
         public string RegistrationCode { get; set; }
-        public string GoodPractices { get; set; }
+        public string Certificates { get; set; }
         public string Type { get; set; }
 
         public string TransactionHash { get; set; }
