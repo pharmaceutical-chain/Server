@@ -21,7 +21,7 @@ namespace PharmaceuticalChain.API.Services.Interfaces
             string phoneNumber, 
             string taxCode, 
             string registrationCode, 
-            string goodPractices, 
+            string certificates, 
             TenantTypes type);
 
         Task Update(

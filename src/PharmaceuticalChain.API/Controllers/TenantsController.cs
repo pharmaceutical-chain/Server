@@ -17,9 +17,13 @@ namespace PharmaceuticalChain.API.Controllers
     public class TenantsController : ControllerBase
     {
         private readonly ITenantService tenantService;
-        public TenantsController(ITenantService tenantService)
+        private readonly IUploadService uploadService;
+        public TenantsController(
+            ITenantService tenantService,
+            IUploadService uploadService)
         {
             this.tenantService = tenantService;
+            this.uploadService = uploadService;
         }
 
         /// <summary>
@@ -48,6 +52,18 @@ namespace PharmaceuticalChain.API.Controllers
                 {
                     return BadRequest("Email cannot be null or empty.");
                 }
+                if (!string.IsNullOrEmpty(command.Cetificates))
+                {
+                    // Ensure each certificate provided in the command
+                    List<string> certificateList = command.Cetificates.Split(',').ToList();
+                    foreach(var cert in certificateList)
+                    {
+                        if (string.IsNullOrEmpty(uploadService.GetFileUri(cert)))
+                        {
+                            return BadRequest("At least one certificate name provided is not valid.");
+                        }
+                    }
+                }
 
                 if (command.PhoneNumber == null)
                     command.PhoneNumber = String.Empty;
@@ -61,14 +77,14 @@ namespace PharmaceuticalChain.API.Controllers
                     command.PhoneNumber, 
                     command.TaxCode, 
                     command.RegistrationCode, 
-                    command.GoodPractices,
+                    command.Cetificates,
                     tenantType);
 
                 return Ok(new { CompanyId = result });
             }
             catch (Exception ex)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                return StatusCode(StatusCodes.Status500InternalServerError, ex);
             }
         }
 
@@ -116,7 +132,7 @@ namespace PharmaceuticalChain.API.Controllers
                     command.PhoneNumber,
                     command.TaxCode,
                     command.RegistrationCode,
-                    command.GoodPractices,
+                    command.Cetificates,
                     tenantType);
                 return Ok();
             }
