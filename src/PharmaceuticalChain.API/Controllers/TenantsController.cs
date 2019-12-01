@@ -52,10 +52,10 @@ namespace PharmaceuticalChain.API.Controllers
                 {
                     return BadRequest("Email cannot be null or empty.");
                 }
-                if (!string.IsNullOrEmpty(command.Cetificates))
+                if (!string.IsNullOrEmpty(command.Certificates))
                 {
                     // Ensure each certificate provided in the command
-                    List<string> certificateList = command.Cetificates.Split(',').ToList();
+                    List<string> certificateList = command.Certificates.Split(',').ToList();
                     foreach(var cert in certificateList)
                     {
                         if (string.IsNullOrEmpty(uploadService.GetFileUri(cert)))
@@ -77,7 +77,7 @@ namespace PharmaceuticalChain.API.Controllers
                     command.PhoneNumber, 
                     command.TaxCode, 
                     command.RegistrationCode, 
-                    command.Cetificates,
+                    command.Certificates,
                     tenantType);
 
                 return Ok(new { CompanyId = result });
@@ -132,7 +132,7 @@ namespace PharmaceuticalChain.API.Controllers
                     command.PhoneNumber,
                     command.TaxCode,
                     command.RegistrationCode,
-                    command.Cetificates,
+                    command.Certificates,
                     tenantType);
                 return Ok();
             }
