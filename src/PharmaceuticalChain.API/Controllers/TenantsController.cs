@@ -56,7 +56,7 @@ namespace PharmaceuticalChain.API.Controllers
                 {
                     // Ensure each certificate provided in the command
                     List<string> certificateList = command.Certificates.Split(',').ToList();
-                    foreach(var cert in certificateList)
+                    foreach (var cert in certificateList)
                     {
                         if (string.IsNullOrEmpty(uploadService.GetFileUri(cert)))
                         {
@@ -66,17 +66,23 @@ namespace PharmaceuticalChain.API.Controllers
                 }
 
                 if (command.PhoneNumber == null)
+                {
                     command.PhoneNumber = String.Empty;
+                }
+                if (command.Certificates == null)
+                {
+                    command.Certificates = String.Empty;
+                }
 
                 Enum.TryParse<TenantTypes>(command.Type, true, out TenantTypes tenantType);
 
                 var result = await tenantService.Create(
-                    command.Name, 
+                    command.Name,
                     command.Email,
-                    command.PrimaryAddress, 
-                    command.PhoneNumber, 
-                    command.TaxCode, 
-                    command.RegistrationCode, 
+                    command.PrimaryAddress,
+                    command.PhoneNumber,
+                    command.TaxCode,
+                    command.RegistrationCode,
                     command.Certificates,
                     tenantType);
 
@@ -146,7 +152,7 @@ namespace PharmaceuticalChain.API.Controllers
         /// Query and return information of all tenants on the network/database.
         /// </summary>
         /// <returns></returns>
-        [HttpGet] 
+        [HttpGet]
         public async Task<IActionResult> GetTenants()
         {
             try

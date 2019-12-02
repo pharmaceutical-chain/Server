@@ -19,7 +19,27 @@ namespace PharmaceuticalChain.API.Services.Interfaces
 
         List<MedicineBatchQueryData> GetAll();
 
+        /// <summary>
+        /// Update every fields but not ManufacturerId.
+        /// Normally, if a manufacturer creates an unwanted batch, it may delete or change the information accordingly, but not "change ownership" to another manufacturer.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="batchNumber"></param>
+        /// <param name="medicineId"></param>
+        /// <param name="manufactureDate"></param>
+        /// <param name="expiryDate"></param>
+        /// <param name="quantity"></param>
+        /// <param name="unit"></param>
+        /// <returns></returns>
+        Task Update(
+            Guid id,
+            string batchNumber,
+            Guid medicineId,
+            DateTime manufactureDate,
+            DateTime expiryDate,
+            uint quantity,
+            string unit);
 
-        
+        Task Delete(Guid id);
     }       
 }

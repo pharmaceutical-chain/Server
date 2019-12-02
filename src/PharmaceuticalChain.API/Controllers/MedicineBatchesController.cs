@@ -81,5 +81,51 @@ namespace PharmaceuticalChain.API.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, ex);
             }
         }
+
+        [HttpPut("{id}")]
+        [Authorize]
+        public async Task<IActionResult> UpdateMedicineBatch(
+            Guid id,
+            [FromBody] CreateMedicineBatchCommand command)
+        {
+            try
+            {
+                await medicineBatchService.Update(
+                    id,
+                    command.BatchNumber,
+                    command.MedicineId,
+                    command.ManufactureDate,
+                    command.ExpiryDate,
+                    command.Quantity,
+                    command.Unit
+                    );
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex);
+            }
+        }
+
+        /// <summary>
+        /// Delete a medicine batch from the blockchain and database.
+        /// </summary>
+        /// <param name="batchId">Id of the batch you want to delete.</param>
+        /// <returns></returns>
+        [HttpDelete]
+        [Authorize]
+        public async Task<IActionResult> DeleteTenantAsync(
+            [FromBody] Guid batchId)
+        {
+            try
+            {
+                await medicineBatchService.Delete(batchId);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex);
+            }
+        }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Hangfire;
+using Microsoft.Extensions.Options;
 using Nethereum.Hex.HexTypes;
 using Nethereum.Util;
 using PharmaceuticalChain.API.Controllers.Models.Queries;
@@ -18,22 +19,25 @@ namespace PharmaceuticalChain.API.Services.Implementations
     {
         private readonly IMedicineBatchRepository medicineBatchRepository;
         private readonly IEthereumService ethereumService;
+        private readonly string MedicineBatchAbi;
         public MedicineBatchService(
             IMedicineBatchRepository medicineBatchRepository,
-             IEthereumService ethereumService
+            IEthereumService ethereumService,
+            IOptions<EthereumSettings> options
             )
         {
             this.medicineBatchRepository = medicineBatchRepository;
             this.ethereumService = ethereumService;
+            MedicineBatchAbi = options.Value.MedicineBatchAbi;
         }
 
         async Task<Guid> IMedicineBatchService.Create(
-            string batchNumber, 
+            string batchNumber,
             Guid medicineId,
-            Guid manufacturerId, 
-            DateTime manufactureDate, 
-            DateTime expiryDate, 
-            uint quantity, 
+            Guid manufacturerId,
+            DateTime manufactureDate,
+            DateTime expiryDate,
+            uint quantity,
             string unit)
         {
             var medicineBatch = new MedicineBatch()
@@ -72,15 +76,87 @@ namespace PharmaceuticalChain.API.Services.Implementations
             return newMedicineBatchId;
         }
 
+        async Task IMedicineBatchService.Delete(Guid id)
+        {
+            var batch = medicineBatchRepository.Get(id);
+            if (batch == null)
+            {
+                throw new ArgumentException("Id does not exist in the system.", nameof(id));
+            }
+
+            var function = ethereumService.GetFunction(EthereumFunctions.RemoveMedicineBatch);
+            var transactionHash = await function.SendTransactionAsync(
+                ethereumService.GetEthereumAccount(),
+                new HexBigInteger(1000000),
+                new HexBigInteger(0),
+                functionInput: new object[] {
+                    id.ToString()
+            });
+
+            var batchContract = ethereumService.GetContract(MedicineBatchAbi, batch.ContractAddress);
+            var deleteFunction = ethereumService.GetFunction(batchContract, EthereumFunctions.SelfDelete);
+            var updateReceipt = await deleteFunction.SendTransactionAsync(
+                ethereumService.GetEthereumAccount(),
+                new HexBigInteger(6000000),
+                new HexBigInteger(Nethereum.Web3.Web3.Convert.ToWei(5, UnitConversion.EthUnit.Gwei)),
+                new HexBigInteger(0),
+                functionInput: new object[] { });
+
+            medicineBatchRepository.Delete(id);
+        }
+
         List<MedicineBatchQueryData> IMedicineBatchService.GetAll()
         {
             var result = new List<MedicineBatchQueryData>();
             var rawList = medicineBatchRepository.GetAll();
-            foreach(var item in rawList)
+            foreach (var item in rawList)
             {
                 result.Add(item.ToMedicineBatchQueryData());
             }
             return result;
+        }
+
+        async Task IMedicineBatchService.Update(
+            Guid id,
+            string batchNumber,
+            Guid medicineId,
+            DateTime manufactureDate,
+            DateTime expiryDate,
+            uint quantity,
+            string unit)
+        {
+            var batch = medicineBatchRepository.Get(id);
+            if (batch == null)
+            {
+                throw new ArgumentException("Id does not exist in the system.", nameof(id));
+            }
+
+            batch.BatchNumber = batchNumber;
+            batch.MedicineId = medicineId;
+            batch.ManufactureDate = manufactureDate;
+            batch.ExpiryDate = expiryDate;
+            batch.Quantity = quantity;
+            batch.Unit = unit;
+
+            medicineBatchRepository.Update(batch);
+
+            // Update the blockchain.
+            var batchContract = ethereumService.GetContract(MedicineBatchAbi, batch.ContractAddress);
+            var updateFunction = ethereumService.GetFunction(batchContract, EthereumFunctions.UpdateMedicineBatchInformation);
+            var updateReceipt = await updateFunction.SendTransactionAsync(
+                ethereumService.GetEthereumAccount(),
+                new HexBigInteger(6000000),
+                new HexBigInteger(Nethereum.Web3.Web3.Convert.ToWei(10, UnitConversion.EthUnit.Gwei)),
+                new HexBigInteger(0),
+                functionInput: new object[] {
+                    batch.MedicineId.ToString(),
+                    batch.BatchNumber,
+                    batch.ManufacturerId.ToString(),
+                    batch.Quantity,
+                    batch.Unit,
+                    batch.ManufactureDate.ToUnixTimestamp(),
+                    batch.ExpiryDate.ToUnixTimestamp()
+                });
         }
     }
 }

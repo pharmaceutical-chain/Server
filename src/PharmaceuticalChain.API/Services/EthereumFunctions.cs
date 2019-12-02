@@ -19,8 +19,11 @@ namespace PharmaceuticalChain.API.Services
 
         public static readonly string AddMedicineBatch = "addMedicineBatch";
         public static readonly string UpdateMedicineBatchInformation = "updateMedicineBatchInformation";
+        public static readonly string RemoveMedicineBatch = "removeMedicineBatch";
 
         public static readonly string AddMedicineBatchTransfer = "addMedicineBatchTransfer";
+
+        public static readonly string SelfDelete = "selfDelete";
 
     }
 }

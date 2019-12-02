@@ -4,6 +4,13 @@
         <name>PharmaceuticalChain.API</name>
     </assembly>
     <members>
+        <member name="M:PharmaceuticalChain.API.Controllers.MedicineBatchesController.DeleteTenantAsync(System.Guid)">
+            <summary>
+            Delete a medicine batch from the blockchain and database.
+            </summary>
+            <param name="batchId">Id of the batch you want to delete.</param>
+            <returns></returns>
+        </member>
         <member name="M:PharmaceuticalChain.API.Controllers.MedicinesController.GetMedicinesAsync(System.Nullable{System.Boolean})">
             <summary>
             Return all medicines in the network/database.
@@ -201,6 +208,20 @@
                 Each object contract contains an id.
                 This id is created by the backend in the creation process (before it is used to in creation transaction on blockchain.)
             </param>
+        </member>
+        <member name="M:PharmaceuticalChain.API.Services.Interfaces.IMedicineBatchService.Update(System.Guid,System.String,System.Guid,System.DateTime,System.DateTime,System.UInt32,System.String)">
+            <summary>
+            Update every fields but not ManufacturerId.
+            Normally, if a manufacturer creates an unwanted batch, it may delete or change the information accordingly, but not "change ownership" to another manufacturer.
+            </summary>
+            <param name="id"></param>
+            <param name="batchNumber"></param>
+            <param name="medicineId"></param>
+            <param name="manufactureDate"></param>
+            <param name="expiryDate"></param>
+            <param name="quantity"></param>
+            <param name="unit"></param>
+            <returns></returns>
         </member>
         <member name="M:PharmaceuticalChain.API.Services.Interfaces.ITenantService.Create(System.String,System.String,System.String,System.String,System.String,System.String,System.String,PharmaceuticalChain.API.Models.Database.TenantTypes)">
             <summary>
