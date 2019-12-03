@@ -62,6 +62,7 @@ namespace PharmaceuticalChain.API
             services.AddTransient<IUploadService, UploadService>();
 
             services.AddTransient<ISupplyChainService, SupplyChainService>();
+            services.AddTransient<IVerificationService, VerificationService>();
 
             services.AddTransient<ITenantService, TenantService>();
             services.AddTransient<IDrugTransactionService, DrugTransactionService>();

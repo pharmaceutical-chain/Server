@@ -242,5 +242,29 @@
             </summary>
             <param name="id"></param>
         </member>
+        <member name="M:PharmaceuticalChain.API.Services.Interfaces.IVerificationService.CreateVerificatorLink(System.Guid,System.Collections.Generic.List{System.Guid})">
+            <summary>
+            Aimed to be called by third-party retailer clients. 
+            Before printing an invoice, they ask our server to create a specific URL for that invoice.
+            The URL can be printed or informed to the drug buyers to let them scan/review the drugs they purchased.
+            </summary>
+            <param name="retailerId"></param>
+            <param name="batchIds"></param>
+            <returns></returns>
+        </member>
+        <member name="M:PharmaceuticalChain.API.Services.Interfaces.IVerificationService.CreateShortenedLink(System.String)">
+            <summary>
+            Verificator links are usually long. Use a shortner to make it shorter. Save data to embed to QR codes.
+            </summary>
+            <param name="longUrl"></param>
+            <returns></returns>
+        </member>
+        <member name="M:PharmaceuticalChain.API.Services.Interfaces.IVerificationService.CreateQRCode">
+            <summary>
+            Take a short link and embed it into a QR code.
+            This QR code will be used to print on bills for end-users to verify their drugs with Verificator.
+            </summary>
+            <returns>Return a QR code with an URL. That URL navigates to a specific Verificator website for a drug purchasing bill.</returns>
+        </member>
     </members>
 </doc>
