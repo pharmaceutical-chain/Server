@@ -19,13 +19,26 @@ namespace PharmaceuticalChain.API.Controllers
             this.verificationService = verificationService;
         }
 
+        /// <summary>
+        /// Aimed for pharmacy retailer usages.
+        /// This API accepts retailerId and batchIds (of which a customer buys) and returns a QR code (in base64 format) decoding to a Verificator link.
+        /// Customer can use that Verificator link to verify drugs.
+        /// </summary>
+        /// <param name="retailerId"></param>
+        /// <param name="batchIds"></param>
+        /// <returns>Return a QR code in base64 format. The QR code contains a link to Verificator with retailerId and batchIds provided.</returns>
         [HttpGet()]
-        public async Task<IActionResult> GetShortenedLink()
+        public async Task<IActionResult> GetVerificatorLink(
+            [FromQuery] Guid retailerId,
+            [FromQuery] List<Guid> batchIds
+            )
         {
             try
             {
-                var link = await verificationService.CreateShortenedLink("https://www.thefreedictionary.com/verifications");
-                return Ok(link);
+                var rawVerificatorLink = verificationService.CreateVerificatorLink(retailerId, batchIds);
+                var shortenedLink = await verificationService.CreateShortenedLink(rawVerificatorLink);
+                var base64QRCode = verificationService.CreateQRCode(shortenedLink);
+                return Ok(base64QRCode);
             }
             catch (Exception ex)
             {

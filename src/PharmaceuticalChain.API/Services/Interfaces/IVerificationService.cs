@@ -30,6 +30,6 @@ namespace PharmaceuticalChain.API.Services.Interfaces
         /// This QR code will be used to print on bills for end-users to verify their drugs with Verificator.
         /// </summary>
         /// <returns>Return a QR code with an URL. That URL navigates to a specific Verificator website for a drug purchasing bill.</returns>
-        Task<string> CreateQRCode();
+        string CreateQRCode(string url);
     }
 }

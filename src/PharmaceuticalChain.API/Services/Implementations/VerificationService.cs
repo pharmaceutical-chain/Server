@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json.Linq;
 using PharmaceuticalChain.API.Services.Interfaces;
+using QRCoder;
 using RestSharp;
 using System;
 using System.Collections.Generic;
@@ -17,9 +18,16 @@ namespace PharmaceuticalChain.API.Services.Implementations
             bitlyAccessToken = configuration["BitlyAccessToken"];
         }
 
-        Task<string> IVerificationService.CreateQRCode()
+        string IVerificationService.CreateQRCode(string url)
         {
-            throw new NotImplementedException();
+            QRCodeGenerator qrGenerator = new QRCodeGenerator();
+            QRCodeData qrCodeData = qrGenerator.CreateQrCode(url, QRCodeGenerator.ECCLevel.Q);
+            PngByteQRCode qrCode = new PngByteQRCode(qrCodeData);
+            byte[] qrCodeAsPngByteArr = qrCode.GetGraphic(20);
+
+            string base64String = Convert.ToBase64String(qrCodeAsPngByteArr);
+
+            return base64String;
         }
 
         async Task<string> IVerificationService.CreateShortenedLink(string longUrl)
@@ -46,7 +54,17 @@ namespace PharmaceuticalChain.API.Services.Implementations
 
         string IVerificationService.CreateVerificatorLink(Guid retailerId, List<Guid> batchIds)
         {
-            throw new NotImplementedException();
+            string rootUrl = "https://pharmachain-verificator.herokuapp.com";
+
+            string batchIdLinks = "";
+            foreach(var id in batchIds)
+            {
+                batchIdLinks += (id + "/");
+            }
+
+            string verificatorLink = rootUrl + "/" + retailerId + "/" + batchIdLinks;
+
+            return verificatorLink;
         }
     }
 }

@@ -103,6 +103,16 @@
             <param name="fileName"></param>
             <returns></returns>
         </member>
+        <member name="M:PharmaceuticalChain.API.Controllers.VerificationsController.GetVerificatorLink(System.Guid,System.Collections.Generic.List{System.Guid})">
+            <summary>
+            Aimed for pharmacy retailer usages.
+            This API accepts retailerId and batchIds (of which a customer buys) and returns a QR code (in base64 format) decoding to a Verificator link.
+            Customer can use that Verificator link to verify drugs.
+            </summary>
+            <param name="retailerId"></param>
+            <param name="batchIds"></param>
+            <returns>Return a QR code in base64 format. The QR code contains a link to Verificator with retailerId and batchIds provided.</returns>
+        </member>
         <member name="P:PharmaceuticalChain.API.EthereumSettings.Abi">
             <summary>
             Abi of the master contract.
@@ -259,7 +269,7 @@
             <param name="longUrl"></param>
             <returns></returns>
         </member>
-        <member name="M:PharmaceuticalChain.API.Services.Interfaces.IVerificationService.CreateQRCode">
+        <member name="M:PharmaceuticalChain.API.Services.Interfaces.IVerificationService.CreateQRCode(System.String)">
             <summary>
             Take a short link and embed it into a QR code.
             This QR code will be used to print on bills for end-users to verify their drugs with Verificator.
