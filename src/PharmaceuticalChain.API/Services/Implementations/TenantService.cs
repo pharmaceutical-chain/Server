@@ -123,9 +123,15 @@ namespace PharmaceuticalChain.API.Services.Implementations
 
         async Task ITenantService.Remove(Guid tenantId)
         {
-            var function = ethereumService.GetFunction(EthereumFunctions.RemoveChainPoint);
+            var tenant = tenantRepository.Get(tenantId);
+            if (tenant == null)
+            {
+                throw new ArgumentException("Id does not exist in the system.", nameof(tenantId));
+            }
+
             try
             {
+                var function = ethereumService.GetFunction(EthereumFunctions.RemoveChainPoint);
                 var transactionHash = await function.SendTransactionAsync(
                                   ethereumService.GetEthereumAccount(),
                                   new HexBigInteger(1000000),
@@ -133,6 +139,17 @@ namespace PharmaceuticalChain.API.Services.Implementations
                                   functionInput: new object[] {
                                        tenantId.ToString()
                 });
+
+                var tenantContract = ethereumService.GetContract(TenantAbi, tenant.ContractAddress);
+                var deleteFunction = ethereumService.GetFunction(tenantContract, EthereumFunctions.SelfDelete);
+                var receipt = await deleteFunction.SendTransactionAsync(
+                    ethereumService.GetEthereumAccount(),
+                    new HexBigInteger(6000000),
+                    new HexBigInteger(Nethereum.Web3.Web3.Convert.ToWei(5, UnitConversion.EthUnit.Gwei)),
+                    new HexBigInteger(0),
+                    functionInput: new object[] { }
+                );
+
                 tenantRepository.Delete(tenantId);
             }
             catch (Exception ex)
@@ -167,14 +184,14 @@ namespace PharmaceuticalChain.API.Services.Implementations
         }
 
         async Task ITenantService.Update(
-            Guid id, 
-            string name, 
-            string email, 
-            string address, 
-            string phoneNumber, 
-            string taxCode, 
-            string registrationCode, 
-            string certificates, 
+            Guid id,
+            string name,
+            string email,
+            string address,
+            string phoneNumber,
+            string taxCode,
+            string registrationCode,
+            string certificates,
             TenantTypes type)
         {
             var tenant = tenantRepository.Get(id);

@@ -95,7 +95,7 @@ namespace PharmaceuticalChain.API.Services.Implementations
 
             var batchContract = ethereumService.GetContract(MedicineBatchAbi, batch.ContractAddress);
             var deleteFunction = ethereumService.GetFunction(batchContract, EthereumFunctions.SelfDelete);
-            var updateReceipt = await deleteFunction.SendTransactionAsync(
+            var receipt = await deleteFunction.SendTransactionAsync(
                 ethereumService.GetEthereumAccount(),
                 new HexBigInteger(6000000),
                 new HexBigInteger(Nethereum.Web3.Web3.Convert.ToWei(5, UnitConversion.EthUnit.Gwei)),

@@ -100,7 +100,7 @@ namespace PharmaceuticalChain.API.Controllers
         /// <param name="tenantId"></param>
         /// <returns></returns>
         [HttpDelete]
-        [Authorize("roles:admin")]
+        //[Authorize("roles:admin")]
         public async Task<IActionResult> DeleteTenantAsync(
             [FromBody] Guid tenantId)
         {
