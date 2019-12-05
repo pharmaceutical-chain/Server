@@ -8,7 +8,7 @@
             <summary>
             Delete a medicine batch from the blockchain and database.
             </summary>
-            <param name="batchId">Id of the batch you want to delete.</param>
+            <param name="id">Id of the batch you want to delete.</param>
             <returns></returns>
         </member>
         <member name="M:PharmaceuticalChain.API.Controllers.MedicinesController.GetMedicinesAsync(System.Nullable{System.Boolean})">
@@ -66,7 +66,7 @@
             <summary>
             Delete a tenant from the blockchain and database.
             </summary>
-            <param name="tenantId"></param>
+            <param name="id"></param>
             <returns></returns>
         </member>
         <member name="M:PharmaceuticalChain.API.Controllers.TenantsController.UpdateTenantAsync(System.Guid,PharmaceuticalChain.API.Controllers.Models.Commands.CreateTenantCommand)">

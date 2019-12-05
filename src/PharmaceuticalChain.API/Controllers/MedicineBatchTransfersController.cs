@@ -77,5 +77,41 @@ namespace PharmaceuticalChain.API.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, ex);
             }
         }
+
+        [HttpPut("{id}")]
+        [Authorize]
+        public async Task<IActionResult> UpdateMedicineBatchTransferAsync(
+            Guid id,
+            [FromBody] CreateMedicineBatchTransferCommand command)
+        {
+            try
+            {
+                await medicineBatchTransferService.Update(
+                    id,
+                    command.MedicineBatchId,
+                    command.FromTenantId,
+                    command.ToTenantId,
+                    command.Quantity);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex);
+            }
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteMedicineBatchTransfer(Guid id)
+        {
+            try
+            {
+                await medicineBatchTransferService.Delete(id);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex);
+            }
+        }
     }
 }

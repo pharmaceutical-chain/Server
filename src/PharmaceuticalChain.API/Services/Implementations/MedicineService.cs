@@ -89,6 +89,43 @@ namespace PharmaceuticalChain.API.Services.Implementations
            
         }
 
+        async Task IMedicineService.Delete(Guid id)
+        {
+            var medicine = medicineRepository.Get(id);
+            if (medicine == null)
+            {
+                throw new ArgumentException("Id does not exist in the system.", nameof(id));
+            }
+
+            try
+            {
+                var function = ethereumService.GetFunction(EthereumFunctions.RemoveMedicine);
+                var transactionHash = await function.SendTransactionAsync(
+                                  ethereumService.GetEthereumAccount(),
+                                  new HexBigInteger(1000000),
+                                  new HexBigInteger(0),
+                                  functionInput: new object[] {
+                                       id.ToString()
+                });
+
+                var contract = ethereumService.GetContract(MedicineAbi, medicine.ContractAddress);
+                var deleteFunction = ethereumService.GetFunction(contract, EthereumFunctions.SelfDelete);
+                var receipt = await deleteFunction.SendTransactionAsync(
+                    ethereumService.GetEthereumAccount(),
+                    new HexBigInteger(6000000),
+                    new HexBigInteger(Nethereum.Web3.Web3.Convert.ToWei(5, UnitConversion.EthUnit.Gwei)),
+                    new HexBigInteger(0),
+                    functionInput: new object[] { }
+                );
+
+                medicineRepository.Delete(id);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
         MedicineQueryData IMedicineService.GetMedicine(Guid id)
         {
             var result = medicineRepository.Get(id).ToMedicineQueryData();
@@ -139,8 +176,8 @@ namespace PharmaceuticalChain.API.Services.Implementations
             medicineRepository.Update(medicine);
 
             // Update the blockchain
-            var medicineBatchContract = ethereumService.GetContract(MedicineAbi, medicine.ContractAddress);
-            var updateFunction = ethereumService.GetFunction(medicineBatchContract, EthereumFunctions.UpdateMedicineInformation);
+            var contract = ethereumService.GetContract(MedicineAbi, medicine.ContractAddress);
+            var updateFunction = ethereumService.GetFunction(contract, EthereumFunctions.UpdateMedicineInformation);
             var updateReceipt = await updateFunction.SendTransactionAsync(
                 ethereumService.GetEthereumAccount(),
                 new HexBigInteger(6000000),

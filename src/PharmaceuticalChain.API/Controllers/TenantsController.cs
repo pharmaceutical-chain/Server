@@ -97,16 +97,15 @@ namespace PharmaceuticalChain.API.Controllers
         /// <summary>
         /// Delete a tenant from the blockchain and database.
         /// </summary>
-        /// <param name="tenantId"></param>
+        /// <param name="id"></param>
         /// <returns></returns>
-        [HttpDelete]
+        [HttpDelete("{id}")]
         //[Authorize("roles:admin")]
-        public async Task<IActionResult> DeleteTenantAsync(
-            [FromBody] Guid tenantId)
+        public async Task<IActionResult> DeleteTenantAsync(Guid id)
         {
             try
             {
-                await tenantService.Remove(tenantId);
+                await tenantService.Remove(id);
                 return Ok();
             }
             catch (Exception ex)

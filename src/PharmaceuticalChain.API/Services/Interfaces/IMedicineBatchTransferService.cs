@@ -15,7 +15,17 @@ namespace PharmaceuticalChain.API.Services.Interfaces
             uint quantity
             );
 
+        Task Update(
+            Guid id,
+            Guid medicineBatchId,
+            Guid fromTenantId,
+            Guid toTenantId,
+            uint quantity
+            );
+
         List<MedicineBatchTransferQueryData> GetAll();
         MedicineBatchTransferQueryData Get(Guid id);
+
+        Task Delete(Guid id);
     }
 }

@@ -110,16 +110,15 @@ namespace PharmaceuticalChain.API.Controllers
         /// <summary>
         /// Delete a medicine batch from the blockchain and database.
         /// </summary>
-        /// <param name="batchId">Id of the batch you want to delete.</param>
+        /// <param name="id">Id of the batch you want to delete.</param>
         /// <returns></returns>
-        [HttpDelete]
+        [HttpDelete("{id}")]
         [Authorize]
-        public async Task<IActionResult> DeleteTenantAsync(
-            [FromBody] Guid batchId)
+        public async Task<IActionResult> DeleteTenantAsync(Guid id)
         {
             try
             {
-                await medicineBatchService.Delete(batchId);
+                await medicineBatchService.Delete(id);
                 return Ok();
             }
             catch (Exception ex)

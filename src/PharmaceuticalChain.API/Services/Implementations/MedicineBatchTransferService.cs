@@ -1,4 +1,5 @@
 ﻿using Hangfire;
+using Microsoft.Extensions.Options;
 using Nethereum.Hex.HexTypes;
 using Nethereum.Util;
 using PharmaceuticalChain.API.Controllers.Models.Queries;
@@ -19,14 +20,17 @@ namespace PharmaceuticalChain.API.Services.Implementations
         private readonly IMedicineBatchRepository medicineBatchRepository;
         private readonly IMedicineBatchTransferRepository medicineBatchTransferRepository;
         private readonly IEthereumService ethereumService;
+        private readonly string MedicineBatchTransferAbi;
         public MedicineBatchTransferService(
             IMedicineBatchRepository medicineBatchRepository,
             IMedicineBatchTransferRepository medicineBatchTransferRepository,
-            IEthereumService ethereumService)
+            IEthereumService ethereumService,
+            IOptions<EthereumSettings> options)
         {
             this.medicineBatchRepository = medicineBatchRepository;
             this.medicineBatchTransferRepository = medicineBatchTransferRepository;
             this.ethereumService = ethereumService;
+            MedicineBatchTransferAbi = options.Value.MedicineBatchTransferAbi;
         }
 
         async Task<Guid> IMedicineBatchTransferService.Create(Guid medicineBatchId, Guid fromTenantId, Guid toTenantId, uint quantity)
@@ -103,6 +107,43 @@ namespace PharmaceuticalChain.API.Services.Implementations
             return newTransferId;
         }
 
+        async Task IMedicineBatchTransferService.Delete(Guid id)
+        {
+            var transfer = medicineBatchTransferRepository.Get(id);
+            if (transfer == null)
+            {
+                throw new ArgumentException("Id does not exist in the system.", nameof(id));
+            }
+
+            try
+            {
+                var function = ethereumService.GetFunction(EthereumFunctions.RemoveMedicineBatchTransfer);
+                var transactionHash = await function.SendTransactionAsync(
+                                  ethereumService.GetEthereumAccount(),
+                                  new HexBigInteger(1000000),
+                                  new HexBigInteger(0),
+                                  functionInput: new object[] {
+                                       id.ToString()
+                });
+
+                var tenantContract = ethereumService.GetContract(MedicineBatchTransferAbi, transfer.ContractAddress);
+                var deleteFunction = ethereumService.GetFunction(tenantContract, EthereumFunctions.SelfDelete);
+                var receipt = await deleteFunction.SendTransactionAsync(
+                    ethereumService.GetEthereumAccount(),
+                    new HexBigInteger(6000000),
+                    new HexBigInteger(Nethereum.Web3.Web3.Convert.ToWei(5, UnitConversion.EthUnit.Gwei)),
+                    new HexBigInteger(0),
+                    functionInput: new object[] { }
+                );
+
+                medicineBatchTransferRepository.Delete(id);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
         MedicineBatchTransferQueryData IMedicineBatchTransferService.Get(Guid id)
         {
             var result = medicineBatchTransferRepository.Get(id).ToMedicineBatchTransferQueryData();
@@ -118,6 +159,43 @@ namespace PharmaceuticalChain.API.Services.Implementations
                 result.Add(transfer.ToMedicineBatchTransferQueryData());
             }
             return result;
+        }
+
+        async Task IMedicineBatchTransferService.Update(
+            Guid id,
+            Guid medicineBatchId, 
+            Guid fromTenantId,
+            Guid toTenantId, 
+            uint quantity)
+        {
+            var transfer = medicineBatchTransferRepository.Get(id);
+            if (transfer == null)
+            {
+                throw new ArgumentException("Id does not exist in the system.", nameof(id));
+            }
+
+            transfer.MedicineBatchId = medicineBatchId;
+            transfer.FromId = fromTenantId;
+            transfer.ToId = toTenantId;
+            transfer.Quantity = quantity;
+
+            // Update the blockchain.
+            var contract = ethereumService.GetContract(MedicineBatchTransferAbi, transfer.ContractAddress);
+            var updateFunction = ethereumService.GetFunction(contract, EthereumFunctions.UpdateMedicineBatchTransfer);
+            var updateReceipt = await updateFunction.SendTransactionAsync(
+                ethereumService.GetEthereumAccount(),
+                new HexBigInteger(6000000),
+                new HexBigInteger(Nethereum.Web3.Web3.Convert.ToWei(20, UnitConversion.EthUnit.Gwei)),
+                new HexBigInteger(0),
+                functionInput: new object[] {
+                    transfer.MedicineBatchId.ToString(),
+                    transfer.FromId.ToString(),
+                    transfer.ToId.ToString(),
+                    transfer.Quantity,
+                    transfer.DateCreated.ToUnixTimestamp()
+                });
+
+            medicineBatchTransferRepository.Update(transfer);
         }
     }
 }

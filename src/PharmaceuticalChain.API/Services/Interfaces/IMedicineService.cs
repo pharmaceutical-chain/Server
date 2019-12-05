@@ -33,5 +33,7 @@ namespace PharmaceuticalChain.API.Services.Interfaces
         List<MedicineQueryData> GetMedicines();
 
         MedicineQueryData GetMedicine(Guid id);
+
+        Task Delete(Guid id);
     }
 }
