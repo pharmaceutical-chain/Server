@@ -117,7 +117,8 @@ namespace PharmaceuticalChain.API
                     {
                         builder.AllowAnyOrigin()
                             .AllowAnyMethod()
-                            .AllowAnyHeader();
+                            .AllowAnyHeader()
+                            .WithExposedHeaders("Location", "location");
                     });
             });
 
