@@ -190,7 +190,6 @@ namespace PharmaceuticalChain.API
             //    Cron.Minutely);
 
             app.UseHttpsRedirection();
-            app.UseCors("AllowSpecificOrigin");
             app.UseAuthentication();
             app.UseMvc();
         }
