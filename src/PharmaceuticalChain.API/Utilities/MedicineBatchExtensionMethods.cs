@@ -14,14 +14,14 @@ namespace PharmaceuticalChain.API.Utilities
             if (medicineBatch == null) return null;
             var result = new MedicineBatchQueryData()
             {
-               BatchNumber = medicineBatch.BatchNumber,
-               ExpiryDate = medicineBatch.ExpiryDate,
-               Id = medicineBatch.Id,
-               ManufactureDate = medicineBatch.ManufactureDate,
-               Manufacturer = medicineBatch.Manufacturer.ToTenantQueryData(),
-               Medicine = medicineBatch.Medicine.ToMedicineQueryData(),
-               Quantity = medicineBatch.Quantity,
-               Unit = medicineBatch.Unit,
+                BatchNumber = medicineBatch.BatchNumber,
+                ExpiryDate = medicineBatch.ExpiryDate,
+                Id = medicineBatch.Id,
+                ManufactureDate = medicineBatch.ManufactureDate,
+                Manufacturer = medicineBatch.Manufacturer.ToTenantQueryData(),
+                Medicine = medicineBatch.Medicine.ToMedicineQueryData(),
+                Quantity = medicineBatch.Quantity,
+                Unit = medicineBatch.Unit,
 
                 ContractAddress = medicineBatch.ContractAddress,
                 DateCreated = medicineBatch.DateCreated,

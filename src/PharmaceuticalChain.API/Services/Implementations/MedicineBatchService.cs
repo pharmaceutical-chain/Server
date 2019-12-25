@@ -48,7 +48,8 @@ namespace PharmaceuticalChain.API.Services.Implementations
                 ManufactureDate = manufactureDate,
                 ExpiryDate = expiryDate,
                 Quantity = quantity,
-                Unit = unit
+                Unit = unit,
+                DateCreated = DateTime.UtcNow
             };
             Guid newMedicineBatchId = medicineBatchRepository.CreateAndReturnId(medicineBatch);
 
