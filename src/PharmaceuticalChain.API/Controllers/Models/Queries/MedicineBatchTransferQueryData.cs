@@ -16,6 +16,8 @@ namespace PharmaceuticalChain.API.Controllers.Models.Queries
 
         public uint Quantity { get; set; }
 
+        public bool IsConfirmed { get; set; }
+
         public string TransactionHash { get; set; }
         public string ContractAddress { get; set; }
         public DateTime DateCreated { get; set; }

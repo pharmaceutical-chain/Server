@@ -28,6 +28,11 @@ namespace PharmaceuticalChain.API.Models.Database
         public uint Quantity { get; set; }
 
         /// <summary>
+        /// The sender creates the transfer, but it's not guaranteed on the other end. Did the recipient of the transfer confirm? 
+        /// </summary>
+        public bool IsConfirmed { get; set; } = false;
+
+        /// <summary>
         /// Tier of the transfer in the supply chain, zero-based.
         /// Tier of a transfer is determined by the tier of the sending tenant.
         /// The focal tenant is the manufacturer of a batch. Tier (tier customer) is count from there.

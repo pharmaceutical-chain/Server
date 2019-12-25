@@ -19,6 +19,7 @@ namespace PharmaceuticalChain.API.Utilities
                 Id = transfer.Id,
                 MedicineBatch = transfer.MedicineBatch.ToMedicineBatchQueryData(),
                 Quantity = transfer.Quantity,
+                IsConfirmed = transfer.IsConfirmed,
                 ContractAddress = transfer.ContractAddress,
                 DateCreated = transfer.DateCreated,
                 TransactionHash = transfer.TransactionHash,

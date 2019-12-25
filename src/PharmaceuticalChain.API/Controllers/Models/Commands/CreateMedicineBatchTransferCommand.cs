@@ -14,5 +14,7 @@ namespace PharmaceuticalChain.API.Controllers.Models.Commands
         public Guid ToTenantId { get; set; }
 
         public uint Quantity { get; set; }
+
+        public bool IsConfirmed { get; set; }
     }
 }

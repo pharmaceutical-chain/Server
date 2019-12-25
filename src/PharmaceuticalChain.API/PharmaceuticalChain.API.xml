@@ -133,6 +133,11 @@
             Address of the Tenant contract object on the blockchain network.
             </summary>
         </member>
+        <member name="P:PharmaceuticalChain.API.Models.Database.MedicineBatchTransfer.IsConfirmed">
+            <summary>
+            The sender creates the transfer, but it's not guaranteed on the other end. Did the recipient of the transfer confirm? 
+            </summary>
+        </member>
         <member name="P:PharmaceuticalChain.API.Models.Database.MedicineBatchTransfer.Tier">
             <summary>
             Tier of the transfer in the supply chain, zero-based.

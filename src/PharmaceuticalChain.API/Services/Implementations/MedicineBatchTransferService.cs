@@ -43,6 +43,7 @@ namespace PharmaceuticalChain.API.Services.Implementations
                 FromId = fromTenantId,
                 ToId = toTenantId,
                 Quantity = quantity,
+                IsConfirmed = false,
                 DateCreated = DateTime.UtcNow
             };
 
@@ -166,7 +167,9 @@ namespace PharmaceuticalChain.API.Services.Implementations
             Guid medicineBatchId, 
             Guid fromTenantId,
             Guid toTenantId, 
-            uint quantity)
+            uint quantity,
+            bool isConfirmed
+            )
         {
             var transfer = medicineBatchTransferRepository.Get(id);
             if (transfer == null)
@@ -178,6 +181,7 @@ namespace PharmaceuticalChain.API.Services.Implementations
             transfer.FromId = fromTenantId;
             transfer.ToId = toTenantId;
             transfer.Quantity = quantity;
+            transfer.IsConfirmed = isConfirmed;
 
             // Update the blockchain.
             var contract = ethereumService.GetContract(MedicineBatchTransferAbi, transfer.ContractAddress);

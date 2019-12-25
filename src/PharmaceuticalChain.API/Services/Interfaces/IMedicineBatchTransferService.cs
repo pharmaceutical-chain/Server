@@ -20,7 +20,8 @@ namespace PharmaceuticalChain.API.Services.Interfaces
             Guid medicineBatchId,
             Guid fromTenantId,
             Guid toTenantId,
-            uint quantity
+            uint quantity,
+            bool isConfirmed
             );
 
         List<MedicineBatchTransferQueryData> GetAll();

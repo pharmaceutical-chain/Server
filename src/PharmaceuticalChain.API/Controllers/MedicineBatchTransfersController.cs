@@ -91,7 +91,8 @@ namespace PharmaceuticalChain.API.Controllers
                     command.MedicineBatchId,
                     command.FromTenantId,
                     command.ToTenantId,
-                    command.Quantity);
+                    command.Quantity,
+                    command.IsConfirmed);
                 return Ok();
             }
             catch (Exception ex)
