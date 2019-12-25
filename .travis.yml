@@ -1,5 +1,6 @@
-language: csharp
+sudo: required
 dist: bionic
+language: csharp
 mono: none
 dotnet: 2.2.106
 script:
