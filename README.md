@@ -1,5 +1,7 @@
 # Server
+The API server of the PharmaChain system.
 
+[![Build Status](https://travis-ci.org/pharmaceutical-chain/Server.svg?branch=master)](https://travis-ci.org/pharmaceutical-chain/Server)
 
 ## Prerequisites
 
