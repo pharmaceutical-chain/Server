@@ -17,14 +17,18 @@ namespace PharmaceuticalChain.API.Controllers
         private readonly IMedicineBatchService medicineBatchService;
         private readonly IMedicineService medicineService;
         private readonly ITenantService tenantService;
+        private readonly IUploadService uploadService;
         public MedicineBatchesController(
             IMedicineBatchService medicineBatchService,
             IMedicineService medicineService,
-            ITenantService tenantService)
+            ITenantService tenantService,
+            IUploadService uploadService
+            )
         {
             this.medicineBatchService = medicineBatchService;
             this.medicineService = medicineService;
             this.tenantService = tenantService;
+            this.uploadService = uploadService;
         }
 
         [HttpPost]
@@ -50,6 +54,18 @@ namespace PharmaceuticalChain.API.Controllers
                 {
                     return BadRequest("TenantId is not valid.");
                 }
+                if (!string.IsNullOrEmpty(command.Certificates))
+                {
+                    // Ensure each certificate provided in the command
+                    List<string> certificateList = command.Certificates.Split(',').ToList();
+                    foreach (var cert in certificateList)
+                    {
+                        if (string.IsNullOrEmpty(uploadService.GetFileUri(cert)))
+                        {
+                            return BadRequest("At least one certificate name provided is not valid.");
+                        }
+                    }
+                }
 
                 var result = await medicineBatchService.Create(
                     command.BatchNumber,
@@ -58,7 +74,8 @@ namespace PharmaceuticalChain.API.Controllers
                     command.ManufactureDate,
                     command.ExpiryDate,
                     command.Quantity,
-                    command.Unit);
+                    command.Unit,
+                    command.Certificates);
                 return Ok(new { MedicineBatchId = result });
             }
             catch (Exception ex)
@@ -97,8 +114,8 @@ namespace PharmaceuticalChain.API.Controllers
                     command.ManufactureDate,
                     command.ExpiryDate,
                     command.Quantity,
-                    command.Unit
-                    );
+                    command.Unit,
+                    command.Certificates);
                 return Ok();
             }
             catch (Exception ex)

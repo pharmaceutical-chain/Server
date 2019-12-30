@@ -19,6 +19,8 @@ namespace PharmaceuticalChain.API.Controllers.Models.Queries
 
         public TenantQueryData SubmittedTenant { get; set; }
 
+        public string Certificates { get; set; }
+
         public string TransactionHash { get; set; }
         public string ContractAddress { get; set; }
         public DateTime DateCreated { get; set; }

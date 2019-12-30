@@ -15,7 +15,8 @@ namespace PharmaceuticalChain.API.Services.Interfaces
             DateTime manufactureDate,
             DateTime expiryDate,
             uint Quantity,
-            string Unit);
+            string Unit,
+            string certificates);
 
         List<MedicineBatchQueryData> GetAll();
 
@@ -30,6 +31,7 @@ namespace PharmaceuticalChain.API.Services.Interfaces
         /// <param name="expiryDate"></param>
         /// <param name="quantity"></param>
         /// <param name="unit"></param>
+        /// <param name="certificates"></param>
         /// <returns></returns>
         Task Update(
             Guid id,
@@ -38,7 +40,8 @@ namespace PharmaceuticalChain.API.Services.Interfaces
             DateTime manufactureDate,
             DateTime expiryDate,
             uint quantity,
-            string unit);
+            string unit,
+            string certificates);
 
         Task Delete(Guid id);
     }       

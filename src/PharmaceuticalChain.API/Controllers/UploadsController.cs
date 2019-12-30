@@ -71,6 +71,24 @@ namespace PharmaceuticalChain.API.Controllers
             }
         }
 
+        [Authorize]
+        [HttpPost("medicine-batch-certificates")]
+        public async Task<IActionResult> PostMedicineBatchCertificates(
+            [FromForm(Name = "myFile")]IFormFile myFile)
+        {
+
+            try
+            {
+                var (blobFileName, uri) = await uploadService.UploadFileToAzureBlob(myFile, ResourceTypes.MedicineBatchCertificates);
+                var key = uploadService.SaveAzureBlobInfoToDatabaseAndReturnKey(blobFileName, uri);
+                return CreatedAtRoute(routeName: "myFile", routeValues: new { fileName = key }, value: null);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex);
+            }
+        }
+
         /// <summary>
         /// Use this API to get the URI of the file on Azure Blob Storage system or the file in download dialogue.
         /// </summary>

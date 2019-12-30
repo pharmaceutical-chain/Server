@@ -38,7 +38,8 @@ namespace PharmaceuticalChain.API.Services.Implementations
             DateTime manufactureDate,
             DateTime expiryDate,
             uint quantity,
-            string unit)
+            string unit,
+            string certificates)
         {
             var medicineBatch = new MedicineBatch()
             {
@@ -49,6 +50,7 @@ namespace PharmaceuticalChain.API.Services.Implementations
                 ExpiryDate = expiryDate,
                 Quantity = quantity,
                 Unit = unit,
+                Certificates = certificates,
                 DateCreated = DateTime.UtcNow
             };
             Guid newMedicineBatchId = medicineBatchRepository.CreateAndReturnId(medicineBatch);
@@ -124,7 +126,8 @@ namespace PharmaceuticalChain.API.Services.Implementations
             DateTime manufactureDate,
             DateTime expiryDate,
             uint quantity,
-            string unit)
+            string unit,
+            string certificates)
         {
             var batch = medicineBatchRepository.Get(id);
             if (batch == null)
@@ -138,6 +141,7 @@ namespace PharmaceuticalChain.API.Services.Implementations
             batch.ExpiryDate = expiryDate;
             batch.Quantity = quantity;
             batch.Unit = unit;
+            batch.Certificates = certificates;
 
             medicineBatchRepository.Update(batch);
 

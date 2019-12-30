@@ -22,7 +22,7 @@ namespace PharmaceuticalChain.API.Utilities
                 Medicine = medicineBatch.Medicine.ToMedicineQueryData(),
                 Quantity = medicineBatch.Quantity,
                 Unit = medicineBatch.Unit,
-
+                Certificates = medicineBatch.Certificates,
                 ContractAddress = medicineBatch.ContractAddress,
                 DateCreated = medicineBatch.DateCreated,
                 TransactionHash = medicineBatch.TransactionHash,

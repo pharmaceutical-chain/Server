@@ -24,13 +24,13 @@ namespace PharmaceuticalChain.API.Services.Implementations
 
         public MedicineService(
             IEthereumService ethereumService,
-            IMedicineRepository medicineBatchRepository,
-            IMedicineBackgroundJob medicineBatchBackgroundJob,
+            IMedicineRepository medicineRepository,
+            IMedicineBackgroundJob medicineBackgroundJob,
             IOptions<EthereumSettings> options)
         {
             this.ethereumService = ethereumService;
-            this.medicineRepository = medicineBatchRepository;
-            this.medicineBackgroundJob = medicineBatchBackgroundJob;
+            this.medicineRepository = medicineRepository;
+            this.medicineBackgroundJob = medicineBackgroundJob;
             MedicineAbi = options.Value.MedicineAbi;
         }
 
@@ -42,7 +42,8 @@ namespace PharmaceuticalChain.API.Services.Implementations
             string ingredientConcentration,
             string packingSpecification,
             uint declaredPrice,
-            Guid submittedTenantId)
+            Guid submittedTenantId,
+            string certificates)
         {
             try
             {
@@ -56,7 +57,8 @@ namespace PharmaceuticalChain.API.Services.Implementations
                     PackingSpecification = packingSpecification,
                     DeclaredPrice = declaredPrice,
                     DateCreated = DateTime.UtcNow,
-                    SubmittedTenantId = submittedTenantId
+                    SubmittedTenantId = submittedTenantId,
+                    Certificates = certificates
                 };
                 Guid newMedicineId = medicineRepository.CreateAndReturnId(medicine);
 
@@ -152,7 +154,8 @@ namespace PharmaceuticalChain.API.Services.Implementations
             string packingSpecification, 
             string dosageForm, 
             uint declaredPrice, 
-            Guid submittedTenantId)
+            Guid submittedTenantId,
+            string certificates)
         {
             var medicine = medicineRepository.Get(medicineId);
             if (medicine == null)
@@ -173,6 +176,8 @@ namespace PharmaceuticalChain.API.Services.Implementations
             medicine.DosageForm = dosageForm;
             medicine.DeclaredPrice = declaredPrice;
             medicine.SubmittedTenantId = submittedTenantId;
+            medicine.Certificates = certificates;
+
             medicineRepository.Update(medicine);
 
             // Update the blockchain

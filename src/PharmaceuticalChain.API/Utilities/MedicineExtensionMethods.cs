@@ -23,7 +23,7 @@ namespace PharmaceuticalChain.API.Utilities
                 PackingSpecification = medicine.PackingSpecification,
                 RegistrationCode = medicine.RegistrationCode,
                 SubmittedTenant = medicine.SubmittedTenant.ToTenantQueryData(),
-
+                Certificates = medicine.Certificates,
                 ContractAddress = medicine.ContractAddress,
                 DateCreated = medicine.DateCreated,
                 TransactionHash = medicine.TransactionHash,

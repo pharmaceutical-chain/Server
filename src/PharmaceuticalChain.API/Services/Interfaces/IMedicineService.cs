@@ -16,7 +16,8 @@ namespace PharmaceuticalChain.API.Services.Interfaces
             string ingredientConcentration,
             string packingSpecification,
             uint declaredPrice,
-            Guid submittedTenantId);
+            Guid submittedTenantId,
+            string certificates);
 
         Task Update(
             Guid medicineId,
@@ -27,7 +28,8 @@ namespace PharmaceuticalChain.API.Services.Interfaces
             string packingSpecification,
             string dosageForm,
             uint declaredPrice,
-            Guid submittedTenantId
+            Guid submittedTenantId,
+            string certificates
             );
 
         List<MedicineQueryData> GetMedicines();

@@ -19,10 +19,16 @@ namespace PharmaceuticalChain.API.Controllers
     {
         private readonly IMedicineService medicineService;
         private readonly IAuth0Service auth0Service;
-        public MedicinesController(IMedicineService medicineService, IAuth0Service auth0Service)
+        private readonly IUploadService uploadService;
+        public MedicinesController(
+            IMedicineService medicineService, 
+            IAuth0Service auth0Service,
+            IUploadService uploadService
+            )
         {
             this.medicineService = medicineService;
             this.auth0Service = auth0Service;
+            this.uploadService = uploadService;
         }
 
         [HttpPost]
@@ -35,6 +41,19 @@ namespace PharmaceuticalChain.API.Controllers
                 if (command.DeclaredPrice <= 0)
                 {
                     return BadRequest("Declared Price cannot be less than 0.");
+                }
+
+                if (!string.IsNullOrEmpty(command.Certificates))
+                {
+                    // Ensure each certificate provided in the command
+                    List<string> certificateList = command.Certificates.Split(',').ToList();
+                    foreach (var cert in certificateList)
+                    {
+                        if (string.IsNullOrEmpty(uploadService.GetFileUri(cert)))
+                        {
+                            return BadRequest("At least one certificate name provided is not valid.");
+                        }
+                    }
                 }
 
                 //var test = User.Claims.FirstOrDefault();
@@ -50,7 +69,8 @@ namespace PharmaceuticalChain.API.Controllers
                     command.IngredientConcentration,
                     command.PackingSpecification,
                     command.DeclaredPrice,
-                    command.CurrentlyLoggedInTenant);
+                    command.CurrentlyLoggedInTenant,
+                    command.Certificates);
 
                 return Ok(new { MedicineId = result });
             }
@@ -77,8 +97,8 @@ namespace PharmaceuticalChain.API.Controllers
                     command.PackingSpecification,
                     command.DosageForm,
                     command.DeclaredPrice,
-                    command.CurrentlyLoggedInTenant
-                    );
+                    command.CurrentlyLoggedInTenant,
+                    command.Certificates);
                 return Ok();
             }
             catch (Exception ex)

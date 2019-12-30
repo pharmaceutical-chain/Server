@@ -27,6 +27,8 @@ namespace PharmaceuticalChain.API.Models.Database
         public uint Quantity { get; set; }
         public string Unit { get; set; }
 
+        public string Certificates { get; set; }
+
         public ICollection<MedicineBatchTransfer> MedicineBatchTransfers { get; set; }
     }
 }

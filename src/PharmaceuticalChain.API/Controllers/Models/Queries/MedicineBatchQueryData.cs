@@ -19,6 +19,7 @@ namespace PharmaceuticalChain.API.Controllers.Models.Queries
 
         public uint Quantity { get; set; }
         public string Unit { get; set; }
+        public string Certificates { get; set; }
 
         public string TransactionHash { get; set; }
         public string ContractAddress { get; set; }

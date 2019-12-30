@@ -14,5 +14,6 @@ namespace PharmaceuticalChain.API.Controllers.Models.Commands
         public DateTime ExpiryDate { get; set; }
         public uint Quantity { get; set; }
         public string Unit { get; set; }
+        public string Certificates { get; set; }
     }
 }

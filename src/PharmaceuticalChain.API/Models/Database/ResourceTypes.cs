@@ -9,6 +9,7 @@ namespace PharmaceuticalChain.API.Models.Database
     {
         TenantCertificates,
         MedicineCertificates,
+        MedicineBatchCertificates,
         Other
     }
 }

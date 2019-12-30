@@ -60,6 +60,11 @@ namespace PharmaceuticalChain.API.Services.Implementations
                         containerName = "medicine-certificates";
                         break;
                     }
+                case (ResourceTypes.MedicineBatchCertificates):
+                    {
+                        containerName = "medicine-batch-certificates";
+                        break;
+                    }
                 case (ResourceTypes.TenantCertificates):
                     {
                         containerName = "tenant-certificates";

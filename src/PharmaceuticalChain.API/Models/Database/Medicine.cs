@@ -21,6 +21,7 @@ namespace PharmaceuticalChain.API.Models.Database
         public string IngredientConcentration { get; set; }
         public string PackingSpecification { get; set; }
         public uint DeclaredPrice { get; set; }
+        public string Certificates { get; set; }
 
         public Guid SubmittedTenantId { get; set; }
         public Tenant SubmittedTenant { get; set; }
