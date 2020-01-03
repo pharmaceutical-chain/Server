@@ -25,5 +25,7 @@ namespace PharmaceuticalChain.API.Controllers.Models.Queries
         public string ContractAddress { get; set; }
         public DateTime DateCreated { get; set; }
         public string TransactionStatus { get; set; }
+
+        public bool IsApprovedByAdmin { get; set; }
     }
 }

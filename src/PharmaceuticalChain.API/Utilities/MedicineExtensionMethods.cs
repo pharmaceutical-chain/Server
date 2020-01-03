@@ -27,7 +27,8 @@ namespace PharmaceuticalChain.API.Utilities
                 ContractAddress = medicine.ContractAddress,
                 DateCreated = medicine.DateCreated,
                 TransactionHash = medicine.TransactionHash,
-                TransactionStatus = medicine.TransactionStatus.ToString()
+                TransactionStatus = medicine.TransactionStatus.ToString(),
+                IsApprovedByAdmin = medicine.IsApprovedByAdmin
             };
             return result;
         }

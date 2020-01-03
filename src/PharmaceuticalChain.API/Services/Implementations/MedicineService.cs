@@ -58,7 +58,8 @@ namespace PharmaceuticalChain.API.Services.Implementations
                     DeclaredPrice = declaredPrice,
                     DateCreated = DateTime.UtcNow,
                     SubmittedTenantId = submittedTenantId,
-                    Certificates = certificates
+                    Certificates = certificates,
+                    IsApprovedByAdmin = false
                 };
                 Guid newMedicineId = medicineRepository.CreateAndReturnId(medicine);
 
@@ -155,7 +156,9 @@ namespace PharmaceuticalChain.API.Services.Implementations
             string dosageForm, 
             uint declaredPrice, 
             Guid submittedTenantId,
-            string certificates)
+            string certificates,
+            bool isApprovedByAdmin
+            )
         {
             var medicine = medicineRepository.Get(medicineId);
             if (medicine == null)
@@ -177,6 +180,7 @@ namespace PharmaceuticalChain.API.Services.Implementations
             medicine.DeclaredPrice = declaredPrice;
             medicine.SubmittedTenantId = submittedTenantId;
             medicine.Certificates = certificates;
+            medicine.IsApprovedByAdmin = isApprovedByAdmin;
 
             medicineRepository.Update(medicine);
 

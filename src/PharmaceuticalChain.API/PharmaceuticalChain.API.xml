@@ -224,7 +224,7 @@
                 This id is created by the backend in the creation process (before it is used to in creation transaction on blockchain.)
             </param>
         </member>
-        <member name="M:PharmaceuticalChain.API.Services.Interfaces.IMedicineBatchService.Update(System.Guid,System.String,System.Guid,System.DateTime,System.DateTime,System.UInt32,System.String,System.String)">
+        <member name="M:PharmaceuticalChain.API.Services.Interfaces.IMedicineBatchService.Update(System.Guid,System.String,System.Guid,System.DateTime,System.DateTime,System.UInt32,System.String,System.String,System.Boolean)">
             <summary>
             Update every fields but not ManufacturerId.
             Normally, if a manufacturer creates an unwanted batch, it may delete or change the information accordingly, but not "change ownership" to another manufacturer.

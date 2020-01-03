@@ -27,5 +27,7 @@ namespace PharmaceuticalChain.API.Models.Database
         public Tenant SubmittedTenant { get; set; }
 
         public ICollection<MedicineBatch> MedicineBatches { get; set; }
+
+        public bool IsApprovedByAdmin { get; set; }
     }
 }

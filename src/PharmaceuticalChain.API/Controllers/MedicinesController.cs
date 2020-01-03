@@ -98,7 +98,8 @@ namespace PharmaceuticalChain.API.Controllers
                     command.DosageForm,
                     command.DeclaredPrice,
                     command.CurrentlyLoggedInTenant,
-                    command.Certificates);
+                    command.Certificates,
+                    command.IsApprovedByAdmin);
                 return Ok();
             }
             catch (Exception ex)

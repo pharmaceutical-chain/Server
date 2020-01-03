@@ -115,7 +115,8 @@ namespace PharmaceuticalChain.API.Controllers
                     command.ExpiryDate,
                     command.Quantity,
                     command.Unit,
-                    command.Certificates);
+                    command.Certificates,
+                    command.IsApprovedByAdmin);
                 return Ok();
             }
             catch (Exception ex)

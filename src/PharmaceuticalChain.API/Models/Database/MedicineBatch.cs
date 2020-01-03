@@ -30,5 +30,7 @@ namespace PharmaceuticalChain.API.Models.Database
         public string Certificates { get; set; }
 
         public ICollection<MedicineBatchTransfer> MedicineBatchTransfers { get; set; }
+
+        public bool IsApprovedByAdmin { get; set; }
     }
 }

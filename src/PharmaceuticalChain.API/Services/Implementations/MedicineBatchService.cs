@@ -127,7 +127,8 @@ namespace PharmaceuticalChain.API.Services.Implementations
             DateTime expiryDate,
             uint quantity,
             string unit,
-            string certificates)
+            string certificates,
+            bool isApprovedByAdmin)
         {
             var batch = medicineBatchRepository.Get(id);
             if (batch == null)
@@ -142,6 +143,7 @@ namespace PharmaceuticalChain.API.Services.Implementations
             batch.Quantity = quantity;
             batch.Unit = unit;
             batch.Certificates = certificates;
+            batch.IsApprovedByAdmin = isApprovedByAdmin;
 
             medicineBatchRepository.Update(batch);
 

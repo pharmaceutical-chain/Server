@@ -29,7 +29,8 @@ namespace PharmaceuticalChain.API.Services.Interfaces
             string dosageForm,
             uint declaredPrice,
             Guid submittedTenantId,
-            string certificates
+            string certificates,
+            bool isApprovedByAdmin
             );
 
         List<MedicineQueryData> GetMedicines();

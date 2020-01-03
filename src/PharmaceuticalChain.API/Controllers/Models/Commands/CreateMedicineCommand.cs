@@ -16,5 +16,6 @@ namespace PharmaceuticalChain.API.Controllers.Models.Commands
         public uint DeclaredPrice { get; set; }
         public Guid CurrentlyLoggedInTenant { get; set; }
         public string Certificates { get; set; }
+        public bool IsApprovedByAdmin { get; set; }
     }
 }

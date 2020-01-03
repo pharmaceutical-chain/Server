@@ -41,7 +41,8 @@ namespace PharmaceuticalChain.API.Services.Interfaces
             DateTime expiryDate,
             uint quantity,
             string unit,
-            string certificates);
+            string certificates,
+            bool isApprovedByAdmin);
 
         Task Delete(Guid id);
     }       
